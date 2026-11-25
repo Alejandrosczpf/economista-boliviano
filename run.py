@@ -12,6 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
+from engine import memoria
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -60,6 +61,11 @@ def main(argv=None) -> dict:
         "frescura": fresc,
     }
     pul = P.construir(series, contratos, salud, a.hoy)
+
+    # Memoria: el índice de cada día desde el inicio de la flotación
+    filas = memoria.actualizar(memoria.leer(), series, contratos, a.hoy)
+    memoria.escribir(filas)
+    pul["indice_historia"] = memoria.para_pulso(filas)
     P.guardar(pul)
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)

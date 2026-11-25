@@ -31,6 +31,7 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | `pipeline/validate.py` | Quarantine: data that breaks its contract doesn't enter the calculation. The allowed jump grows with elapsed time |
 | `pipeline/store.py` | `data/observaciones.csv`. Each git commit is a "vintage": you can see what the system knew on any date |
 | `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, plus historical episodes |
+| `engine/memoria.py` | The index for each day since 29 Jun 2026 (`data/indice.csv`): "en vivo" rows are frozen; the rest are rebuilt using only data that had been published by each date (`rezago_dias`) |
 | `engine/pulso.py` | Builds `site/pulso.json` and `site/index.html` with educational explanations |
 | `engine/verificador.py` | Compares every number in an AI-written report against the data; if one doesn't match, publication is blocked |
 | `reports/salud.md` | Health report: freshness of each series, quarantine, failed sources, current alerts |

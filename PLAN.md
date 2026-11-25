@@ -8,7 +8,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 |---|---|---|
 | 1 | Fuentes que no fallan | ✅ hecha (25-nov-2026) |
 | 2 | Un robot que avisa | ✅ hecha (25-nov-2026) |
-| 3 | Memoria del índice | pendiente |
+| 3 | Memoria del índice | ✅ hecha (25-nov-2026) |
 | 4 | Dólar paralelo automático | pendiente |
 | 5 | Más series oficiales automáticas | pendiente |
 | 6 | El motor con datos reales | pendiente |
@@ -59,15 +59,22 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 - La corrida repetida actualizó los avisos sin abrir issues nuevos.
 - Ya no hay advertencias de Node.
 
-## 3. Memoria del índice
+## 3. Memoria del índice ✅
 
-**Por qué:** el Pulso muestra el índice de hoy, pero no cómo llegó ahí.
+**Por qué:** el Pulso mostraba el índice de hoy, pero no cómo llegó ahí.
 
-- Guardar el índice de cada día con sus señales en `data/indice.csv`.
-- Reconstruirlo hacia atrás desde el 29-jun-2026 con los datos que se conocían en cada fecha, sin usar datos del futuro.
-- Mostrar un gráfico de la evolución del índice en el Pulso, con las fechas de los cambios de estado.
+**Hecho:**
+- `engine/memoria.py` guarda en `data/indice.csv` una fila por día desde el 29-jun-2026, con el índice, el estado, cuántos indicadores votaron y la señal de cada uno.
+  - Las filas **en vivo** son lo que el robot calculó ese día y quedan congeladas.
+  - Las filas **reconstruidas** se recalculan en cada corrida, así un dato histórico cargado después mejora la reconstrucción.
+- Rezago de publicación: cada serie tiene `rezago_dias` en `config/series.json`. Al reconstruir el pasado, un dato cuenta recién desde su fecha más el rezago. Por ejemplo, la inflación de octubre cuenta desde el 7-nov.
+- Regla de mayoría: un día en que vota menos de la mitad de los indicadores no se dibuja ni cuenta como cambio de estado. Con pocos votos, el índice depende más de cuáles votaron que de la economía; el 29-jun solo votaban el déficit y el PIB, y daba 100.
+- El Pulso muestra la línea del índice, una franja con los indicadores que votaron cada día (mismo eje de fechas), los cambios de estado y la tabla día por día.
+- Hay 7 pruebas nuevas, entre ellas una que exige que agregar datos posteriores a un día no cambie el índice reconstruido de ese día.
 
-**Listo cuando:** el Pulso muestra la línea del índice desde el inicio de la flotación, y una prueba comprueba que la reconstrucción no usa datos posteriores a cada fecha.
+**Error encontrado y corregido:** el recolector del BCB guardaba el tipo de cambio con la **fecha de corte**, que es el día anterior, en vez de la fecha de vigencia. La página escribe "VIGENCIA: MIÉRCOLES 25…" sin el "DEL" que esperaba el programa, y este tomaba en silencio la fecha de corte. Ahora acepta los dos formatos, y si no encuentra la vigencia, falla y avisa en vez de adivinar. Se borró el dato mal fechado del 24-nov.
+
+**Lo que la reconstrucción mostró:** entre julio y octubre el índice aparece casi siempre en "alerta". Esto se debe en buena parte a que los indicadores que suelen estar en verde (depreciación, brecha) no tienen datos: el dólar oficial se cargó a mano con saltos de semanas entre un dato y otro. La solución es de datos (sesiones 4 y 5), no de fórmula.
 
 ## 4. Dólar paralelo automático
 
@@ -85,6 +92,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 - Revisar qué publica el BCB y el INE en formato estable (tablas, Excel, PDF con estructura fija).
 - Pasar a recolector automático al menos la RIN y la inflación mensual.
+- Cargar la **historia diaria del dólar oficial** desde el 29-jun-2026, con las tablas del BCB. Es lo que más mejora la reconstrucción del índice (sesión 3), porque la depreciación a 30 días vuelve a votar todos los días.
 
 **Listo cuando:** la RIN y la inflación se actualizan sin carga manual, con prueba cada una.
 
@@ -95,6 +103,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 - Reemplazar los valores aproximados de `HISTORIA` por las series oficiales, citando la fuente.
 - Prueba retrospectiva: calcular el índice año por año desde 1980 y revisar si anticipó cada crisis.
 - Revisar los umbrales del régimen flotante con la experiencia de jun-nov 2026 y documentar cada cambio.
+- Decidir si el índice del día debe exigir un mínimo de indicadores votando, como ya lo exige el gráfico (regla de mayoría de la sesión 3).
 
 **Listo cuando:** las pruebas históricas usan datos oficiales y siguen reconociendo 1985, 2016, 2019, 2023 y 2024.
 
@@ -102,7 +111,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 - Mostrar qué cambió desde la semana pasada y por qué se movió el índice.
 - Agregar una ficha por indicador: qué mide, por qué importa y su último dato con la fuente enlazada.
-- Revisar que se lea bien en el celular y que sea accesible.
+- Revisar que se lea bien en el celular y que sea accesible. Ya se sabe que en un celular la página se desborda a la derecha (se cortan las tarjetas de arriba) y que el texto del gráfico del índice queda muy chico.
 
 **Listo cuando:** una persona sin formación económica puede explicar el estado actual después de leer la página.
 

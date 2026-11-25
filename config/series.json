@@ -1,5 +1,5 @@
 {
- "_nota": "Contrato de cada serie. Un dato que rompe su contrato va a cuarentena y no entra al cálculo. min/max = rango físicamente posible; max_salto_pct = cambio máximo creíble frente al dato anterior; frescura_dias = edad máxima antes de marcarlo como viejo.",
+ "_nota": "Contrato de cada serie. Un dato que rompe su contrato va a cuarentena y no entra al cálculo. min/max = rango físicamente posible; max_salto_pct = cambio máximo creíble frente al dato anterior; frescura_dias = edad máxima antes de marcarlo como viejo. rezago_dias = días entre la fecha del dato y su publicación: al reconstruir el pasado, un dato solo cuenta desde fecha + rezago (así no se usa lo que todavía no se sabía).",
  "series": [
   {
    "id": "tco",
@@ -11,6 +11,7 @@
    "max": 40,
    "max_salto_pct": 8,
    "frescura_dias": 5,
+   "rezago_dias": 0,
    "quiebres": [
     "2026-06-29"
    ]
@@ -24,7 +25,8 @@
    "min": 5,
    "max": 60,
    "max_salto_pct": 12,
-   "frescura_dias": 10
+   "frescura_dias": 10,
+   "rezago_dias": 0
   },
   {
    "id": "rin",
@@ -35,7 +37,8 @@
    "min": 0,
    "max": 20000,
    "max_salto_pct": 60,
-   "frescura_dias": 70
+   "frescura_dias": 70,
+   "rezago_dias": 20
   },
   {
    "id": "rin_divisas",
@@ -46,7 +49,8 @@
    "min": 0,
    "max": 15000,
    "max_salto_pct": 900,
-   "frescura_dias": 160
+   "frescura_dias": 160,
+   "rezago_dias": 20
   },
   {
    "id": "inflacion_12m",
@@ -57,7 +61,8 @@
    "min": -10,
    "max": 30000,
    "max_salto_pts": 15,
-   "frescura_dias": 45
+   "frescura_dias": 45,
+   "rezago_dias": 7
   },
   {
    "id": "inflacion_mensual",
@@ -68,7 +73,8 @@
    "min": -5,
    "max": 200,
    "max_salto_pts": 10,
-   "frescura_dias": 45
+   "frescura_dias": 45,
+   "rezago_dias": 7
   },
   {
    "id": "embi",
@@ -79,7 +85,8 @@
    "min": 0,
    "max": 10000,
    "max_salto_pct": 80,
-   "frescura_dias": 30
+   "frescura_dias": 30,
+   "rezago_dias": 1
   },
   {
    "id": "pib_proy_fmi",
@@ -90,7 +97,8 @@
    "min": -30,
    "max": 30,
    "max_salto_pts": 8,
-   "frescura_dias": 200
+   "frescura_dias": 200,
+   "rezago_dias": 0
   },
   {
    "id": "pib_proy_bcb",
@@ -101,7 +109,8 @@
    "min": -30,
    "max": 30,
    "max_salto_pts": 8,
-   "frescura_dias": 120
+   "frescura_dias": 120,
+   "rezago_dias": 0
   },
   {
    "id": "pib_proy_bm",
@@ -112,7 +121,8 @@
    "min": -30,
    "max": 30,
    "max_salto_pts": 8,
-   "frescura_dias": 200
+   "frescura_dias": 200,
+   "rezago_dias": 0
   },
   {
    "id": "deficit_fiscal",
@@ -123,7 +133,8 @@
    "min": -10,
    "max": 40,
    "max_salto_pts": 15,
-   "frescura_dias": 400
+   "frescura_dias": 400,
+   "rezago_dias": 90
   },
   {
    "id": "base_monetaria_var_acum",
@@ -134,7 +145,8 @@
    "min": -100000,
    "max": 100000,
    "max_salto_pct": null,
-   "frescura_dias": 45
+   "frescura_dias": 45,
+   "rezago_dias": 10
   },
   {
    "id": "wb_inflacion",
@@ -145,7 +157,8 @@
    "min": -10,
    "max": 30000,
    "max_salto_pts": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "wb_pib_crec",
@@ -156,7 +169,8 @@
    "min": -30,
    "max": 30,
    "max_salto_pts": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "wb_reservas",
@@ -167,7 +181,8 @@
    "min": 0,
    "max": 50000000000.0,
    "max_salto_pct": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "wb_exportaciones",
@@ -178,7 +193,8 @@
    "min": 0,
    "max": 100000000000.0,
    "max_salto_pct": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "wb_dinero_amplio_pib",
@@ -189,7 +205,8 @@
    "min": 0,
    "max": 300,
    "max_salto_pts": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "fmi_weo_pib",
@@ -200,7 +217,8 @@
    "min": -30,
    "max": 30,
    "max_salto_pts": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   },
   {
    "id": "fmi_weo_inflacion",
@@ -211,7 +229,8 @@
    "min": -10,
    "max": 30000,
    "max_salto_pts": null,
-   "frescura_dias": 800
+   "frescura_dias": 800,
+   "rezago_dias": 120
   }
  ]
 }

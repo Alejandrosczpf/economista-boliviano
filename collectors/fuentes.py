@@ -90,11 +90,12 @@ def parsear_tco(pagina: str) -> Obs:
     if not m:
         raise ValueError("no se encontró la cotización 'Bs x,xx/$us' en la página del BCB")
     valor = float(m.group(1).replace(",", "."))
-    f = re.search(r"VIGENCIA:\s*DEL\s+\w+\s+(\d{1,2})\s+DE\s+(\w+)\s+DE\s+(\d{4})", texto, re.I)
+    # La página escribe "VIGENCIA: MIÉRCOLES 25 DE ..." y a veces "VIGENCIA: DEL MIÉRCOLES 25 ... AL ...".
+    # Sin vigencia NO se usa la fecha de corte: es el día anterior y guardaría el dato mal fechado
+    # (pasó el 25-nov-2026). Mejor fallar y que llegue el aviso.
+    f = re.search(r"VIGENCIA:\s*(?:DEL\s+)?\w+\s+(\d{1,2})\s+DE\s+(\w+)\s+DE\s+(\d{4})", texto, re.I)
     if not f:
-        f = re.search(r"FECHA DE CORTE:\s*\w+\s+(\d{1,2})\s+DE\s+(\w+)\s+DE\s+(\d{4})", texto, re.I)
-    if not f:
-        raise ValueError("no se encontró la fecha de vigencia en la página del BCB")
+        raise ValueError("no se encontró la fecha de vigencia en la página del BCB (¿cambió el formato?)")
     mes = MESES[f.group(2).lower().replace("é", "e")]
     dia = date(int(f.group(3)), mes, int(f.group(1)))
     return Obs("tco", dia.isoformat(), valor, "BCB", URL_TCO, "recolector automático")

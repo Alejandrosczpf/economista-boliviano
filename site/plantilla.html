@@ -70,7 +70,7 @@ h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--text
 .chart .leg{display:flex;gap:14px;font-size:12px;color:var(--text-secondary);margin:4px 0 6px}
 .chart .leg span{display:inline-flex;align-items:center;gap:6px}
 .chart .leg i{width:14px;height:3px;border-radius:2px;display:inline-block}
-.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart > svg{width:100%;height:auto;display:block;overflow:visible}
 .chart .axis text{font-size:10px;fill:var(--text-muted)}
 .chart .grid line{stroke:var(--line);stroke-width:1}
 .ttip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,.15);display:none;z-index:50}
@@ -81,6 +81,11 @@ td.n{font-variant-numeric:tabular-nums}
 details summary{cursor:pointer;color:var(--text-secondary);font-size:13px}
 .nota{font-size:12px;color:var(--text-muted);margin-top:8px}
 footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
+.chart .ref line{stroke:var(--text-muted);stroke-width:1;stroke-dasharray:4 3}
+.chart .ref text{font-size:10px;fill:var(--text-muted)}
+.chart .cob-t{font-size:11px;color:var(--text-muted);margin:10px 0 2px}
+.cambios{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--text-secondary)}
+.cambios li{display:inline-flex;align-items:center;gap:6px}
 .aprendiz-off .solo-aprendiz{display:none}
 .solo-aprendiz{font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:8px 10px;margin-top:10px}
 </style>
@@ -111,6 +116,9 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
       <div class="solo-aprendiz">Las barras suman el índice. Un indicador en gris no votó: le falta un dato reciente, y el sistema prefiere no adivinar.</div>
     </div>
   </section>
+
+  <h2>El índice desde la flotación</h2>
+  <div class="card chart" id="memoria"></div>
 
   <h2>Indicadores</h2>
   <div class="grid" id="tiles"></div>
@@ -235,6 +243,62 @@ document.getElementById('charts').innerHTML =
     series:[{nombre:'Inflación',datos:H_.inflacion_12m}], nota:'Bajó de 21 % a 5 %, pero repuntó a 7,08 % en octubre por el nuevo precio del diésel.'}) +
   chart({titulo:'Riesgo país (EMBI)', sub:'Puntos básicos', unidad:'pb', dec:0, base0:true,
     series:[{nombre:'EMBI',datos:H_.embi}], nota:'Puntos sueltos tomados de la prensa: la serie diaria llegará con el recolector de mercado.'});
+
+// ---------- memoria del índice: línea (escala fija 0-100) + franja de cobertura con el mismo eje x ----------
+(function(){
+  const M = P.indice_historia, el = document.getElementById('memoria');
+  if(!M || !M.puntos.length){ el.style.display='none'; return; }
+  const pts = M.puntos, W=1080, ml=40, mr=86, H1=230, mt=12, mb=8, H2=58, mb2=22;
+  const t = s=>new Date(s+'T00:00:00Z').getTime();
+  const x0=t(pts[0].fecha), x1=Math.max(t(pts[pts.length-1].fecha), x0+864e5);
+  const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>mt+(1-v/100)*(H1-mt-mb);
+  const paso=(W-ml-mr)/((x1-x0)/864e5+1);
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  // tramos: solo días con mayoría de indicadores votando; un día insuficiente corta la línea
+  let d='', abierto=false;
+  pts.forEach(p=>{ if(p.suficiente){ d+=`${abierto?'L':'M'}${X(t(p.fecha)).toFixed(1)},${Y(p.valor).toFixed(1)}`; abierto=true; } else abierto=false; });
+  const meses=[]; {const a=new Date(x0); let m=new Date(Date.UTC(a.getUTCFullYear(),a.getUTCMonth()+1,1)); while(m.getTime()<=x1){meses.push(m.getTime()); m=new Date(Date.UTC(m.getUTCFullYear(),m.getUTCMonth()+1,1));}}
+  const robot = M.robot_desde && M.robot_desde>pts[0].fecha ? X(t(M.robot_desde)) : null;
+  const g1 = `<g class="grid">${[0,100].map(v=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>
+    <g class="axis">${[0,35,60,100].map(v=>`<text x="${ml-6}" y="${Y(v)+3}" text-anchor="end">${v}</text>`).join('')}</g>
+    <g class="ref">${[[35,'vigilancia'],[60,'alerta']].map(([v,l])=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${W-mr+6}" y="${Y(v)+3}">${l} desde ${v}</text>`).join('')}</g>
+    ${robot?`<line x1="${robot}" x2="${robot}" y1="${mt}" y2="${H1-mb}" stroke="var(--text-secondary)" stroke-width="1"/><text x="${robot-6}" y="${mt+9}" text-anchor="end" style="font-size:10px;fill:var(--text-secondary)">← reconstruido</text><text x="${robot+6}" y="${mt+9}" style="font-size:10px;fill:var(--text-secondary)">en vivo →</text>`:''}
+    <path d="${d}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle id="mem-dot" r="4.5" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" style="display:none"/>`;
+  const Yc=v=>(1-v)*(H2-4)+2;
+  const g2 = `<g class="grid"><line x1="${ml}" x2="${W-mr}" y1="${Yc(0)}" y2="${Yc(0)}"/></g>
+    ${pts.map(p=>{const h=p.votan/p.de; return `<rect x="${(X(t(p.fecha))-paso/2+0.5).toFixed(1)}" y="${Yc(h).toFixed(1)}" width="${Math.max(1,paso-1).toFixed(1)}" height="${(Yc(0)-Yc(h)).toFixed(1)}" fill="var(--${p.suficiente?'text-muted':'line'})"/>`}).join('')}
+    <g class="ref"><line x1="${ml}" x2="${W-mr}" y1="${Yc(0.5)}" y2="${Yc(0.5)}"/><text x="${W-mr+6}" y="${Yc(0.5)+3}">mayoría</text></g>
+    <g class="axis"><text x="${ml-6}" y="${Yc(1)+8}" text-anchor="end">9</text><text x="${ml-6}" y="${Yc(0)}" text-anchor="end">0</text>
+    ${meses.map(m=>{const f=new Date(m);return `<text x="${X(m)}" y="${H2+mb2-6}" text-anchor="middle">${MES[f.getUTCMonth()]} ${String(f.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
+  const ESTL={calma:['good','calma'],vigilancia:['warning','vigilancia'],alerta:['critical','alerta']};
+  const cambios = M.cambios.length ? `<ul class="cambios">${M.cambios.map(c=>`<li>${icono(ESTL[c.a][0])} ${fecha(c.fecha)}: de ${c.de} a <b>${c.a}</b> (${nf(c.indice,1)})</li>`).join('')}</ul>` : '';
+  const ult = pts[pts.length-1];
+  el.innerHTML = `<h3>Índice de riesgo, día por día</h3>
+    <div class="sub">0 a 100. Hasta el ${fecha(M.robot_desde||ult.fecha)}, reconstruido solo con los datos que ya se habían publicado cada día; desde entonces, lo que el robot calculó cada mañana.</div>
+    <svg viewBox="0 0 ${W} ${H1}" role="img" aria-label="Evolución del índice de riesgo desde la flotación">${g1}<rect id="mem-hit" x="${ml}" y="0" width="${W-ml-mr}" height="${H1}" fill="transparent"/></svg>
+    <div class="cob-t">Indicadores que votaron cada día (de 9)</div>
+    <svg viewBox="0 0 ${W} ${H2+mb2}" role="img" aria-label="Cuántos indicadores votaron cada día">${g2}<line id="mem-x2" y1="0" y2="${H2}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/></svg>
+    ${cambios}
+    <div class="solo-aprendiz">La línea se corta los días en que votó menos de la mitad de los indicadores. Con pocos votos, el índice depende más de cuáles votaron que de la economía. Los huecos de 2026 se deben a series que todavía se cargan a mano, como el dólar oficial diario y el paralelo.</div>
+    <details style="margin-top:10px"><summary>Ver la tabla día por día</summary>
+      <table><thead><tr><th>Fecha</th><th>Índice</th><th>Estado</th><th>Votaron</th><th>Origen</th></tr></thead><tbody>
+      ${pts.slice().reverse().map(p=>`<tr><td>${fecha(p.fecha)}</td><td class="n">${nf(p.valor,1)}</td><td>${p.suficiente?icono(ESTL[p.estado][0])+' '+p.estado:'pocos datos'}</td><td class="n">${p.votan} de ${p.de}</td><td>${p.origen}</td></tr>`).join('')}
+      </tbody></table></details>`;
+  const hit=document.getElementById('mem-hit'), dot=document.getElementById('mem-dot'), x2=document.getElementById('mem-x2'), svg=hit.ownerSVGElement;
+  hit.addEventListener('mousemove',e=>{
+    const b=svg.getBoundingClientRect(), mx=(e.clientX-b.left)*W/b.width, tv=x0+(mx-ml)/(W-ml-mr)*(x1-x0);
+    const p=pts.reduce((a,q)=>Math.abs(t(q.fecha)-tv)<Math.abs(t(a.fecha)-tv)?q:a);
+    const px=X(t(p.fecha));
+    dot.setAttribute('cx',px); dot.setAttribute('cy',Y(p.valor)); dot.style.display=p.suficiente?'':'none';
+    x2.setAttribute('x1',px); x2.setAttribute('x2',px); x2.style.display='';
+    const [k,l]=ESTL[p.estado];
+    tt.innerHTML=`<b>${fecha(p.fecha)}</b><br>`+(p.suficiente?`Índice ${nf(p.valor,1)} · ${icono(k)} ${l}`:`Pocos datos: no se dibuja (daría ${nf(p.valor,1)})`)+
+      `<br>Votaron ${p.votan} de ${p.de} indicadores<br><span style="color:var(--text-muted)">${p.origen==='en vivo'?'calculado ese día por el robot':'reconstruido con los datos de entonces'}</span>`;
+    tt.style.display='block'; tt.style.left=Math.min(e.clientX+14, innerWidth-260)+'px'; tt.style.top=(e.clientY-10)+'px';
+  });
+  hit.addEventListener('mouseleave',()=>{tt.style.display='none';dot.style.display='none';x2.style.display='none';});
+})();
 
 // salud
 const S=P.salud;

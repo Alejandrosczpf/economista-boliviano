@@ -108,6 +108,21 @@ def test_parsea_pagina_del_bcb():
     assert (o.serie, o.fecha, o.valor) == ("tco", "2026-11-25", 11.83)
 
 
+def test_bcb_sin_del_usa_la_vigencia_no_la_fecha_de_corte():
+    # formato real del 25-nov-2026: antes se guardaba con la fecha de corte (un día antes)
+    pagina = open(os.path.join(FIX, "bcb_tco_2026-11-25.html"), encoding="utf-8").read()
+    assert parsear_tco(pagina).fecha == "2026-11-25"
+
+
+def test_bcb_sin_vigencia_falla_en_vez_de_adivinar():
+    pagina = "<p>Bs 11,83/$us</p><p>FECHA DE CORTE: MARTES 24 DE NOVIEMBRE DE 2026</p>"
+    try:
+        parsear_tco(pagina)
+        assert False, "debía fallar"
+    except ValueError as e:
+        assert "vigencia" in str(e)
+
+
 def test_parsea_banco_mundial():
     cuerpo = json.dumps([{"page": 1}, [{"date": "2024", "value": 5.1}, {"date": "2023", "value": None}]])
     obs = parsear_bm("wb_inflacion", cuerpo)
