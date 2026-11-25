@@ -42,6 +42,20 @@ PESOS = {
 
 ESTADOS = [(0, 35, "calma"), (35, 60, "vigilancia"), (60, 101, "alerta")]
 
+# De qué series se alimenta cada indicador (ver indicadores_actuales).
+# Lo usan los avisos para decir qué indicador deja de votar cuando una serie se vence.
+INSUMOS = {
+    "inflacion_12m": ["inflacion_12m"],
+    "inflacion_mensual": ["inflacion_mensual"],
+    "rin_var_12m": ["rin"],
+    "liquidez_rin": ["rin_divisas", "rin"],
+    "deficit_fiscal": ["deficit_fiscal"],
+    "brecha": ["paralelo", "tco"],
+    "depreciacion_30d": ["tco"],
+    "embi": ["embi"],
+    "pib_proy": ["pib_proy_fmi", "pib_proy_bcb", "pib_proy_bm"],
+}
+
 
 def senal(indicador: str, valor: float | None) -> float | None:
     if valor is None:

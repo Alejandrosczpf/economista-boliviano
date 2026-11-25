@@ -13,7 +13,7 @@ from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
 from engine import pulso as P
-from pipeline import store, validate
+from pipeline import avisos, store, validate
 
 RED = ["bcb_tco", "banco_mundial", "fmi"]
 
@@ -27,7 +27,8 @@ def main(argv=None) -> dict:
     contratos = store.cargar_contratos()
     existentes = store.leer()
     nuevas, errores = [], {}
-    for nombre in ["manual"] + ([] if a.sin_red else RED):
+    intentadas = ["manual"] + ([] if a.sin_red else RED)
+    for nombre in intentadas:
         try:
             got = RECOLECTORES[nombre]()
             nuevas += got
@@ -60,21 +61,36 @@ def main(argv=None) -> dict:
     }
     pul = P.construir(series, contratos, salud, a.hoy)
     P.guardar(pul)
-    escribir_informe_salud(salud, pul)
+
+    # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)
+    estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)
+    avisos.guardar_estado(estado)
+    notas = {t["id"]: t.get("nota") for t in pul["tarjetas"]}
+    lista = avisos.calcular(estado, fresc, pul["no_votan"], notas)
+    avisos.guardar_avisos(lista, a.hoy)
+
+    escribir_informe_salud(salud, pul, lista)
     print(f"Índice {pul['indice']} ({pul['estado']}), régimen {pul['regimen']}; "
-          f"{cambios} datos nuevos, {len(rechazadas)} en cuarentena, {len(errores)} fuentes con error.")
+          f"{cambios} datos nuevos, {len(rechazadas)} en cuarentena, {len(errores)} fuentes con error, "
+          f"{len(lista)} avisos.")
+    for av in lista:
+        print(f"  aviso: {av.titulo}")
     return pul
 
 
-def escribir_informe_salud(salud: dict, pul: dict) -> None:
+def escribir_informe_salud(salud: dict, pul: dict, lista_avisos: list | None = None) -> None:
     viejos = [f for f in salud["frescura"] if f["estado"] != "fresco"]
+    lista_avisos = lista_avisos or []
     L = [f"# Informe de salud del sistema — {salud['fecha']}", "",
          f"- Índice de riesgo: **{pul['indice']}** ({pul['estado']}), régimen {pul['regimen']}",
          f"- Datos nuevos o corregidos: {salud['datos_nuevos']}",
          f"- En cuarentena esta corrida: {len(salud['en_cuarentena'])}",
          f"- Fuentes con error: {len(salud['fuentes_con_error'])}",
          f"- Series con dato viejo o sin datos: {len(viejos)} de {len(salud['frescura'])}",
-         f"- Indicadores que no votaron por falta de dato fresco: {', '.join(pul['no_votan']) or 'ninguno'}", ""]
+         f"- Indicadores que no votaron por falta de dato fresco: {', '.join(pul['no_votan']) or 'ninguno'}",
+         f"- Avisos vigentes: {len(lista_avisos)}", ""]
+    if lista_avisos:
+        L += ["## Avisos", ""] + [f"- **{av.titulo}**" for av in lista_avisos] + [""]
     if salud["en_cuarentena"]:
         L += ["## Cuarentena", "", "| Serie | Fecha | Valor | Motivo |", "|---|---|---|---|"]
         L += [f"| {q['serie']} | {q['fecha']} | {q['valor']} | {q['motivo']} |" for q in salud["en_cuarentena"]]

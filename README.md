@@ -16,7 +16,8 @@ Requires Python 3.10 or newer. No packages need to be installed: only Python's s
 ```bash
 python run.py --sin-red     # solo datos de data/manual/entradas.csv
 python run.py               # además BCB, Banco Mundial y FMI por internet
-python -m pytest -q         # 23 pruebas (necesita pytest)
+python -m tests             # todas las pruebas, sin instalar nada
+python -m pytest -q         # lo mismo con pytest (más detalle si algo falla)
 ```
 
 Then open `site/index.html` in a browser. The page carries its data inside, so it doesn't need a server.
@@ -32,7 +33,8 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, plus historical episodes |
 | `engine/pulso.py` | Builds `site/pulso.json` and `site/index.html` with educational explanations |
 | `engine/verificador.py` | Compares every number in an AI-written report against the data; if one doesn't match, publication is blocked |
-| `reports/salud.md` | Health report: freshness of each series, quarantine, failed sources |
+| `reports/salud.md` | Health report: freshness of each series, quarantine, failed sources, current alerts |
+| `pipeline/avisos.py` | Alerts as GitHub issues (label `robot`): a source down 2 runs in a row, an expired series, a manual series that expires within 7 days. Closes them by itself once solved |
 | `.github/workflows/recolectar.yml` | Runs Monday to Friday at 09:17 Bolivia time, saves data and publishes to GitHub Pages |
 
 ## Rules the system enforces
@@ -41,6 +43,10 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 2. **No unchecked data gets in.** Anything out of range or with an impossible jump goes to quarantine with its reason.
 3. **No unverified number gets published.** That is the job of `verificador.py`.
 4. **No formula change goes through if it breaks history.** The tests require it to keep recognizing 1985, 2016, 2019, 2023 and 2024.
+
+## Alerts
+
+You don't need to check the report every day. When something needs attention, the robot opens an *issue* in the repository's **Issues** tab, and GitHub sends you an email. When the problem is fixed, the robot closes it. If the whole run fails, it also opens an issue. To test that path: **Actions → Run workflow**, tick *Simular una falla*.
 
 ## Data that is still loaded by hand
 

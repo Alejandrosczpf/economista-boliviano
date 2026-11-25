@@ -4,3 +4,5 @@ __pycache__/
 # Lo privado (bitácora, notas, preferencias) NO va aquí: vive en el almacenamiento propio.
 privado/
 .env
+# Avisos de la corrida: el robot los convierte en issues; no se guardan en git.
+reports/avisos.json

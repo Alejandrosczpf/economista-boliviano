@@ -3,12 +3,18 @@ name: Recolectar y publicar el Pulso
 on:
   schedule:
     - cron: "17 13 * * 1-5"   # lunes a viernes, 09:17 hora de Bolivia (tras la cotización del BCB)
-  workflow_dispatch: {}        # botón "Run workflow" para correrlo a mano
+  workflow_dispatch:           # botón "Run workflow" para correrlo a mano
+    inputs:
+      simular_falla:
+        description: "Simular una falla (para probar que llega el aviso)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write                # para abrir y cerrar los avisos del robot
 
 concurrency:
   group: pulso
@@ -19,11 +25,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+
+      - name: Falla simulada (solo si se pidió al lanzar a mano)
+        if: ${{ inputs.simular_falla }}
+        run: |
+          echo "Falla simulada a pedido, para probar el aviso."
+          exit 1
 
       - name: Pruebas (si fallan, no se publica nada)
         run: |
@@ -39,11 +51,35 @@ jobs:
           git config user.email "economista-bot@users.noreply.github.com"
           git add data/ site/pulso.json reports/salud.md
           git diff --cached --quiet || git commit -m "Datos $(date -u +%F)"
+          git pull --rebase -q   # por si alguien subió cambios mientras corría el robot
           git push
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
+
+      - name: Avisos (abrir, actualizar o cerrar issues)
+        continue-on-error: true    # un problema con los issues no debe impedir publicar el Pulso
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m pipeline.avisos
+
+      - name: Avisar si la corrida falló
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          titulo="La corrida del robot falló"
+          gh label create robot --color 5319e7 --description "Avisos automáticos del robot recolector" --force
+          n=$(gh issue list --label robot --state open --search "in:title \"$titulo\"" --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then
+            gh issue comment "$n" --body "Volvió a fallar el $(date -u +%F): $url"
+          else
+            gh issue create --label robot --title "$titulo" --body "La corrida del $(date -u +%F) no terminó: no se publicaron datos nuevos. Detalle: $url
+
+          Este issue no se cierra solo: ciérrelo cuando la corrida vuelva a salir en verde."
+          fi
 
   publicar:
     needs: recolectar
@@ -53,4 +89,4 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
