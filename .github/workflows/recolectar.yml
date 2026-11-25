@@ -51,7 +51,7 @@ jobs:
           git config user.email "economista-bot@users.noreply.github.com"
           git add data/ site/pulso.json reports/salud.md
           git diff --cached --quiet || git commit -m "Datos $(date -u +%F)"
-          git pull --rebase -q   # por si alguien subió cambios mientras corría el robot
+          git pull --rebase --autostash -q   # por si alguien subió cambios mientras corría el robot
           git push
 
       - uses: actions/upload-pages-artifact@v5
