@@ -1,16 +1,11 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **55.0** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 1
+- Datos nuevos o corregidos: 420
 - En cuarentena esta corrida: 0
-- Fuentes con error: 2
-- Series con dato viejo o sin datos: 8 de 19
+- Fuentes con error: 0
+- Series con dato viejo o sin datos: 1 de 19
 - Indicadores que no votaron por falta de dato fresco: brecha
-
-## Fuentes con error
-
-- **banco_mundial**: no se pudo leer https://api.worldbank.org/v2/country/BOL/indicator/FP.CPI.TOTL.ZG?format=json&per_page=200: HTTP Error 403: Forbidden
-- **fmi**: no se pudo leer https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/BOL: HTTP Error 403: Forbidden
 
 ## Frescura de cada serie
 
@@ -28,10 +23,10 @@
 | Proyección PIB del año (Banco Mundial) | 2026-06-10 | 168 | 200 | fresco |
 | Déficit fiscal | 2025-12-31 | 329 | 400 | fresco |
 | Variación acumulada de la base monetaria en el año | 2026-10-31 | 25 | 45 | fresco |
-| Inflación anual (Banco Mundial) | — | — | 800 | sin datos |
-| Crecimiento PIB real (Banco Mundial) | — | — | 800 | sin datos |
-| Reservas totales con oro (Banco Mundial) | — | — | 800 | sin datos |
-| Exportaciones de bienes y servicios (Banco Mundial) | — | — | 800 | sin datos |
-| Dinero en sentido amplio (% del PIB) | — | — | 800 | sin datos |
-| Crecimiento PIB real (FMI DataMapper) | — | — | 800 | sin datos |
-| Inflación promedio (FMI DataMapper) | — | — | 800 | sin datos |
+| Inflación anual (Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Crecimiento PIB real (Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Reservas totales con oro (Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Exportaciones de bienes y servicios (Banco Mundial) | 2024-12-31 | 694 | 800 | fresco |
+| Dinero en sentido amplio (% del PIB) | 2025-12-31 | 329 | 800 | fresco |
+| Crecimiento PIB real (FMI DataMapper) | 2025-12-31 | 329 | 800 | fresco |
+| Inflación promedio (FMI DataMapper) | 2025-12-31 | 329 | 800 | fresco |

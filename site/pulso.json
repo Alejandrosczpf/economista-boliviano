@@ -410,12 +410,9 @@
  },
  "salud": {
   "fecha": "2026-11-25",
-  "datos_nuevos": 1,
+  "datos_nuevos": 420,
   "en_cuarentena": [],
-  "fuentes_con_error": {
-   "banco_mundial": "no se pudo leer https://api.worldbank.org/v2/country/BOL/indicator/FP.CPI.TOTL.ZG?format=json&per_page=200: HTTP Error 403: Forbidden",
-   "fmi": "no se pudo leer https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/BOL: HTTP Error 403: Forbidden"
-  },
+  "fuentes_con_error": {},
   "frescura": [
    {
     "serie": "tco",
@@ -516,58 +513,58 @@
    {
     "serie": "wb_inflacion",
     "nombre": "Inflación anual (Banco Mundial)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "wb_pib_crec",
     "nombre": "Crecimiento PIB real (Banco Mundial)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "wb_reservas",
     "nombre": "Reservas totales con oro (Banco Mundial)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "wb_exportaciones",
     "nombre": "Exportaciones de bienes y servicios (Banco Mundial)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2024-12-31",
+    "edad_dias": 694,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "wb_dinero_amplio_pib",
     "nombre": "Dinero en sentido amplio (% del PIB)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "fmi_weo_pib",
     "nombre": "Crecimiento PIB real (FMI DataMapper)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    },
    {
     "serie": "fmi_weo_inflacion",
     "nombre": "Inflación promedio (FMI DataMapper)",
-    "estado": "sin datos",
-    "ultimo": null,
-    "edad_dias": null,
-    "limite_dias": 800
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    }
   ]
  }
