@@ -14,7 +14,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 6 | El motor con datos reales | ✅ hecha (25-nov-2026) |
 | 7 | El Pulso para el lector | ✅ hecha (25-nov-2026) |
 | 8 | Carga semanal asistida por IA | ✅ hecha (25-nov-2026) |
-| 9 | Informe semanal verificado | pendiente |
+| 9 | Informe semanal verificado | ✅ hecha (25-nov-2026) |
 
 ---
 
@@ -187,9 +187,18 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
   - Si una fuente falla, la rutina lo dice en su resumen.
 - 8 pruebas nuevas (85 en total).
 
-## 9. Informe semanal verificado
+## 9. Informe semanal verificado ✅
 
-- Escribir con IA un informe corto cada semana a partir del Pulso.
-- Antes de publicarlo, `engine/verificador.py` compara cada cifra con los datos; si alguna no coincide, no se publica.
+**El problema del verificador de la fase 1:** comparaba cada número contra **todo el historial** (miles de valores de 20 series desde 1960), así que casi cualquier cifra inventada coincidía con algún valor viejo. Por ejemplo, "la inflación es 5,7 %" pasaba porque 5,7 fue la de septiembre. Además, no miraba de qué hablaba cada cifra.
 
-**Listo cuando:** el informe aparece en el Pulso y una prueba confirma que uno con una cifra inventada queda bloqueado.
+**Hecho:**
+- **Ficha de hechos del día** (`engine/hechos.py` y `data/hechos/AAAA-MM-DD.json`): la escribe el robot en cada corrida. Son unas 25 cifras citables (índice, cada indicador, dólar oficial y paralelo, reservas, proyecciones, el cambio de la semana), cada una con las palabras clave de su tema.
+- **Verificador por afirmación** (`engine/verificador.py`): cada número del informe debe cumplir dos condiciones.
+  1. Coincidir con un hecho de la ficha **de esa fecha**, con el redondeo con que está escrito: "47,8" exige 47,75-47,85.
+  2. Estar en una oración que **nombre su tema**: "la inflación llegó a 59,6 %" se bloquea porque 59,6 es el cambio de las reservas.
+
+  Las fechas y los años no cuentan como cifras. Los períodos ("12 meses", "30 días") solo valen junto a su unidad.
+- **Rutina "Economista Boliviano: informe semanal verificado"** de Claude en la nube, los **lunes a las 10:00 de Bolivia**, después del robot de las 09:17. Es `trig_012hN8ub6FmPFmvfBtuc5797`. **No tiene acceso a la web**: solo lee la ficha. Sigue `agentes/informe_semanal.md`: 200 a 350 palabras, para cualquier persona, sin opiniones, recomendaciones ni predicciones. Corre el verificador hasta que todo pase y abre un *pull request* "Informe semanal AAAA-MM-DD".
+- **Revisión del *pull request***: GitHub verifica de nuevo las cifras del informe y **rechaza cualquier cambio a `data/hechos/`**, porque un informe no puede traer su propia ficha. Comenta el resultado.
+- **Publicación:** al aprobarlo, el Pulso se publica enseguida. La página muestra el informe más reciente (de hasta 14 días) **solo si todas sus cifras pasan** contra la ficha de su fecha, con el sello "las N cifras fueron verificadas". El markdown se escapa, así que no puede inyectar HTML.
+- 9 pruebas nuevas (94 en total). Una exige que un informe con una sola cifra inventada quede bloqueado entero.

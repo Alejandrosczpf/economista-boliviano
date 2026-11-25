@@ -35,7 +35,9 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | `engine/historia.py` | Year-by-year backtest since 1980 with official series (IMF WEO, BCB, World Bank, paralelo.bo), each value with its source. Written to `reports/historia.md` |
 | `engine/memoria.py` | The index for each day since 29 Jun 2026 (`data/indice.csv`): "en vivo" rows are frozen; the rest are rebuilt using only data that had been published by each date (`rezago_dias`) |
 | `engine/pulso.py` | Builds `site/pulso.json` and `site/index.html` with educational explanations |
-| `engine/verificador.py` | Compares every number in an AI-written report against the data; if one doesn't match, publication is blocked |
+| `engine/hechos.py` | The day's fact sheet (`data/hechos/AAAA-MM-DD.json`), written by the robot: the only figures a report may cite, each with its topic keywords |
+| `engine/verificador.py` | Checks every number in an AI-written report against that date's fact sheet (correct rounding, and its topic named in the same sentence). If one fails, the report is not published |
+| `informes/` | Weekly report, drafted on Mondays by a Claude routine ([agentes/informe_semanal.md](agentes/informe_semanal.md)), approved by a person and published on the Pulso with a verification seal |
 | `reports/salud.md` | Health report: freshness of each series, quarantine, failed sources, current alerts |
 | `pipeline/avisos.py` | Alerts as GitHub issues (label `robot`): a source down 2 runs in a row, an expired series, a manual series that expires within 7 days. Closes them by itself once solved |
 | `.github/workflows/recolectar.yml` | Runs Monday to Friday at 09:17 Bolivia time, saves data and publishes to GitHub Pages |
