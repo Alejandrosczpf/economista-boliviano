@@ -54,7 +54,9 @@ You don't need to check the report every day. When something needs attention, th
 
 ## Data that is still loaded by hand
 
-Some sources have no public API: EMBI, agency GDP projections, the fiscal deficit and the monetary base. They are entered in `data/manual/entradas.csv`, each with a source and a link. The plan is for the AI to add them every week from the official bulletins, and over time to replace them with automatic collectors.
+Some sources have no public API: EMBI, agency GDP projections, the fiscal deficit and the monetary base. They are entered in `data/manual/entradas.csv`, each with a source and a link.
+
+Every Monday at 08:00 (Bolivia), a scheduled Claude routine follows [agentes/carga_semanal.md](agentes/carga_semanal.md). It looks for new values of the series that are due, using official sources or reputable press, and proposes them as a pull request quoting each number's source. It never merges. Each such pull request is checked automatically (`.github/workflows/revisar-propuesta.yml`) and the result is posted as a comment. A person opens the links and approves. `python -m pipeline.propuesta pendientes` lists what is due.
 
 ## Upload to GitHub (once)
 

@@ -13,7 +13,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 5 | Más series oficiales automáticas | ✅ hecha (25-nov-2026) |
 | 6 | El motor con datos reales | ✅ hecha (25-nov-2026) |
 | 7 | El Pulso para el lector | ✅ hecha (25-nov-2026) |
-| 8 | Carga semanal asistida por IA | pendiente |
+| 8 | Carga semanal asistida por IA | ✅ hecha (25-nov-2026) |
 | 9 | Informe semanal verificado | pendiente |
 
 ---
@@ -160,14 +160,24 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 **Pendiente menor:** los gráficos de dólar, reservas, inflación y EMBI no tienen tabla de datos para quien no puede usar el mouse ni el tacto; sus notas dicen los valores clave.
 
-## 8. Carga semanal asistida por IA
+## 8. Carga semanal asistida por IA ✅
 
-**Por qué:** algunos datos no tienen API, como el EMBI y las proyecciones de los organismos.
+**Por qué:** algunos datos no tienen API: el EMBI, las proyecciones del PIB, el déficit fiscal y la base monetaria.
 
-- Crear una rutina programada que cada semana busque esos datos en boletines y prensa confiable.
-- La rutina propone los cambios a `data/manual/entradas.csv`, con fuente y enlace, como *pull request*. Una persona los aprueba antes de que entren.
+**Hecho:**
+- **Rutina semanal de Claude en la nube** ("Economista Boliviano: carga semanal de datos manuales"), los **lunes a las 08:00 de Bolivia**, con el modelo `claude-sonnet-5-5`, sin conectores. Se administra en https://claude.ai/code/routines/trig_01Q34rbt31RKXUyuFrLVxRiM.
+  - Sigue `agentes/carga_semanal.md`: busca en la web las series que vencen en 14 días o menos, o que tienen publicación nueva, y las agrega con fuente y enlace.
+  - Abre un *pull request* "Carga semanal AAAA-MM-DD" con la cita textual de cada dato. **Nunca hace merge.** Si no encuentra nada con fuente clara, no abre nada.
+- **Revisión automática de cada propuesta** (`.github/workflows/revisar-propuesta.yml` y `pipeline/propuesta.py`). En cada *pull request* que toca `data/manual/`, GitHub corre las pruebas y revisa fila por fila:
+  - fuente y enlace obligatorios;
+  - fecha no futura;
+  - que la serie no sea una de las automáticas;
+  - el rango y el salto creíble de la serie.
 
-**Listo cuando:** llega una propuesta semanal revisable y los datos aprobados pasan por la cuarentena como cualquier otro.
+  Comenta el resultado en el *pull request* y falla si alguna fila no pasa. Una persona abre los enlaces y aprueba.
+- `python -m pipeline.propuesta pendientes` lista las series manuales de la más urgente a la menos.
+- La rutina necesita la **app de Claude en GitHub** instalada en el repositorio para poder hacer push y abrir el *pull request*. Se instaló el 25-nov-2026.
+- 8 pruebas nuevas (85 en total).
 
 ## 9. Informe semanal verificado
 
