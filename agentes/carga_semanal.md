@@ -40,5 +40,6 @@ La nube solo deja abrir los dominios permitidos del entorno. Si una fuente útil
 
 - **Reservas brutas y netas no son lo mismo.** La serie de reservas se mezcló así una vez. Esas series ya llegan solas, pero el cuidado vale para cualquier cifra: comprueba que sea **el mismo concepto** que el dato anterior de la serie.
 - **La fecha de corte no es la fecha de vigencia.** Usa la fecha a la que se refiere el valor, como dice la tabla.
+- **Cada proyección pertenece a un informe.** El Banco Mundial proyectó −1,1 % para 2026 en enero, −3,2 % en abril y junio, y −2,8 % en octubre. Se llegó a cargar el −1,1 de enero con fecha de junio. Identifica de qué informe es la cifra y usa su fecha. Si solo tienes la fecha de la nota de prensa, úsala y escribe en `nota` "fecha de la nota".
 - **Revisa el signo.** Una proyección de −3,0 % no es 3,0 %, y un déficit se carga como número positivo.
 - Si un valor parece un salto enorme frente al anterior, vuelve a verificarlo. Si es real, explícalo en el *pull request*: la revisión automática lo marcará y una persona decidirá si lo aprueba.
