@@ -4,6 +4,8 @@ Cada sesión tiene un objetivo, sus tareas y una condición de **"listo cuando"*
 Una sesión se da por cerrada solo si las pruebas pasan y la corrida en GitHub termina en verde.
 El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectura.
 
+### Fase 1
+
 | # | Sesión | Estado |
 |---|---|---|
 | 1 | Fuentes que no fallan | ✅ hecha (25-nov-2026) |
@@ -15,6 +17,88 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 7 | El Pulso para el lector | ✅ hecha (25-nov-2026) |
 | 8 | Carga semanal asistida por IA | ✅ hecha (25-nov-2026) |
 | 9 | Informe semanal verificado | ✅ hecha (25-nov-2026) |
+
+### Fase 2
+
+La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que quedaron a la vista y lo hace más útil para quien lo lee. El orden sigue siendo: primero lo que puede romperse o vencerse, después lo que mejora la lectura.
+
+| # | Sesión | Por qué ahora | Estado |
+|---|---|---|---|
+| 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | pendiente |
+| 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | pendiente |
+| 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | pendiente |
+| 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | pendiente |
+| 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | pendiente |
+| 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | pendiente |
+| 16 | Revisión de umbrales del régimen flotante | Programada para **junio de 2027**, al cumplirse 12 meses de flotación | programada |
+
+---
+
+## 10. Riesgo país que no se vence
+
+**Por qué:** el EMBI vence el 2-dic-2026 y la rutina semanal no halló un valor posterior con fecha explícita. JP Morgan no publica el EMBI abiertamente, así que solo llega a través de la prensa, de forma irregular.
+
+- Investigar fuentes **públicas y legítimas**:
+  - comunicados periódicos del MEFP o del BCB;
+  - resúmenes mensuales de la prensa ("Riesgo país en noviembre", de Bloomberg Línea);
+  - el rendimiento de los bonos soberanos de Bolivia publicado por bolsas o por el emisor.
+- Si no hay una fuente frecuente, **ajustar el contrato a la realidad**. Si el dato es mensual, la frescura no puede ser de 30 días. Hay que documentar la decisión y cuánto pesa un dato más viejo.
+- Agregar la fuente elegida a las instrucciones de la rutina y a los dominios permitidos.
+
+**Listo cuando:** el riesgo país tiene una fuente con frecuencia conocida y su contrato coincide con esa frecuencia, de modo que no queda "vencido" por diseño.
+
+## 11. Vigilar a las rutinas
+
+**Por qué:** si una rutina en la nube no corre (cuenta, red, GitHub), hoy nadie se entera. "No hubo *pull request*" puede significar "no había datos" o "la rutina falló".
+
+- Una **bitácora**: cada lunes, las dos rutinas dejan su resumen como comentario en un issue fijo ("Bitácora de rutinas"), aunque no propongan nada.
+- El robot de los martes revisa la bitácora. Si falta el comentario del lunes de alguna rutina, abre un aviso.
+- Avisar también si un *pull request* de datos o de informe lleva más de 7 días sin revisarse.
+
+**Listo cuando:** si se desactiva una rutina a propósito, el martes llega un aviso.
+
+## 12. Metodología y archivo públicos
+
+**Por qué:** para que el Pulso sea creíble fuera de este repositorio, quien lo lee debe poder ver cómo se calcula y qué dijo antes.
+
+- Página **"Cómo se calcula"**: método KLR, los 9 indicadores con sus umbrales y pesos, la regla de mayoría, la histéresis, el rezago de publicación, las fuentes con sus licencias y los límites conocidos (por ejemplo, el déficit del FMI frente al del MEFP). Se genera con los contratos y el motor, para que no envejezca.
+- **Archivo de informes**: todos los informes semanales, cada uno con su sello de verificación.
+- **"Qué sabía el sistema el día X"**: elegir una fecha y ver el índice y los datos de ese día (salen de `data/indice.csv` y del historial de git).
+
+**Listo cuando:** desde el Pulso se llega a la metodología y al archivo, y una prueba confirma que la página de metodología refleja los umbrales reales del motor.
+
+## 13. Compartir y accesibilidad
+
+- **Vista previa al compartir** (Open Graph): título, estado e índice del día al pegar el enlace en WhatsApp o redes. La imagen se genera cada día.
+- **Fuente RSS** de los informes semanales, para quien quiera recibirlos.
+- **Tablas de datos** para los cuatro gráficos de "Cómo se movieron", y tooltips accesibles con teclado.
+- Revisar el contraste y los textos alternativos con una herramienta automática.
+
+**Listo cuando:** al compartir el enlace se ve el estado del día, y la página pasa una revisión automática de accesibilidad sin errores graves.
+
+## 14. "A un paso de cambiar"
+
+**Por qué:** saber qué indicadores están **cerca de su umbral** ayuda a anticipar movimientos del índice sin hacer predicciones.
+
+- Calcular para cada indicador la distancia a su próximo umbral, por ejemplo "la inflación a 12 meses está a 4,9 puntos del rojo".
+- Mostrar en el Pulso cuáles cambiarían de color con un movimiento chico, y cuánto cambiaría el índice si lo hicieran.
+- Agregar esas distancias a la ficha de hechos, para que el informe semanal pueda citarlas verificadas.
+
+**Listo cuando:** el Pulso muestra las distancias a los umbrales, y una prueba confirma que coinciden con los umbrales del motor.
+
+## 15. Nuevos indicadores con prueba histórica
+
+**Candidatos con fuente oficial automatizable:** exportaciones e importaciones mensuales (INE), depósitos y bolivianización (BCB/ASFI) y crédito al sector privado.
+
+- Cada candidato entra **solo si mejora la prueba retrospectiva desde 1980**: debe anticipar mejor las crisis sin encender falsas alarmas en los años buenos.
+- Si no la mejora, se muestra como contexto y no vota en el índice.
+
+**Listo cuando:** cada candidato tiene su resultado documentado (entra o no entra, y por qué) y las pruebas históricas siguen pasando.
+
+## 16. Revisión de umbrales del régimen flotante (jun-2027)
+
+- Con 12 meses de flotación, revisar si los umbrales de depreciación, brecha y reservas siguen siendo razonables, usando la memoria del índice (`data/indice.csv`).
+- Cada cambio se documenta y debe seguir pasando las pruebas históricas.
 
 ---
 
