@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import historia, memoria
+from engine import hechos, historia, memoria
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -84,6 +84,11 @@ def main(argv=None) -> dict:
     # Textos para el lector, armados con los datos del día
     pul["notas_graficos"] = P.notas_graficos(series)
     pul["resumen"] = P.resumen(pul)
+
+    # Ficha de hechos del día: las únicas cifras que un informe escrito por IA puede citar
+    hechos.guardar(hechos.construir(pul, series))
+    # Informe semanal: se publica el más reciente SOLO si todas sus cifras pasan el verificador
+    pul["informe"] = P.informe_publicable()
     P.guardar(pul)
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)

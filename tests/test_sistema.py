@@ -8,7 +8,7 @@ from collectors.fuentes import (AGENTE, FallaParcial, _por_indicador, es_comunic
                                 parsear_rin_xlsx, parsear_tco, parsear_tco_periodos, verificar_ipc)
 from engine.historia import evaluar_anio, indicadores_anio
 from engine.motor import estado_con_memoria, evaluar, indicadores_actuales, regimen_en, senal
-from engine.verificador import verificar, numeros
+from engine.verificador import numeros
 from pipeline.store import Obs, cargar_aprobados, cargar_contratos, deduplicar, leer, por_serie
 from pipeline.validate import revisar
 
@@ -416,11 +416,7 @@ def test_un_indicador_caido_no_borra_los_demas():
         assert len(e.obs) == 1 and "wb_pib_crec" in e.errores
 
 
-# ---------- Verificador de cifras ----------
-
-def test_verificador_detecta_cifra_inventada():
-    texto = "Las reservas suben a 3.932,8 millones y el dólar oficial está en Bs 11,83; el riesgo país en 610 puntos."
-    assert verificar(texto, [3932.8, 11.83, 494]) == ["610"]
+# (las pruebas del verificador de cifras están en tests/test_verificador.py)
 
 
 def test_verificador_ignora_anios():

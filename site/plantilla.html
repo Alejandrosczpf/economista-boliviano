@@ -92,6 +92,10 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 .resumen h2{margin:0 0 8px}
 .resumen p{margin:0 0 6px}
 .resumen p:first-of-type{font-size:18px;font-weight:600}
+.informe{margin-bottom:16px;font-size:15px;line-height:1.6}
+.informe h4{font-size:15px;margin:12px 0 4px}
+.informe p{margin:0 0 8px}
+.informe .sello{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:4px 8px;margin-bottom:8px}
 .cambios-semana{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px;font-size:14px}
 .cambios-semana li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .chart .ref.adentro text{paint-order:stroke;stroke:var(--surface-1);stroke-width:3px}
@@ -110,6 +114,8 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
   </header>
 
   <section class="card resumen" id="resumen" aria-label="En pocas palabras"></section>
+
+  <section class="card informe" id="informe" aria-label="Informe de la semana" style="display:none"></section>
 
   <section class="hero">
     <div class="card indice tt" tabindex="0">
@@ -211,6 +217,15 @@ document.getElementById('aprendiz').addEventListener('change',e=>document.getEle
 
 // ---------- En pocas palabras y qué cambió esta semana (textos armados con los datos del día) ----------
 document.getElementById('resumen').innerHTML = `<h2>En pocas palabras</h2>${(P.resumen||[]).map(f=>`<p>${f}</p>`).join('')}`;
+// Informe de la semana: escrito por IA, publicado solo si TODAS sus cifras pasaron el verificador (ya escapado en Python)
+if (P.informe) {
+  const el = document.getElementById('informe');
+  el.innerHTML = `<h2>Informe de la semana · ${fecha(P.informe.fecha)}</h2>
+    <div class="sello">${icono('good')} Las ${P.informe.cifras} cifras de este informe fueron verificadas contra los datos del ${fecha(P.informe.fecha)}</div>
+    ${P.informe.html}
+    <div class="solo-aprendiz">Lo redacta una IA cada lunes usando solo la ficha de datos del día. Un programa comprueba cada número y el tema de cada oración; si una sola cifra no coincide, el informe no se publica. Una persona lo aprueba antes.</div>`;
+  el.style.display = '';
+}
 (function(){
   const S = P.semana, el = document.getElementById('semana');
   if(!S){ el.textContent = 'Todavía no hay una semana de historia para comparar.'; return; }

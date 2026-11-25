@@ -1,6 +1,9 @@
 name: Recolectar y publicar el Pulso
 
 on:
+  push:                        # al aprobar un informe semanal, se publica enseguida
+    branches: [main]
+    paths: ["informes/**"]
   schedule:
     - cron: "17 13 * * 1-5"   # lunes a viernes, 09:17 hora de Bolivia (tras la cotización del BCB)
   workflow_dispatch:           # botón "Run workflow" para correrlo a mano

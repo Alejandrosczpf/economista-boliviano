@@ -173,6 +173,74 @@ def notas_graficos(series: dict) -> dict:
     return n
 
 
+INFORMES = os.path.join(RAIZ, "informes")
+
+
+def _md_a_html(md: str) -> str:
+    """Markdown mínimo y seguro (se escapa todo el HTML): ## títulos, listas con '- ', **negrita**, párrafos."""
+    import html as H
+    import re
+    out, lista, parrafo = [], False, []
+
+    def linea(t):
+        return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", H.escape(t))
+
+    def cerrar_parrafo():
+        if parrafo:
+            out.append(f"<p>{linea(' '.join(parrafo))}</p>")
+            parrafo.clear()
+    for crudo in md.splitlines():
+        t = crudo.strip()
+        if t.startswith("- "):
+            cerrar_parrafo()
+            if not lista:
+                out.append("<ul>")
+                lista = True
+            out.append(f"<li>{linea(t[2:])}</li>")
+            continue
+        if lista:
+            out.append("</ul>")
+            lista = False
+        if not t:
+            cerrar_parrafo()
+        elif t.startswith("#"):
+            cerrar_parrafo()
+            out.append(f"<h4>{linea(t.lstrip('#').strip())}</h4>")
+        else:
+            parrafo.append(t)
+    cerrar_parrafo()
+    if lista:
+        out.append("</ul>")
+    return "\n".join(out)
+
+
+def informe_publicable(carpeta: str = INFORMES, hoy: date | None = None, max_dias: int = 14) -> dict | None:
+    """El informe más reciente (informes/AAAA-MM-DD.md) si tiene 14 días o menos y TODAS sus cifras pasan el
+    verificador contra la ficha de hechos de su fecha. Si no pasa, no se publica (y se avisa en la consola)."""
+    from engine import hechos as H
+    from engine.verificador import numeros, verificar_informe
+    hoy = hoy or date.today()
+    if not os.path.isdir(carpeta):
+        return None
+    archivos = sorted(f for f in os.listdir(carpeta) if len(f) == 13 and f.endswith(".md") and f[:4].isdigit())
+    if not archivos:
+        return None
+    nombre = archivos[-1]
+    fecha = nombre[:10]
+    if (hoy - date.fromisoformat(fecha)).days > max_dias:
+        return None
+    texto = open(os.path.join(carpeta, nombre), encoding="utf-8").read()
+    ficha = H.leer(fecha)
+    if ficha is None:
+        print(f"  informe {nombre}: sin ficha de hechos de esa fecha; no se publica")
+        return None
+    malos = verificar_informe(texto, ficha)
+    if malos:
+        print(f"  informe {nombre}: BLOQUEADO, {len(malos)} cifras sin respaldo: {', '.join(c for c, _ in malos)}")
+        return None
+    return {"fecha": fecha, "html": _md_a_html(texto), "cifras": len(numeros(texto))}
+
+
 def guardar(pulso: dict, ruta: str | None = None) -> str:
     ruta = ruta or os.path.join(RAIZ, "site", "pulso.json")
     with open(ruta, "w", encoding="utf-8") as f:

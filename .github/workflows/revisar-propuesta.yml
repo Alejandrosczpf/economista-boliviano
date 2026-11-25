@@ -1,12 +1,17 @@
-name: Revisar propuesta de datos manuales
+name: Revisar propuesta de datos manuales o informe
 
-# Cada pull request que toca los datos manuales (o sus aprobaciones) se revisa solo:
-# pruebas del sistema + revisión fila por fila (fuente, enlace, fecha, contrato de la serie).
-# El resultado queda como comentario en el pull request. Una persona aprueba después de abrir los enlaces.
+# Cada pull request que toca los datos manuales, sus aprobaciones o un informe semanal se revisa solo:
+# - pruebas del sistema;
+# - datos manuales: fila por fila (fuente, enlace, fecha, contrato de la serie);
+# - informes: cada cifra contra la ficha de hechos de su fecha (engine/verificador.py);
+# - nadie fuera del robot puede tocar las fichas de hechos (data/hechos/).
+# El resultado queda como comentario en el pull request. Una persona aprueba después de leerlo.
 on:
   pull_request:
     paths:
       - "data/manual/**"
+      - "informes/**"
+      - "data/hechos/**"
 
 permissions:
   contents: read
@@ -30,27 +35,54 @@ jobs:
           pip install pytest
           python -m pytest -q
 
-      - name: Revisar fila por fila
+      - name: Revisar datos manuales, informes y fichas
         id: revisar
         run: |
-          git show "origin/${{ github.base_ref }}:data/manual/entradas.csv" > "$RUNNER_TEMP/base.csv"
-          set +e
-          python -m pipeline.propuesta revisar "$RUNNER_TEMP/base.csv" "$RUNNER_TEMP/informe.md"
-          echo "codigo=$?" >> "$GITHUB_OUTPUT"
+          base="origin/${{ github.base_ref }}"
+          informe="$RUNNER_TEMP/informe.md"
+          codigo=0
+          : > "$informe"
+          cambiados=$(git diff --name-only "$base"...HEAD)
+
+          if echo "$cambiados" | grep -q '^data/hechos/'; then
+            echo "### ❌ Este pull request modifica fichas de hechos (data/hechos/)" >> "$informe"
+            echo "Las fichas las escribe solo el robot diario: un informe no puede traer su propia ficha." >> "$informe"
+            echo >> "$informe"
+            codigo=1
+          fi
+
+          if echo "$cambiados" | grep -q '^data/manual/'; then
+            git show "$base:data/manual/entradas.csv" > "$RUNNER_TEMP/base.csv"
+            python -m pipeline.propuesta revisar "$RUNNER_TEMP/base.csv" "$RUNNER_TEMP/datos.md" || codigo=1
+            cat "$RUNNER_TEMP/datos.md" >> "$informe"
+            echo >> "$informe"
+          fi
+
+          informes=$(echo "$cambiados" | grep -E '^informes/[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$' | while read f; do [ -f "$f" ] && echo "$f"; done)
+          if [ -n "$informes" ]; then
+            echo "### Verificación de cifras del informe" >> "$informe"
+            echo '```' >> "$informe"
+            python -m engine.verificador $informes >> "$informe" 2>&1 || codigo=1
+            echo '```' >> "$informe"
+            echo "Además de las cifras, una persona debe leer el texto: el verificador no juzga el tono ni las conclusiones." >> "$informe"
+          fi
+
+          [ -s "$informe" ] || echo "No hay datos manuales ni informes que revisar." > "$informe"
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
 
       - name: Comentar el resultado en el pull request
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          [ -f "$RUNNER_TEMP/informe.md" ] || echo "La revisión no llegó a correr: ver el registro del workflow." > "$RUNNER_TEMP/informe.md"
+          [ -s "$RUNNER_TEMP/informe.md" ] || echo "La revisión no llegó a correr: ver el registro del workflow." > "$RUNNER_TEMP/informe.md"
           gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} \
             --edit-last --body-file "$RUNNER_TEMP/informe.md" 2>/dev/null \
           || gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} \
             --body-file "$RUNNER_TEMP/informe.md"
 
-      - name: Fallar si alguna fila no pasa
+      - name: Fallar si algo no pasa
         if: steps.revisar.outputs.codigo != '0'
         run: |
-          echo "Hay filas que no pasan la revisión: ver el comentario en el pull request."
+          echo "Hay datos o cifras que no pasan la revisión: ver el comentario en el pull request."
           exit 1
