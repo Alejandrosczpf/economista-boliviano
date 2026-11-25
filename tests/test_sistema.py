@@ -389,6 +389,14 @@ def test_excel_de_rin_con_otras_columnas_falla():
         assert "columnas" in str(e)
 
 
+def test_riesgo_pais_vota_hasta_90_dias():
+    # sesión 10: el EMBI llega por prensa cada 2-3 meses; con 30 días quedaba vencido por diseño
+    assert C["embi"]["frescura_dias"] == 90 and C["embi"]["nota_frescura"]
+    s = {"embi": [Obs("embi", "2026-08-13", 407)]}
+    assert indicadores_actuales(s, C, date(2026, 11, 1))[0]["embi"] == 407     # 80 días: vota
+    assert indicadores_actuales(s, C, date(2026, 11, 15))[0]["embi"] is None   # 94 días: no vota
+
+
 def test_liquidez_usa_reservas_brutas():
     s = {"rin_divisas": [Obs("rin_divisas", "2026-09-30", 478.1)],
          "rin_brutas": [Obs("rin_brutas", "2026-09-30", 3932.8)],
