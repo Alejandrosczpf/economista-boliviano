@@ -25,7 +25,7 @@ import urllib.request
 from dataclasses import asdict, dataclass
 from datetime import date
 
-from collectors.fuentes import BM, FMI
+from collectors.fuentes import SERIES_AUTOMATICAS
 from engine.motor import INSUMOS
 from pipeline.store import RAIZ
 
@@ -36,7 +36,7 @@ AVISOS = os.path.join(RAIZ, "reports", "avisos.json")
 ETIQUETA = "robot"
 
 # Series que llegan solas (recolector automático). Las demás se cargan a mano.
-AUTOMATICAS = {"tco"} | set(BM) | set(FMI)
+AUTOMATICAS = SERIES_AUTOMATICAS
 
 
 @dataclass

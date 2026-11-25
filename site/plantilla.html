@@ -209,7 +209,8 @@ function chart({titulo, sub, series, unidad, dec=2, desde, nota, base0=false}){
     const d=s.datos.filter(p=>!desde||p.fecha>=desde);
     const path=d.map((p,j)=>`${j?'L':'M'}${X(t(p)).toFixed(1)},${Y(p.valor).toFixed(1)}`).join('');
     g+=`<path d="${path}" fill="none" stroke="var(--series-${i+1})" stroke-width="2" stroke-linejoin="round"/>`;
-    g+=d.map(p=>`<circle cx="${X(t(p))}" cy="${Y(p.valor)}" r="3" fill="var(--series-${i+1})" stroke="var(--surface-1)" stroke-width="1.5"/>`).join('');
+    // series ralas: un punto por dato (se ve dónde hay datos de verdad); series diarias: solo la línea
+    if(d.length<=40) g+=d.map(p=>`<circle cx="${X(t(p))}" cy="${Y(p.valor)}" r="3" fill="var(--series-${i+1})" stroke="var(--surface-1)" stroke-width="1.5"/>`).join('');
   });
   // capa de interacción: el punto más cercano en x
   const all = series.flatMap((s,i)=>s.datos.filter(p=>!desde||p.fecha>=desde).map(p=>({...p,s:s.nombre,i})));
@@ -236,7 +237,7 @@ const H_ = P.historia;
 document.getElementById('charts').innerHTML =
   chart({titulo:'Dólar oficial y paralelo', sub:'Bs por dólar, desde el inicio de la flotación', unidad:'Bs',
     series:[{nombre:'Oficial (BCB)',datos:H_.tco},{nombre:'Paralelo',datos:H_.paralelo}], desde:'2026-06-29',
-    nota:'Cuando la línea naranja queda debajo de la azul, el paralelo está más barato que el oficial: señal de confianza.'}) +
+    nota:'Cuando la línea naranja queda debajo de la azul, el paralelo está más barato que el oficial: señal de confianza. Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).'}) +
   chart({titulo:'Reservas internacionales netas', sub:'Millones de dólares', unidad:'MM USD', dec:0, base0:true,
     series:[{nombre:'RIN',datos:H_.rin}], nota:'Mínimo en 2023; la recuperación de 2026 es sobre todo oro revalorizado y compras genuinas.'}) +
   chart({titulo:'Inflación a 12 meses', sub:'Porcentaje', unidad:'%', base0:true,
@@ -280,7 +281,7 @@ document.getElementById('charts').innerHTML =
     <div class="cob-t">Indicadores que votaron cada día (de 9)</div>
     <svg viewBox="0 0 ${W} ${H2+mb2}" role="img" aria-label="Cuántos indicadores votaron cada día">${g2}<line id="mem-x2" y1="0" y2="${H2}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/></svg>
     ${cambios}
-    <div class="solo-aprendiz">La línea se corta los días en que votó menos de la mitad de los indicadores. Con pocos votos, el índice depende más de cuáles votaron que de la economía. Los huecos de 2026 se deben a series que todavía se cargan a mano, como el dólar oficial diario y el paralelo.</div>
+    <div class="solo-aprendiz">La línea se corta los días en que votó menos de la mitad de los indicadores. Con pocos votos, el índice depende más de cuáles votaron que de la economía. Los huecos de 2026 se deben sobre todo al dólar oficial, cargado a mano con saltos de semanas antes de que llegara el robot: sin él no votan la depreciación ni la brecha.</div>
     <details style="margin-top:10px"><summary>Ver la tabla día por día</summary>
       <table><thead><tr><th>Fecha</th><th>Índice</th><th>Estado</th><th>Votaron</th><th>Origen</th></tr></thead><tbody>
       ${pts.slice().reverse().map(p=>`<tr><td>${fecha(p.fecha)}</td><td class="n">${nf(p.valor,1)}</td><td>${p.suficiente?icono(ESTL[p.estado][0])+' '+p.estado:'pocos datos'}</td><td class="n">${p.votan} de ${p.de}</td><td>${p.origen}</td></tr>`).join('')}
@@ -316,7 +317,7 @@ document.getElementById('salud').innerHTML = `
    <td>${f.estado==='fresco'?icono('good')+' fresco':f.estado==='viejo'?icono('warning')+' viejo':icono('none')+' sin datos'}</td></tr>`).join('')}
   </tbody></table></details>
   <div class="solo-aprendiz">Cada dato tiene un contrato (rango posible y salto creíble). Si lo rompe, queda en cuarentena y no entra al cálculo hasta que alguien lo revise.</div>`;
-document.getElementById('pie').innerHTML = `Datos: BCB, INE, FMI, Banco Mundial, JP Morgan (vía prensa). Cada cifra enlaza a su fuente desde su tarjeta.
+document.getElementById('pie').innerHTML = `Datos: BCB, INE, FMI, Banco Mundial, JP Morgan (vía prensa). Dólar paralelo: <a href="https://paralelo.bo" target="_blank" rel="noopener">paralelo.bo (https://paralelo.bo)</a>, datos bajo licencia <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noopener">CC-BY 4.0</a>. Cada cifra enlaza a su fuente desde su tarjeta.
   Este tablero es una herramienta de análisis, no una recomendación financiera.`;
 })();
 </script>

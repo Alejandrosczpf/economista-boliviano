@@ -190,4 +190,41 @@ def fmi() -> list[Obs]:
     return _por_indicador({s: (lambda s=s, c=c: _fmi_uno(s, c)) for s, c in FMI.items()})
 
 
-RECOLECTORES = {"manual": manual, "bcb_tco": bcb_tco, "banco_mundial": banco_mundial, "fmi": fmi}
+# ---------- Dólar paralelo/digital: paralelo.bo (API pública, datos CC-BY 4.0) ----------
+# Mediana de las mejores ofertas de USDT/BOB en plataformas P2P (Binance, Bybit, Bitget),
+# promedio entre compra y venta. Metodología: https://paralelo.bo/metodologia
+# Atribución exigida por la licencia: "paralelo.bo (https://paralelo.bo)".
+
+URL_PARALELO = "https://paralelo.bo/api/v1/historical.json"
+FUENTE_PARALELO = "paralelo.bo (CC-BY 4.0)"
+
+
+def parsear_paralelo(cuerpo: str, hoy: date | None = None) -> list[Obs]:
+    """Serie diaria completa. El día en curso se omite: su valor todavía cambia durante el día
+    y se guarda completo en la corrida siguiente."""
+    d = json.loads(cuerpo)
+    if d.get("illustrative") is not False:
+        raise ValueError("paralelo.bo marcó la serie como ilustrativa (no observada): no se usa")
+    esperado = {"currencyPair": "USD/BOB", "market": "parallel", "resolution": "daily"}
+    distinto = {k: d.get(k) for k, v in esperado.items() if d.get(k) != v}
+    if distinto:
+        raise ValueError(f"paralelo.bo cambió el formato de la serie: {distinto}")
+    hoy = hoy or date.today()
+    out = []
+    for p in d.get("points", []):
+        dia = date.fromisoformat(p["t"][:10])
+        if dia < hoy and p.get("v") is not None:
+            out.append(Obs("paralelo", dia.isoformat(), float(p["v"]), FUENTE_PARALELO,
+                           "https://paralelo.bo", "mediana P2P USDT/BOB"))
+    return out
+
+
+def paralelo() -> list[Obs]:
+    return parsear_paralelo(_get(URL_PARALELO))
+
+
+# Series que llegan solas. Las demás se cargan a mano (y avisan antes de vencerse).
+SERIES_AUTOMATICAS = {"tco", "paralelo"} | set(BM) | set(FMI)
+
+RECOLECTORES = {"manual": manual, "bcb_tco": bcb_tco, "paralelo": paralelo,
+                "banco_mundial": banco_mundial, "fmi": fmi}

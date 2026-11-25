@@ -9,7 +9,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 1 | Fuentes que no fallan | ✅ hecha (25-nov-2026) |
 | 2 | Un robot que avisa | ✅ hecha (25-nov-2026) |
 | 3 | Memoria del índice | ✅ hecha (25-nov-2026) |
-| 4 | Dólar paralelo automático | pendiente |
+| 4 | Dólar paralelo automático | ✅ hecha (25-nov-2026) |
 | 5 | Más series oficiales automáticas | pendiente |
 | 6 | El motor con datos reales | pendiente |
 | 7 | El Pulso para el lector | pendiente |
@@ -76,15 +76,28 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 **Lo que la reconstrucción mostró:** entre julio y octubre el índice aparece casi siempre en "alerta". Esto se debe en buena parte a que los indicadores que suelen estar en verde (depreciación, brecha) no tienen datos: el dólar oficial se cargó a mano con saltos de semanas entre un dato y otro. La solución es de datos (sesiones 4 y 5), no de fórmula.
 
-## 4. Dólar paralelo automático
+## 4. Dólar paralelo automático ✅
 
-**Por qué:** es la serie que más se vence. Su límite de frescura es de 10 días y hoy tiene 33, así que la brecha cambiaria no vota.
+**Por qué:** era la serie que más se vencía. Tenía 33 días con un límite de 10, así que la brecha cambiaria no votaba.
 
-- Investigar fuentes públicas y legítimas que publiquen el paralelo o el dólar digital con fecha.
-- Escribir el recolector, su prueba con una página guardada y su contrato de datos.
-- Si ninguna fuente sirve, que lo cargue la IA cada semana (sesión 8).
+**Fuente elegida:** la [API pública de paralelo.bo](https://paralelo.bo/api).
+- Sin clave ni registro, con datos bajo **CC-BY 4.0**.
+- Metodología publicada: la mediana de las mejores ofertas de USDT/BOB en Binance, Bybit y Bitget, como promedio entre compra y venta.
+- Serie diaria continua desde agosto de 2024, sin huecos, marcada `illustrative: false`, es decir, datos observados.
+- Coincide con lo que se había cargado a mano desde la prensa: 11,42 frente a 11,43 el 15-ago, y 11,99 frente a 11,93 el 23-oct.
+- **En contra:** lo opera un equipo anónimo y el sitio tiene enlaces de referido. Por eso el recolector exige el formato esperado y rechaza una serie marcada como ilustrativa, y el contrato de datos sigue filtrando saltos imposibles.
+- **Descartada:** `mauforonda/dolares` (GitHub). Está activa, pero no declara licencia, así que no corresponde volver a publicar sus datos.
 
-**Listo cuando:** el paralelo se actualiza solo, al menos cada semana, y la brecha vuelve a votar.
+**Hecho:**
+- Recolector `paralelo`. Solo guarda días completos: el día en curso tiene un valor parcial y se guarda completo al día siguiente.
+- Contrato: frescura de 5 días (antes 10, cuando se cargaba a mano) y rezago de publicación de 1 día.
+- Se quitaron los 3 datos manuales del paralelo, que quedan en el historial de git, para que la serie tenga una sola fuente.
+- Regla general: si dos fuentes traen la misma serie y fecha, gana la automática (`store.deduplicar`). Sin ella, los dos datos se pisaban en cada corrida.
+- La atribución CC-BY aparece en el pie del Pulso, en el gráfico del dólar y en cada dato.
+- Las series diarias se dibujan sin un punto por día.
+- Hay 6 pruebas nuevas, 49 en total, con una respuesta real de la API guardada.
+
+**Resultado:** entraron 841 días del paralelo sin ninguno en cuarentena. Por primera vez votan los 9 indicadores. La brecha es de 1,4 % (verde) y el índice pasó de 55,0 a 47,8, en vigilancia.
 
 ## 5. Más series oficiales automáticas
 
@@ -117,7 +130,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 ## 8. Carga semanal asistida por IA
 
-**Por qué:** algunos datos no tienen API (EMBI, proyecciones de organismos y, quizás, el paralelo).
+**Por qué:** algunos datos no tienen API, como el EMBI y las proyecciones de los organismos.
 
 - Crear una rutina programada que cada semana busque esos datos en boletines y prensa confiable.
 - La rutina propone los cambios a `data/manual/entradas.csv`, con fuente y enlace, como *pull request*. Una persona los aprueba antes de que entren.

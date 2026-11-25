@@ -4,10 +4,10 @@ import json
 import os
 
 from collectors.fuentes import (AGENTE, FallaParcial, _por_indicador, parsear_bm, parsear_fmi,
-                                parsear_fmi_sdmx, parsear_tco)
+                                parsear_fmi_sdmx, parsear_paralelo, parsear_tco)
 from engine.motor import evaluar, evaluar_anio, regimen_en, senal
 from engine.verificador import verificar, numeros
-from pipeline.store import Obs, cargar_contratos
+from pipeline.store import Obs, cargar_contratos, deduplicar
 from pipeline.validate import revisar
 
 C = cargar_contratos()
@@ -142,6 +142,45 @@ def test_parsea_api_nueva_del_fmi():
     assert [o.fecha[:4] for o in obs] == [str(a) for a in range(2020, 2026)]
     assert round(obs[0].valor, 1) == -12.7  # pandemia 2020
     assert all(o.fuente == "FMI WEO" for o in obs)
+
+
+def _paralelo_fixture():
+    return open(os.path.join(FIX, "paralelo_bo_historico.json"), encoding="utf-8").read()
+
+
+def test_parsea_paralelo_bo_sin_el_dia_en_curso():
+    # respuesta real del 25-nov-2026: el punto de hoy es parcial (13:40 UTC) y no se guarda
+    obs = parsear_paralelo(_paralelo_fixture(), hoy=date(2026, 11, 25))
+    assert [o.fecha for o in obs] == ["2026-11-20", "2026-11-21", "2026-11-22", "2026-11-23", "2026-11-24"]
+    assert obs[-1].valor == 12.0 and obs[-1].serie == "paralelo"
+    assert "paralelo.bo" in obs[-1].fuente and obs[-1].url == "https://paralelo.bo"  # atribución CC-BY
+
+
+def test_paralelo_bo_ilustrativo_no_se_usa():
+    d = json.loads(_paralelo_fixture())
+    d["illustrative"] = True
+    try:
+        parsear_paralelo(json.dumps(d), hoy=HOY)
+        assert False, "debía rechazar una serie ilustrativa"
+    except ValueError as e:
+        assert "ilustrativa" in str(e)
+
+
+def test_paralelo_bo_con_otro_formato_falla():
+    d = json.loads(_paralelo_fixture())
+    d["resolution"] = "hourly"
+    try:
+        parsear_paralelo(json.dumps(d), hoy=HOY)
+        assert False, "debía rechazar un cambio de formato"
+    except ValueError as e:
+        assert "formato" in str(e)
+
+
+def test_misma_serie_y_fecha_de_dos_fuentes_gana_la_ultima():
+    # la automática va después de la manual: sin esto, se pisarían en cada corrida
+    manual = Obs("paralelo", "2026-10-23", 11.93, "prensa")
+    auto = Obs("paralelo", "2026-10-23", 11.99, "paralelo.bo")
+    assert deduplicar([manual, auto]) == [auto]
 
 
 def test_identificacion_solo_ascii():

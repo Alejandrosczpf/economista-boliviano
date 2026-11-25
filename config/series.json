@@ -21,12 +21,12 @@
    "nombre": "Dólar paralelo/digital (promedio compra-venta)",
    "unidad": "Bs por USD",
    "frecuencia": "diaria",
-   "fuente": "dolarboliviahoy.com vía prensa",
+   "fuente": "paralelo.bo (mediana P2P USDT/BOB, CC-BY 4.0)",
    "min": 5,
    "max": 60,
    "max_salto_pct": 12,
-   "frescura_dias": 10,
-   "rezago_dias": 0
+   "frescura_dias": 5,
+   "rezago_dias": 1
   },
   {
    "id": "rin",

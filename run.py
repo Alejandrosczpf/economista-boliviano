@@ -16,7 +16,7 @@ from engine import memoria
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
-RED = ["bcb_tco", "banco_mundial", "fmi"]
+RED = ["bcb_tco", "paralelo", "banco_mundial", "fmi"]
 
 
 def main(argv=None) -> dict:
@@ -41,6 +41,10 @@ def main(argv=None) -> dict:
         except Exception as e:  # noqa: BLE001 - una fuente caída no detiene al sistema
             errores[nombre] = str(e)[:300]
             print(f"  {nombre}: ERROR {errores[nombre]}")
+
+    # Si dos fuentes traen la misma serie y fecha, gana la última recolectada (las automáticas
+    # van después de la manual). Sin esto, las dos se pisarían en cada corrida.
+    nuevas = store.deduplicar(nuevas)
 
     # Validar solo lo que es nuevo o cambió
     previas = store.por_serie(existentes)

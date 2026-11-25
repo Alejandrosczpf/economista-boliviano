@@ -80,6 +80,11 @@ def fusionar(existentes: list[Obs], nuevas: list[Obs]) -> tuple[list[Obs], int]:
     return list(idx.values()), cambios
 
 
+def deduplicar(obs: list[Obs]) -> list[Obs]:
+    """Una observación por (serie, fecha): la última de la lista gana."""
+    return list({(o.serie, o.fecha): o for o in obs}.values())
+
+
 def por_serie(obs: list[Obs]) -> dict[str, list[Obs]]:
     d: dict[str, list[Obs]] = {}
     for o in obs:

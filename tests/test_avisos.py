@@ -49,7 +49,13 @@ def _f(serie, edad, limite, estado=None):
 def test_paralelo_vencido_explica_por_que_no_vota_la_brecha():
     av = calcular({}, [_f("paralelo", 33, 10)], ["brecha"], {"brecha": "último paralelo viejo"})
     assert _claves(av) == ["vencida:paralelo"]  # sin un segundo aviso repetido por la brecha
-    assert "brecha" in av[0].detalle and "entradas.csv" in av[0].detalle
+    # el paralelo llega solo desde paralelo.bo: el aviso apunta al recolector, no a la carga manual
+    assert "brecha" in av[0].detalle and "recolector" in av[0].detalle
+
+
+def test_serie_manual_vencida_indica_donde_cargarla():
+    av = calcular({}, [_f("embi", 40, 30)], ["embi"], {})
+    assert _claves(av) == ["vencida:embi"] and "entradas.csv" in av[0].detalle
 
 
 def test_serie_manual_por_vencer_avisa_una_semana_antes():
