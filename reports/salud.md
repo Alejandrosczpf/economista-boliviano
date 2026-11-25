@@ -1,7 +1,7 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **47.8** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 2
+- Datos nuevos o corregidos: 0
 - En cuarentena esta corrida: 0
 - Fuentes con error: 0
 - Series con dato viejo o sin datos: 0 de 22
