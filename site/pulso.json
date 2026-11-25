@@ -7002,5 +7002,396 @@
   ],
   "robot_desde": "2026-11-25"
  },
- "estado_sin_histeresis": "vigilancia"
+ "estado_sin_histeresis": "vigilancia",
+ "semana": {
+  "desde": "2026-11-18",
+  "hasta": "2026-11-25",
+  "indice_antes": 47.8,
+  "indice_hoy": 47.8,
+  "estado_antes": "vigilancia",
+  "estado_hoy": "vigilancia",
+  "cambios": []
+ },
+ "historia_anual": [
+  {
+   "anio": 1980,
+   "indice": 37.5,
+   "estado": "vigilancia",
+   "votan": 3,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1981,
+   "indice": 90.9,
+   "estado": "alerta",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1982,
+   "indice": 63.6,
+   "estado": "alerta",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1983,
+   "indice": 81.8,
+   "estado": "alerta",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1984,
+   "indice": 63.6,
+   "estado": "alerta",
+   "votan": 4,
+   "de": 8,
+   "episodio": "hiperinflación"
+  },
+  {
+   "anio": 1985,
+   "indice": 86.7,
+   "estado": "alerta",
+   "votan": 5,
+   "de": 8,
+   "episodio": "hiperinflación (pico) y estabilización"
+  },
+  {
+   "anio": 1986,
+   "indice": 36.4,
+   "estado": "vigilancia",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1987,
+   "indice": 22.7,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1988,
+   "indice": 50.0,
+   "estado": "vigilancia",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1989,
+   "indice": 31.8,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1990,
+   "indice": 36.4,
+   "estado": "vigilancia",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1991,
+   "indice": 54.5,
+   "estado": "vigilancia",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1992,
+   "indice": 9.1,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1993,
+   "indice": 22.7,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1994,
+   "indice": 9.1,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1995,
+   "indice": 18.2,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1996,
+   "indice": 9.1,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1997,
+   "indice": 9.1,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1998,
+   "indice": 31.8,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 1999,
+   "indice": 9.1,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2000,
+   "indice": 18.2,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2001,
+   "indice": 13.6,
+   "estado": "calma",
+   "votan": 4,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2002,
+   "indice": 53.8,
+   "estado": "vigilancia",
+   "votan": 5,
+   "de": 8,
+   "episodio": "corrida de depósitos y crisis política"
+  },
+  {
+   "anio": 2003,
+   "indice": 23.1,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": "crisis política (febrero y octubre)"
+  },
+  {
+   "anio": 2004,
+   "indice": 11.5,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2005,
+   "indice": 0.0,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2006,
+   "indice": 0.0,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2007,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2008,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2009,
+   "indice": 0.0,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2010,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2011,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2012,
+   "indice": 0.0,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2013,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2014,
+   "indice": 7.7,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2015,
+   "indice": 26.9,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": "caída del precio del gas: pérdida de reservas"
+  },
+  {
+   "anio": 2016,
+   "indice": 42.3,
+   "estado": "vigilancia",
+   "votan": 5,
+   "de": 8,
+   "episodio": "caída del precio del gas: pérdida de reservas"
+  },
+  {
+   "anio": 2017,
+   "indice": 11.5,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2018,
+   "indice": 26.9,
+   "estado": "calma",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2019,
+   "indice": 42.3,
+   "estado": "vigilancia",
+   "votan": 5,
+   "de": 8,
+   "episodio": "crisis política; déficit gemelos"
+  },
+  {
+   "anio": 2020,
+   "indice": 69.2,
+   "estado": "alerta",
+   "votan": 5,
+   "de": 8,
+   "episodio": "pandemia"
+  },
+  {
+   "anio": 2021,
+   "indice": 46.2,
+   "estado": "vigilancia",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2022,
+   "indice": 57.7,
+   "estado": "vigilancia",
+   "votan": 5,
+   "de": 8,
+   "episodio": ""
+  },
+  {
+   "anio": 2023,
+   "indice": 69.2,
+   "estado": "alerta",
+   "votan": 5,
+   "de": 8,
+   "episodio": "escasez de dólares"
+  },
+  {
+   "anio": 2024,
+   "indice": 70.6,
+   "estado": "alerta",
+   "votan": 6,
+   "de": 8,
+   "episodio": "escasez de dólares y combustible"
+  },
+  {
+   "anio": 2025,
+   "indice": 76.5,
+   "estado": "alerta",
+   "votan": 6,
+   "de": 8,
+   "episodio": "inflación más alta en 36 años"
+  }
+ ],
+ "notas_graficos": {
+  "dolar": "El paralelo (Bs 12,00) está 1,4 % por encima del oficial (Bs 11,83). Desde el inicio de la flotación, el oficial subió 21,6 %. Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).",
+  "rin": "Última: 3.965 millones de dólares (31 oct 2026), 59,6 % más que un año antes. El mínimo desde 2002 fue 725 millones (28 feb 2003). Son reservas NETAS: la prensa suele citar las brutas, que son mayores.",
+  "inflacion": "Última: 7,08 % a 12 meses (31 oct 2026). El máximo de este gráfico fue 20,96 % (30 nov 2025).",
+  "embi": "Último dato: 494 puntos (2 nov 2026). Son puntos sueltos tomados de la prensa: no hay una serie diaria pública."
+ },
+ "resumen": [
+  "El índice de riesgo está en 48 de 100, en vigilancia: hay señales de tensión que conviene seguir de cerca, aunque no las de una crisis inminente.",
+  "Lo que más preocupa: el déficit del Estado (11,0 % del PIB); la inflación del último mes (2,1 %); la parte de las reservas en divisas listas para usar (21,6 % del total). También en amarillo: la inflación anual (7,1 %); el riesgo país (494 puntos).",
+  "Lo que ayuda: las reservas netas del BCB, que cambiaron 59,6 % en un año; la diferencia entre el dólar paralelo y el oficial (1,4 %); el dólar oficial, que cambió -0,4 % en un mes.",
+  "En la última semana el índice no cambió."
+ ]
 }
