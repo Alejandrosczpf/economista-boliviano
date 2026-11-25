@@ -1,0 +1,40 @@
+# Carga semanal de datos manuales (instrucciones para la IA)
+
+Tu tarea es **proponer** los datos que no tienen recolector automático. Los propones en un *pull request* y una persona los aprueba. Nunca agregas nada directamente a `main`.
+
+## Regla de oro
+
+**Ningún número sin una fuente que lo diga textualmente.** No calcules, no estimes, no interpoles y no "redondees desde un gráfico". Si la fuente no dice el valor y la fecha con claridad, ese dato no se carga. Una semana sin propuesta es un resultado válido.
+
+## Pasos
+
+1. Ponte al día: `git pull`. Después corre `python -m pipeline.propuesta pendientes`, que lista las series manuales de la más urgente a la menos.
+2. Por cada serie que **vence en 14 días o menos**, o que tiene una publicación nueva esperable (ver el calendario abajo), busca el dato más reciente en las fuentes de la tabla.
+3. Por cada dato encontrado, agrega una fila al final de `data/manual/entradas.csv`:
+   `serie,fecha,valor,fuente,url,nota`
+   - `fecha`: la fecha **a la que se refiere el valor**. No es la fecha en que lo encontraste. Para cada serie, ver la tabla.
+   - `valor`: con punto decimal (`494`, `-3.39`), sin unidades.
+   - `fuente`: quién produce el dato y por dónde llegó, por ejemplo `JP Morgan vía Bloomberg Línea`.
+   - `url`: el enlace exacto donde se lee el valor.
+   - `nota`: opcional y breve, por ejemplo `informe de enero`.
+4. Trabaja en una rama `carga/AAAA-MM-DD`. Corre `python -m tests` y `python -m pipeline.propuesta revisar <copia de entradas.csv de main>`. Todo debe pasar.
+5. Abre el *pull request* con el título `Carga semanal AAAA-MM-DD`. En el cuerpo, por cada fila, pon la **cita textual** de la fuente donde aparece el número y su enlace. Así quien revisa compara sin buscar.
+6. **No hagas merge.** No toques `data/manual/aprobados.csv`, el código ni las series que llegan solas (el workflow las rechaza).
+
+## Series y fuentes
+
+| Serie | Qué es | Fecha que va en la fila | Fuentes, en orden de preferencia | Cuándo hay dato nuevo |
+|---|---|---|---|---|
+| `embi` | Riesgo país de Bolivia (EMBI de JP Morgan), en puntos básicos | El día de la cotización | JP Morgan citado por Bloomberg Línea, El Deber, Ámbito, eju.tv o Reuters. Si dos fuentes difieren, la más reciente con fecha explícita | Cada semana |
+| `pib_proy_fmi` | Proyección de crecimiento del PIB **del año en curso**, FMI | Fecha de publicación del informe | FMI, Perspectivas de la Economía Mundial (WEO) o comunicado de un Artículo IV | Abril y octubre |
+| `pib_proy_bm` | Lo mismo, Banco Mundial | Fecha de publicación | Banco Mundial: Perspectivas Económicas Mundiales (enero y junio) o informe semestral de América Latina (abril y octubre) | Enero, abril, junio y octubre |
+| `pib_proy_bcb` | Lo mismo, BCB | Fecha de publicación | BCB: Informe de Política Monetaria o presentaciones oficiales del presidente del BCB | Enero y julio (a veces más) |
+| `deficit_fiscal` | Déficit del sector público no financiero, % del PIB (positivo = déficit) | 31 de diciembre del año que mide | MEFP (Ministerio de Economía y Finanzas Públicas); si no, el FMI (Artículo IV) | Una vez al año (primer trimestre) |
+| `base_monetaria_var_acum` | Variación acumulada de la base monetaria en el año, en millones de Bs | Último día del mes de corte | BCB, Programa Monetario mensual (PDF en bcb.gob.bo/webdocs/programamonetario) | Cada mes |
+
+## Cuidados que ya costaron errores en este proyecto
+
+- **Reservas brutas y netas no son lo mismo.** La serie de reservas se mezcló así una vez. Esas series ya llegan solas, pero el cuidado vale para cualquier cifra: comprueba que sea **el mismo concepto** que el dato anterior de la serie.
+- **La fecha de corte no es la fecha de vigencia.** Usa la fecha a la que se refiere el valor, como dice la tabla.
+- **Revisa el signo.** Una proyección de −3,0 % no es 3,0 %, y un déficit se carga como número positivo.
+- Si un valor parece un salto enorme frente al anterior, vuelve a verificarlo. Si es real, explícalo en el *pull request*: la revisión automática lo marcará y una persona decidirá si lo aprueba.

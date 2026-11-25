@@ -1,0 +1,56 @@
+name: Revisar propuesta de datos manuales
+
+# Cada pull request que toca los datos manuales (o sus aprobaciones) se revisa solo:
+# pruebas del sistema + revisión fila por fila (fuente, enlace, fecha, contrato de la serie).
+# El resultado queda como comentario en el pull request. Una persona aprueba después de abrir los enlaces.
+on:
+  pull_request:
+    paths:
+      - "data/manual/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Pruebas del sistema
+        run: |
+          pip install pytest
+          python -m pytest -q
+
+      - name: Revisar fila por fila
+        id: revisar
+        run: |
+          git show "origin/${{ github.base_ref }}:data/manual/entradas.csv" > "$RUNNER_TEMP/base.csv"
+          set +e
+          python -m pipeline.propuesta revisar "$RUNNER_TEMP/base.csv" "$RUNNER_TEMP/informe.md"
+          echo "codigo=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Comentar el resultado en el pull request
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f "$RUNNER_TEMP/informe.md" ] || echo "La revisión no llegó a correr: ver el registro del workflow." > "$RUNNER_TEMP/informe.md"
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} \
+            --edit-last --body-file "$RUNNER_TEMP/informe.md" 2>/dev/null \
+          || gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} \
+            --body-file "$RUNNER_TEMP/informe.md"
+
+      - name: Fallar si alguna fila no pasa
+        if: steps.revisar.outputs.codigo != '0'
+        run: |
+          echo "Hay filas que no pasan la revisión: ver el comentario en el pull request."
+          exit 1
