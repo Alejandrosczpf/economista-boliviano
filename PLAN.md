@@ -7,7 +7,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | # | Sesión | Estado |
 |---|---|---|
 | 1 | Fuentes que no fallan | ✅ hecha (25-nov-2026) |
-| 2 | Un robot que avisa | pendiente |
+| 2 | Un robot que avisa | ✅ hecha (25-nov-2026) |
 | 3 | Memoria del índice | pendiente |
 | 4 | Dólar paralelo automático | pendiente |
 | 5 | Más series oficiales automáticas | pendiente |
@@ -35,16 +35,29 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 **Listo cuando:** la corrida en GitHub termina con 0 fuentes con error.
 
-## 2. Un robot que avisa
+## 2. Un robot que avisa ✅
 
-**Por qué:** hoy, si una fuente se cae o un dato manual se vence, nadie se entera salvo que abra `reports/salud.md`.
+**Por qué:** hasta ahora, si una fuente se caía o un dato manual se vencía, nadie se enteraba salvo que abriera `reports/salud.md`.
 
-- Abrir automáticamente un *issue* en GitHub cuando una fuente falla dos días seguidos o una serie que vota se vence. GitHub avisa por correo.
-- Avisar con una semana de anticipación cuando una serie manual está por vencerse.
-- Actualizar los componentes del workflow (checkout v4→v7, setup-python v5→v7, Pages v3/v4→v5), que GitHub marca como obsoletos. Hay que verificar que el robot pueda seguir haciendo `git push`.
-- Agregar una forma simple de correr las pruebas en la PC sin instalar pytest.
+**Hecho:**
+- `pipeline/avisos.py` abre un *issue* con la etiqueta `robot` en cuatro casos:
+  - una fuente falla 2 corridas seguidas;
+  - una serie que alimenta el índice se vence;
+  - una serie manual vence en 7 días o menos;
+  - un indicador no vota por otra razón.
 
-**Listo cuando:** al provocar un error a propósito se abre un issue, y la corrida no muestra advertencias de Node.
+  Si el aviso sigue al día siguiente, el issue se actualiza sin mandar otro correo. Cuando el problema se resuelve, el robot lo cierra.
+- Si la corrida entera falla, se abre el issue "La corrida del robot falló". Las fallas siguientes se comentan en ese mismo issue.
+- La cuenta de fallas de cada fuente se guarda en `data/estado_fuentes.json`.
+- El workflow usa los componentes con Node 24 (checkout v7, setup-python v7, Pages v5) y hace `git pull --rebase --autostash` antes del push.
+- Al lanzar el workflow a mano se puede marcar *Simular una falla* para probar el aviso.
+- `python -m tests` corre las pruebas sin instalar nada. Hay 14 pruebas nuevas, 37 en total.
+
+**Comprobado en GitHub:**
+- La primera corrida abrió dos avisos reales: el dólar paralelo vencido (#3) y el EMBI por vencer (#2).
+- La falla simulada comentó en el issue #1 sin duplicarlo.
+- La corrida repetida actualizó los avisos sin abrir issues nuevos.
+- Ya no hay advertencias de Node.
 
 ## 3. Memoria del índice
 
