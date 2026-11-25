@@ -1,7 +1,7 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **47.8** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 0
+- Datos nuevos o corregidos: 3
 - En cuarentena esta corrida: 0
 - Fuentes con error: 0
 - Series con dato viejo o sin datos: 0 de 22
@@ -26,7 +26,7 @@
 | Riesgo país (EMBI) | 2026-11-02 | 23 | 30 | fresco |
 | Proyección PIB del año (FMI) | 2026-10-13 | 43 | 200 | fresco |
 | Proyección PIB del año (BCB) | 2026-10-08 | 48 | 120 | fresco |
-| Proyección PIB del año (Banco Mundial) | 2026-06-10 | 168 | 200 | fresco |
+| Proyección PIB del año (Banco Mundial) | 2026-10-07 | 49 | 200 | fresco |
 | Déficit fiscal | 2025-12-31 | 329 | 400 | fresco |
 | Variación acumulada de la base monetaria en el año | 2026-10-31 | 25 | 45 | fresco |
 | Inflación anual (Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |

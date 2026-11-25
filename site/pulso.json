@@ -161,11 +161,11 @@
    "que": "Promedio de lo que proyectan FMI, BCB y Banco Mundial para la economía este año.",
    "lectura": "Por debajo de 0 % es recesión: la economía produce menos que el año anterior.",
    "familia": "Recesión suele traer menos empleo formal y menos ingresos en el comercio.",
-   "valor": -2.5,
+   "valor": -3.06,
    "fecha": "2026-10-13",
    "fuente": "FMI WEO oct-2026",
    "url": "https://correodelsur.com/economia/20261014/fmi-bolivia-decrecera-un-3-en-2026-y-otro-1-5-en-2027.html",
-   "nota": "promedio de FMI WEO oct-2026: -3,00 %; BCB RIPoM III-2026: -3,39 %; Banco Mundial vía Bloomberg Línea: -1,10 %",
+   "nota": "promedio de FMI WEO oct-2026: -3,00 %; BCB RIPoM III-2026: -3,39 %; Banco Mundial vía Correo del Sur: -2,80 %",
    "semaforo": "rojo",
    "peso": 1,
    "puntos": 8.7,
@@ -5445,7 +5445,7 @@
  },
  "salud": {
   "fecha": "2026-11-25",
-  "datos_nuevos": 0,
+  "datos_nuevos": 3,
   "en_cuarentena": [],
   "fuentes_con_error": {},
   "frescura": [
@@ -5532,8 +5532,8 @@
    {
     "serie": "pib_proy_bm",
     "nombre": "Proyección PIB del año (Banco Mundial)",
-    "ultimo": "2026-06-10",
-    "edad_dias": 168,
+    "ultimo": "2026-10-07",
+    "edad_dias": 49,
     "limite_dias": 200,
     "estado": "fresco"
    },
@@ -7394,5 +7394,9 @@
   "Lo que ayuda: las reservas netas del BCB, que cambiaron 59,6 % en un año; la diferencia entre el dólar paralelo y el oficial (1,4 %); el dólar oficial, que cambió -0,4 % en un mes.",
   "En la última semana el índice no cambió."
  ],
- "informe": null
+ "informe": {
+  "fecha": "2026-11-25",
+  "html": "<h4>El riesgo se mantiene en vigilancia, sin cambios en la semana</h4>\n<p>El índice de riesgo está en 47,8 de 100, en estado de vigilancia. Esto significa que hay señales de tensión que conviene seguir de cerca, aunque no son las de una crisis inminente. El índice de riesgo hace una semana también estaba en 47,8, así que no hubo cambio en la semana. En total, 9 indicadores votaron en esta medición.</p>\n<p>Lo que empuja el riesgo hacia arriba: el déficit fiscal del Estado fue de 11,00 % del PIB. La inflación mensual de precios fue de 2,07 % en octubre, y la inflación a 12 meses llegó a 7,08 %. Las reservas en divisas con liquidez inmediata son 21,57 % del total de las reservas. El riesgo país medido por el EMBI es de 494 puntos básicos. En cuanto al crecimiento, la proyección del FMI para el PIB es de -3,00 %, la del BCB es de -3,39 % y la del Banco Mundial es de -1,10 %.</p>\n<p>Lo que ayuda: las reservas internacionales netas llegaron a 3.965 millones de USD al 31 de octubre de 2026, y su variación en 12 meses fue de 59,64 %. La brecha entre el dólar paralelo y el oficial es de 1,44 %: el dólar oficial vale 11,83 Bs y el dólar paralelo, 12,00 Bs. En los últimos 30 días, la variación del dólar oficial fue de -0,42 %.</p>\n<p>Conviene tener presente que el índice mide señales y no adivina el futuro. Cada dato tiene su propia fecha de corte: la inflación y las reservas son de octubre, el riesgo país es de principios de noviembre y el déficit fiscal corresponde a fines de 2025.</p>\n<p><b>Qué mirar la próxima semana:</b> la publicación del siguiente dato de inflación y de reservas internacionales, que actualizarán dos de los indicadores del índice, y la brecha entre el dólar paralelo y el oficial, que se actualiza a diario.</p>",
+  "cifras": 21
+ }
 }
