@@ -97,6 +97,9 @@ def informe(revisadas: list[tuple[dict, list[str]]]) -> str:
 
 
 def main(argv: list[str]) -> int:
+    # la consola de Windows no siempre usa UTF-8: sin esto, imprimir ✅/❌ falla
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     if not argv or argv[0] == "pendientes":
         print("Series manuales, de la más urgente a la menos:\n")
         for p in pendientes():
