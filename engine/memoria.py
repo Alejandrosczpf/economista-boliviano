@@ -107,6 +107,30 @@ def cambios_de_estado(filas: list[dict]) -> list[dict]:
     return out
 
 
+def _senal(x) -> float | None:
+    return None if x in ("", None) else float(x)
+
+
+def resumen_semana(filas: list[dict], dias: int = 7) -> dict | None:
+    """Qué cambió frente a hace 'dias' días: índice, estado y la señal de cada indicador."""
+    filas = sorted(filas, key=lambda r: r["fecha"])
+    if len(filas) < 2:
+        return None
+    hoy = filas[-1]
+    objetivo = (date.fromisoformat(hoy["fecha"]) - timedelta(days=dias)).isoformat()
+    antes = next((r for r in reversed(filas) if r["fecha"] <= objetivo), None)
+    if antes is None:
+        return None
+    cambios = []
+    for ind in INDICADORES:
+        a, d = _senal(antes.get(ind)), _senal(hoy.get(ind))
+        if a != d:
+            cambios.append({"id": ind, "antes": a, "despues": d})
+    return {"desde": antes["fecha"], "hasta": hoy["fecha"],
+            "indice_antes": float(antes["indice"]), "indice_hoy": float(hoy["indice"]),
+            "estado_antes": antes["estado"], "estado_hoy": hoy["estado"], "cambios": cambios}
+
+
 def para_pulso(filas: list[dict]) -> dict:
     """Lo que el gráfico del Pulso necesita."""
     puntos = [{"fecha": r["fecha"], "valor": float(r["indice"]), "estado": r["estado"],

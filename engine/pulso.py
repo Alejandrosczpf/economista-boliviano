@@ -5,7 +5,7 @@ import json
 import os
 from datetime import date
 
-from engine.motor import (INICIO_FLOTACION, PESOS, UMBRALES, evaluar, indicadores_actuales, regimen_en)
+from engine.motor import (INICIO_FLOTACION, PESOS, UMBRALES, es, evaluar, fe, indicadores_actuales, regimen_en)
 from pipeline.store import RAIZ
 
 COLOR = {0.0: "verde", 0.5: "amarillo", 1.0: "rojo", None: "gris"}
@@ -81,6 +81,96 @@ def construir(series: dict, contratos: dict, salud: dict, hoy: date) -> dict:
         "historia": hist,
         "salud": salud,
     }
+
+
+QUE_SIGNIFICA = {
+    "calma": "la economía no muestra señales de crisis",
+    "vigilancia": "hay señales de tensión que conviene seguir de cerca, aunque no las de una crisis inminente",
+    "alerta": "las señales se parecen a las de los años previos a una crisis, como 2022 antes de la escasez de dólares",
+}
+
+
+# Cada indicador dicho en lenguaje simple ({v} = su valor en formato boliviano). Sirven para lo bueno y lo malo.
+CORTO = {
+    "inflacion_12m": "la inflación anual ({v} %)",
+    "inflacion_mensual": "la inflación del último mes ({v} %)",
+    "rin_var_12m": "las reservas netas del BCB, que cambiaron {v} % en un año",
+    "liquidez_rin": "la parte de las reservas en divisas listas para usar ({v} % del total)",
+    "deficit_fiscal": "el déficit del Estado ({v} % del PIB)",
+    "brecha": "la diferencia entre el dólar paralelo y el oficial ({v} %)",
+    "depreciacion_30d": "el dólar oficial, que cambió {v} % en un mes",
+    "embi": "el riesgo país ({v} puntos)",
+    "pib_proy": "el crecimiento esperado de la economía ({v} %)",
+}
+
+
+def _dato(t: dict) -> str:
+    v = t["valor"]
+    return CORTO[t["id"]].format(v=es(v, 0 if abs(v) >= 100 else 1))
+
+
+def resumen(pul: dict) -> list[str]:
+    """'En pocas palabras': tres o cuatro frases en lenguaje simple, armadas solo con los datos del día."""
+    t = pul["tarjetas"]
+    rojos = sorted((x for x in t if x["semaforo"] == "rojo"), key=lambda x: -x["puntos"])
+    amarillos = sorted((x for x in t if x["semaforo"] == "amarillo"), key=lambda x: -x["puntos"])
+    verdes = [x for x in t if x["semaforo"] == "verde"]
+    sin = [x for x in t if x["semaforo"] == "gris"]
+    frases = [f"El índice de riesgo está en {es(pul['indice'], 0)} de 100, en {pul['estado']}: "
+              f"{QUE_SIGNIFICA[pul['estado']]}."]
+    if rojos:
+        frases.append("Lo que más preocupa: " + "; ".join(_dato(x) for x in rojos[:3]) + "."
+                      + (f" También en amarillo: {'; '.join(_dato(x) for x in amarillos[:2])}." if amarillos else ""))
+    if verdes:
+        frases.append("Lo que ayuda: " + "; ".join(_dato(x) for x in verdes) + ".")
+    s = pul.get("semana")
+    if s:
+        d = s["indice_hoy"] - s["indice_antes"]
+        mov = ("no cambió" if abs(d) < 0.05 else f"{'subió' if d > 0 else 'bajó'} {es(abs(d), 1)} puntos")
+        frases.append(f"En la última semana el índice {mov}"
+                      + (f" y pasó de {s['estado_antes']} a {s['estado_hoy']}." if s["estado_antes"] != s["estado_hoy"] else "."))
+    if sin:
+        frases.append(f"Sin dato reciente (no cuentan hoy): {', '.join(x['titulo'].lower() for x in sin)}.")
+    return frases
+
+
+def _pct(a: float, b: float) -> float:
+    return (a / b - 1) * 100
+
+
+def notas_graficos(series: dict) -> dict:
+    """Las notas de los gráficos, escritas con los datos de hoy (antes eran texto fijo y envejecían)."""
+    n = {}
+    tco, par = series.get("tco"), series.get("paralelo")
+    if tco and par:
+        b = _pct(par[-1].valor, tco[-1].valor)
+        lado = "por encima" if b > 0 else "por debajo"
+        desde = next((o for o in tco if o.fecha >= INICIO_FLOTACION.isoformat()), tco[0])
+        n["dolar"] = (f"El paralelo (Bs {es(par[-1].valor)}) está {es(abs(b), 1)} % {lado} del oficial "
+                      f"(Bs {es(tco[-1].valor)}). Desde el inicio de la flotación, el oficial "
+                      f"{'subió' if tco[-1].valor >= desde.valor else 'bajó'} {es(abs(_pct(tco[-1].valor, desde.valor)), 1)} %. "
+                      "Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).")
+    rin = series.get("rin")
+    if rin:
+        u = rin[-1]
+        hace_un_anio = next((o for o in reversed(rin) if o.fecha <= f"{int(u.fecha[:4]) - 1}{u.fecha[4:]}"), None)
+        minimo = min(rin, key=lambda o: o.valor)
+        n["rin"] = (f"Última: {es(u.valor, 0)} millones de dólares ({fe(u.fecha)})"
+                    + (f", {es(abs(_pct(u.valor, hace_un_anio.valor)), 1)} % {'más' if u.valor >= hace_un_anio.valor else 'menos'} que un año antes"
+                       if hace_un_anio else "")
+                    + f". El mínimo desde 2002 fue {es(minimo.valor, 0)} millones ({fe(minimo.fecha)}). "
+                      "Son reservas NETAS: la prensa suele citar las brutas, que son mayores.")
+    inf = series.get("inflacion_12m")
+    if inf:
+        u = inf[-1]
+        pico = max(inf, key=lambda o: o.valor)
+        n["inflacion"] = (f"Última: {es(u.valor)} % a 12 meses ({fe(u.fecha)}). "
+                          f"El máximo de este gráfico fue {es(pico.valor)} % ({fe(pico.fecha)}).")
+    embi = series.get("embi")
+    if embi:
+        n["embi"] = (f"Último dato: {es(embi[-1].valor, 0)} puntos ({fe(embi[-1].fecha)}). "
+                     "Son puntos sueltos tomados de la prensa: no hay una serie diaria pública.")
+    return n
 
 
 def guardar(pulso: dict, ruta: str | None = None) -> str:

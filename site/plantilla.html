@@ -46,6 +46,7 @@ h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--text
 .aporte .track{height:12px;background:var(--surface-2);border-radius:3px;overflow:hidden}
 .aporte .fill{height:100%;border-radius:0 4px 4px 0}
 .aporte .pts{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-secondary)}
+@media (max-width:520px){.aporte{grid-template-columns:minmax(0,1fr) 72px 40px}}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .tile{position:relative}
 .tile .t{font-size:13px;color:var(--text-secondary);display:flex;justify-content:space-between;gap:8px}
@@ -79,6 +80,7 @@ th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
 th{color:var(--text-muted);font-weight:600;font-size:12px}
 td.n{font-variant-numeric:tabular-nums}
 details summary{cursor:pointer;color:var(--text-secondary);font-size:13px}
+details{max-width:100%;overflow-x:auto}
 .nota{font-size:12px;color:var(--text-muted);margin-top:8px}
 footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 .chart .ref line{stroke:var(--text-muted);stroke-width:1;stroke-dasharray:4 3}
@@ -86,6 +88,13 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 .chart .cob-t{font-size:11px;color:var(--text-muted);margin:10px 0 2px}
 .cambios{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--text-secondary)}
 .cambios li{display:inline-flex;align-items:center;gap:6px}
+.resumen{margin-bottom:16px;font-size:16px;line-height:1.55}
+.resumen h2{margin:0 0 8px}
+.resumen p{margin:0 0 6px}
+.resumen p:first-of-type{font-size:18px;font-weight:600}
+.cambios-semana{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.cambios-semana li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chart .ref.adentro text{paint-order:stroke;stroke:var(--surface-1);stroke-width:3px}
 .aprendiz-off .solo-aprendiz{display:none}
 .solo-aprendiz{font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:8px 10px;margin-top:10px}
 </style>
@@ -99,6 +108,8 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
     </div>
     <label class="toggle"><input type="checkbox" id="aprendiz" checked> Modo aprendiz (explicaciones visibles)</label>
   </header>
+
+  <section class="card resumen" id="resumen" aria-label="En pocas palabras"></section>
 
   <section class="hero">
     <div class="card indice tt" tabindex="0">
@@ -117,6 +128,9 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
     </div>
   </section>
 
+  <h2>Qué cambió esta semana</h2>
+  <div class="card" id="semana"></div>
+
   <h2>El índice desde la flotación</h2>
   <div class="card chart" id="memoria"></div>
 
@@ -125,6 +139,9 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 
   <h2>Cómo se movieron</h2>
   <div class="charts" id="charts"></div>
+
+  <h2>¿Habría avisado? El índice desde 1980</h2>
+  <div class="card chart" id="historia"></div>
 
   <h2>Salud del sistema</h2>
   <div class="card" id="salud"></div>
@@ -192,119 +209,188 @@ document.getElementById('tiles').innerHTML = P.tarjetas.map(t=>{
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.activeElement) document.activeElement.blur(); });
 document.getElementById('aprendiz').addEventListener('change',e=>document.getElementById('app').classList.toggle('aprendiz-off',!e.target.checked));
 
-// ---------- gráficos SVG (una sola escala por gráfico, líneas de 2px, puntos ≥8px al pasar el mouse) ----------
+// ---------- En pocas palabras y qué cambió esta semana (textos armados con los datos del día) ----------
+document.getElementById('resumen').innerHTML = `<h2>En pocas palabras</h2>${(P.resumen||[]).map(f=>`<p>${f}</p>`).join('')}`;
+(function(){
+  const S = P.semana, el = document.getElementById('semana');
+  if(!S){ el.textContent = 'Todavía no hay una semana de historia para comparar.'; return; }
+  const T = Object.fromEntries(P.tarjetas.map(t=>[t.id,t]));
+  const color = s => s==null ? ['none','sin dato'] : s===0 ? ['good','verde'] : s===0.5 ? ['warning','amarillo'] : ['critical','rojo'];
+  const d = S.indice_hoy - S.indice_antes;
+  const mov = Math.abs(d)<0.05 ? `no cambió (${nf(S.indice_hoy,1)})` : `${d>0?'subió':'bajó'} ${nf(Math.abs(d),1)} puntos, de ${nf(S.indice_antes,1)} a ${nf(S.indice_hoy,1)}`;
+  let h = `<div>Entre el ${fecha(S.desde)} y el ${fecha(S.hasta)}, el índice ${mov}${S.estado_antes!==S.estado_hoy?` y pasó de ${S.estado_antes} a <b>${S.estado_hoy}</b>`:''}.</div>`;
+  h += S.cambios.length
+    ? `<ul class="cambios-semana">${S.cambios.map(c=>{const [ka,la]=color(c.antes),[kd,ld]=color(c.despues);const t=T[c.id];
+        return `<li><b>${t?t.titulo:c.id}</b>: ${icono(ka)} ${la} → ${icono(kd)} ${ld}</li>`;}).join('')}</ul>`
+    : `<div class="sub" style="margin-top:6px">Ningún indicador cambió de color en la semana.</div>`;
+  el.innerHTML = h;
+})();
+
+// ---------- gráficos SVG ----------
+// Cada gráfico se dibuja al ANCHO REAL de su tarjeta: así el texto mide lo mismo en un celular que en una
+// computadora (antes se dibujaban a 540/1080 px y se achicaban: en un celular las letras medían 4 px).
+// Una sola escala por gráfico, líneas de 2 px; responden al mouse y al dedo (eventos pointer).
 const tt = document.getElementById('ttip');
-function chart({titulo, sub, series, unidad, dec=2, desde, nota, base0=false}){
-  const W=540,H=210,ml=46,mr=14,mt=10,mb=26;
+const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const ESTL = {calma:['good','calma'], vigilancia:['warning','vigilancia'], alerta:['critical','alerta']};
+function mostrarTip(e, html){
+  tt.innerHTML = html; tt.style.display = 'block';
+  tt.style.left = Math.max(4, Math.min(e.clientX+14, innerWidth-tt.offsetWidth-8))+'px';
+  tt.style.top = (e.clientY+16)+'px';
+}
+function ocultarTip(){ tt.style.display = 'none'; }
+function anchoUtil(el){ const cs = getComputedStyle(el); return Math.max(260, el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)); }
+function alPasar(hit, mover, salir){
+  ['pointermove','pointerdown'].forEach(ev => hit.addEventListener(ev, mover));
+  hit.addEventListener('pointerleave', salir);
+}
+
+function chart({el, titulo, sub, series, unidad, dec=2, desde, nota, base0=false}){
+  const W = anchoUtil(el), H = W<500 ? 190 : 210, ml=46, mr=14, mt=10, mb=26;
   const pts = series.flatMap(s=>s.datos.filter(d=>!desde||d.fecha>=desde));
-  if(!pts.length) return '';
+  if(!pts.length){ el.style.display='none'; return; }
   const t = d=>new Date(d.fecha).getTime();
-  let x0=Math.min(...pts.map(t)), x1=Math.max(...pts.map(t));
+  const x0=Math.min(...pts.map(t)), x1=Math.max(...pts.map(t));
   let y0=Math.min(...pts.map(d=>d.valor)), y1=Math.max(...pts.map(d=>d.valor));
   if(base0) y0=Math.min(0,y0);
   const pad=(y1-y0)*0.12||1; y0=base0?y0:y0-pad; y1+=pad;
   const X=v=>ml+(v-x0)/(x1-x0||1)*(W-ml-mr), Y=v=>mt+(1-(v-y0)/(y1-y0))*(H-mt-mb);
-  const ticks=4, yt=[...Array(ticks+1)].map((_,i)=>y0+(y1-y0)*i/ticks);
-  const nx = 4, xt=[...Array(nx+1)].map((_,i)=>x0+(x1-x0)*i/nx);
-  const id='c'+Math.random().toString(36).slice(2,7);
+  const yt=[...Array(5)].map((_,i)=>y0+(y1-y0)*i/4), nx=W<500?3:4, xt=[...Array(nx+1)].map((_,i)=>x0+(x1-x0)*i/nx);
   let g = `<g class="grid">${yt.map(v=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>
    <g class="axis">${yt.map(v=>`<text x="${ml-6}" y="${Y(v)+3}" text-anchor="end">${nf(v,Math.abs(y1)>=100?0:1)}</text>`).join('')}
-   ${xt.map(v=>{const d=new Date(v);return `<text x="${X(v)}" y="${H-8}" text-anchor="middle">${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
+   ${xt.map(v=>{const d=new Date(v);return `<text x="${X(v)}" y="${H-8}" text-anchor="middle">${MES[d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
   series.forEach((s,i)=>{
     const d=s.datos.filter(p=>!desde||p.fecha>=desde);
-    const path=d.map((p,j)=>`${j?'L':'M'}${X(t(p)).toFixed(1)},${Y(p.valor).toFixed(1)}`).join('');
-    g+=`<path d="${path}" fill="none" stroke="var(--series-${i+1})" stroke-width="2" stroke-linejoin="round"/>`;
+    g+=`<path d="${d.map((p,j)=>`${j?'L':'M'}${X(t(p)).toFixed(1)},${Y(p.valor).toFixed(1)}`).join('')}" fill="none" stroke="var(--series-${i+1})" stroke-width="2" stroke-linejoin="round"/>`;
     // series ralas: un punto por dato (se ve dónde hay datos de verdad); series diarias: solo la línea
     if(d.length<=40) g+=d.map(p=>`<circle cx="${X(t(p))}" cy="${Y(p.valor)}" r="3" fill="var(--series-${i+1})" stroke="var(--surface-1)" stroke-width="1.5"/>`).join('');
   });
-  // capa de interacción: el punto más cercano en x
   const all = series.flatMap((s,i)=>s.datos.filter(p=>!desde||p.fecha>=desde).map(p=>({...p,s:s.nombre,i})));
-  g+=`<line id="${id}x" y1="${mt}" y2="${H-mb}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/>
-      <rect x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}" fill="transparent" data-c="${id}"/>`;
-  setTimeout(()=>{
-    const r=document.querySelector(`rect[data-c="${id}"]`), ln=document.getElementById(id+'x'), svg=r.ownerSVGElement;
-    r.addEventListener('mousemove',e=>{
-      const b=svg.getBoundingClientRect(), mx=(e.clientX-b.left)*W/b.width;
-      const tv=x0+(mx-ml)/(W-ml-mr)*(x1-x0);
-      const near=all.reduce((a,p)=>Math.abs(t(p)-tv)<Math.abs(t(a)-tv)?p:a);
-      const same=all.filter(p=>p.fecha===near.fecha);
-      ln.setAttribute('x1',X(t(near)));ln.setAttribute('x2',X(t(near)));ln.style.display='';
-      tt.innerHTML=`<b>${fecha(near.fecha)}</b><br>`+same.map(p=>`<span style="color:var(--series-${p.i+1})">●</span> ${p.s}: ${nf(p.valor,dec)} ${unidad}`).join('<br>');
-      tt.style.display='block'; tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY-10)+'px';
-    });
-    r.addEventListener('mouseleave',()=>{tt.style.display='none';ln.style.display='none';});
-  });
-  const leg = series.length>1? `<div class="leg">${series.map((s,i)=>`<span><i style="background:var(--series-${i+1})"></i>${s.nombre}</span>`).join('')}</div>`:'';
-  return `<div class="card chart"><h3>${titulo}</h3><div class="sub">${sub}</div>${leg}
-    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${titulo}">${g}</svg>${nota?`<div class="nota">${nota}</div>`:''}</div>`;
+  g+=`<line class="xh" y1="${mt}" y2="${H-mb}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/>
+      <rect class="hit" x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}" fill="transparent"/>`;
+  const leg = series.length>1 ? `<div class="leg">${series.map((s,i)=>`<span><i style="background:var(--series-${i+1})"></i>${s.nombre}</span>`).join('')}</div>` : '';
+  el.innerHTML = `<h3>${titulo}</h3><div class="sub">${sub}</div>${leg}
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${titulo}">${g}</svg>${nota?`<div class="nota">${nota}</div>`:''}`;
+  const svg=el.querySelector('svg'), hit=svg.querySelector('.hit'), ln=svg.querySelector('.xh');
+  alPasar(hit, e=>{
+    const b=svg.getBoundingClientRect(), tv=x0+((e.clientX-b.left)*W/b.width-ml)/(W-ml-mr)*(x1-x0);
+    const near=all.reduce((a,p)=>Math.abs(t(p)-tv)<Math.abs(t(a)-tv)?p:a);
+    ln.setAttribute('x1',X(t(near))); ln.setAttribute('x2',X(t(near))); ln.style.display='';
+    mostrarTip(e, `<b>${fecha(near.fecha)}</b><br>`+all.filter(p=>p.fecha===near.fecha).map(p=>`<span style="color:var(--series-${p.i+1})">●</span> ${p.s}: ${nf(p.valor,dec)} ${unidad}`).join('<br>'));
+  }, ()=>{ ocultarTip(); ln.style.display='none'; });
 }
-const H_ = P.historia;
-document.getElementById('charts').innerHTML =
-  chart({titulo:'Dólar oficial y paralelo', sub:'Bs por dólar, desde el inicio de la flotación', unidad:'Bs',
-    series:[{nombre:'Oficial (BCB)',datos:H_.tco},{nombre:'Paralelo',datos:H_.paralelo}], desde:'2026-06-29',
-    nota:'Cuando la línea naranja queda debajo de la azul, el paralelo está más barato que el oficial: señal de confianza. Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).'}) +
-  chart({titulo:'Reservas internacionales netas', sub:'Millones de dólares', unidad:'MM USD', dec:0, base0:true,
-    series:[{nombre:'RIN',datos:H_.rin}], nota:'Mínimo en 2023; la recuperación de 2026 es sobre todo oro revalorizado y compras genuinas.'}) +
-  chart({titulo:'Inflación a 12 meses', sub:'Porcentaje', unidad:'%', base0:true,
-    series:[{nombre:'Inflación',datos:H_.inflacion_12m}], nota:'Bajó de 21 % a 5 %, pero repuntó a 7,08 % en octubre por el nuevo precio del diésel.'}) +
-  chart({titulo:'Riesgo país (EMBI)', sub:'Puntos básicos', unidad:'pb', dec:0, base0:true,
-    series:[{nombre:'EMBI',datos:H_.embi}], nota:'Puntos sueltos tomados de la prensa: la serie diaria llegará con el recolector de mercado.'});
 
-// ---------- memoria del índice: línea (escala fija 0-100) + franja de cobertura con el mismo eje x ----------
-(function(){
+// ---------- memoria del índice: línea (0-100) + franja de cobertura con el mismo eje x ----------
+function dibujarMemoria(){
   const M = P.indice_historia, el = document.getElementById('memoria');
   if(!M || !M.puntos.length){ el.style.display='none'; return; }
-  const pts = M.puntos, W=1080, ml=40, mr=86, H1=230, mt=12, mb=8, H2=58, mb2=22;
+  const pts=M.puntos, W=anchoUtil(el), angosto=W<600, ml=32, mr=12, mt=14, mb=8, H1=angosto?190:230, H2=58, mb2=22;
   const t = s=>new Date(s+'T00:00:00Z').getTime();
   const x0=t(pts[0].fecha), x1=Math.max(t(pts[pts.length-1].fecha), x0+864e5);
   const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>mt+(1-v/100)*(H1-mt-mb);
   const paso=(W-ml-mr)/((x1-x0)/864e5+1);
-  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   // tramos: solo días con mayoría de indicadores votando; un día insuficiente corta la línea
   let d='', abierto=false;
   pts.forEach(p=>{ if(p.suficiente){ d+=`${abierto?'L':'M'}${X(t(p.fecha)).toFixed(1)},${Y(p.valor).toFixed(1)}`; abierto=true; } else abierto=false; });
   const meses=[]; {const a=new Date(x0); let m=new Date(Date.UTC(a.getUTCFullYear(),a.getUTCMonth()+1,1)); while(m.getTime()<=x1){meses.push(m.getTime()); m=new Date(Date.UTC(m.getUTCFullYear(),m.getUTCMonth()+1,1));}}
   const robot = M.robot_desde && M.robot_desde>pts[0].fecha ? X(t(M.robot_desde)) : null;
+  const ref = (y,txt)=>`<g class="ref adentro"><line x1="${ml}" x2="${W-mr}" y1="${y}" y2="${y}"/><text x="${W-mr-4}" y="${y-4}" text-anchor="end">${txt}</text></g>`;
   const g1 = `<g class="grid">${[0,100].map(v=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>
     <g class="axis">${[0,35,60,100].map(v=>`<text x="${ml-6}" y="${Y(v)+3}" text-anchor="end">${v}</text>`).join('')}</g>
-    <g class="ref">${[[35,'vigilancia'],[60,'alerta']].map(([v,l])=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${W-mr+6}" y="${Y(v)+3}">${l} desde ${v}</text>`).join('')}</g>
-    ${robot?`<line x1="${robot}" x2="${robot}" y1="${mt}" y2="${H1-mb}" stroke="var(--text-secondary)" stroke-width="1"/><text x="${robot-6}" y="${mt+9}" text-anchor="end" style="font-size:10px;fill:var(--text-secondary)">← reconstruido</text><text x="${robot+6}" y="${mt+9}" style="font-size:10px;fill:var(--text-secondary)">en vivo →</text>`:''}
+    ${ref(Y(60),'alerta desde 60')}${ref(Y(35),'vigilancia desde 35')}
+    ${robot?`<line x1="${robot}" x2="${robot}" y1="${mt}" y2="${H1-mb}" stroke="var(--text-secondary)" stroke-width="1"/><text x="${robot-6}" y="${mt+9}" text-anchor="end" style="font-size:10px;fill:var(--text-secondary)">← reconstruido</text>${(W-mr-robot)>70?`<text x="${robot+6}" y="${mt+9}" style="font-size:10px;fill:var(--text-secondary)">en vivo →</text>`:''}`:''}
     <path d="${d}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle id="mem-dot" r="4.5" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" style="display:none"/>`;
-  const Yc=v=>(1-v)*(H2-4)+2;
+    <circle class="punto" r="4.5" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" style="display:none"/>`;
+  const Yc=v=>(1-v)*(H2-4)+2, cadaMes = angosto ? 2 : 1;
   const g2 = `<g class="grid"><line x1="${ml}" x2="${W-mr}" y1="${Yc(0)}" y2="${Yc(0)}"/></g>
-    ${pts.map(p=>{const h=p.votan/p.de; return `<rect x="${(X(t(p.fecha))-paso/2+0.5).toFixed(1)}" y="${Yc(h).toFixed(1)}" width="${Math.max(1,paso-1).toFixed(1)}" height="${(Yc(0)-Yc(h)).toFixed(1)}" fill="var(--${p.suficiente?'text-muted':'line'})"/>`}).join('')}
-    <g class="ref"><line x1="${ml}" x2="${W-mr}" y1="${Yc(0.5)}" y2="${Yc(0.5)}"/><text x="${W-mr+6}" y="${Yc(0.5)+3}">mayoría</text></g>
+    ${pts.map(p=>{const h=p.votan/p.de; return `<rect x="${(X(t(p.fecha))-paso/2+0.25).toFixed(1)}" y="${Yc(h).toFixed(1)}" width="${Math.max(0.8,paso-0.5).toFixed(1)}" height="${(Yc(0)-Yc(h)).toFixed(1)}" fill="var(--${p.suficiente?'text-muted':'line'})"/>`}).join('')}
+    <g class="ref"><line x1="${ml}" x2="${W-mr}" y1="${Yc(0.5)}" y2="${Yc(0.5)}"/></g>
     <g class="axis"><text x="${ml-6}" y="${Yc(1)+8}" text-anchor="end">9</text><text x="${ml-6}" y="${Yc(0)}" text-anchor="end">0</text>
-    ${meses.map(m=>{const f=new Date(m);return `<text x="${X(m)}" y="${H2+mb2-6}" text-anchor="middle">${MES[f.getUTCMonth()]} ${String(f.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
-  const ESTL={calma:['good','calma'],vigilancia:['warning','vigilancia'],alerta:['critical','alerta']};
+    ${meses.filter((_,i)=>i%cadaMes===0).map(m=>{const f=new Date(m);return `<text x="${X(m)}" y="${H2+mb2-6}" text-anchor="middle">${MES[f.getUTCMonth()]} ${String(f.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
   const cambios = M.cambios.length ? `<ul class="cambios">${M.cambios.map(c=>`<li>${icono(ESTL[c.a][0])} ${fecha(c.fecha)}: de ${c.de} a <b>${c.a}</b> (${nf(c.indice,1)})</li>`).join('')}</ul>` : '';
-  const ult = pts[pts.length-1];
   el.innerHTML = `<h3>Índice de riesgo, día por día</h3>
-    <div class="sub">0 a 100. Hasta el ${fecha(M.robot_desde||ult.fecha)}, reconstruido solo con los datos que ya se habían publicado cada día; desde entonces, lo que el robot calculó cada mañana.</div>
-    <svg viewBox="0 0 ${W} ${H1}" role="img" aria-label="Evolución del índice de riesgo desde la flotación">${g1}<rect id="mem-hit" x="${ml}" y="0" width="${W-ml-mr}" height="${H1}" fill="transparent"/></svg>
-    <div class="cob-t">Indicadores que votaron cada día (de 9)</div>
-    <svg viewBox="0 0 ${W} ${H2+mb2}" role="img" aria-label="Cuántos indicadores votaron cada día">${g2}<line id="mem-x2" y1="0" y2="${H2}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/></svg>
+    <div class="sub">0 a 100. Hasta el ${fecha(M.robot_desde||pts[pts.length-1].fecha)}, reconstruido solo con los datos que ya se habían publicado cada día; desde entonces, lo que el robot calculó cada mañana.</div>
+    <svg viewBox="0 0 ${W} ${H1}" width="${W}" height="${H1}" role="img" aria-label="Evolución del índice de riesgo desde la flotación">${g1}<rect class="hit" x="${ml}" y="0" width="${W-ml-mr}" height="${H1}" fill="transparent"/></svg>
+    <div class="cob-t">Indicadores que votaron cada día (de 9). La línea punteada marca la mayoría.</div>
+    <svg viewBox="0 0 ${W} ${H2+mb2}" width="${W}" height="${H2+mb2}" role="img" aria-label="Cuántos indicadores votaron cada día">${g2}<line class="xh" y1="0" y2="${H2}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/></svg>
     ${cambios}
-    <div class="solo-aprendiz">Si un día vota menos de la mitad de los indicadores, la línea se corta: con pocos votos, el índice depende más de cuáles votaron que de la economía. La franja de abajo muestra cuántos votaron cada día.</div>
+    <div class="solo-aprendiz">Si un día vota menos de la mitad de los indicadores, la línea se corta: con pocos votos, el índice depende más de cuáles votaron que de la economía. Para bajar de estado, el índice debe quedar 3 puntos por debajo del umbral; así no cambia de estado por oscilaciones de un día.</div>
     <details style="margin-top:10px"><summary>Ver la tabla día por día</summary>
       <table><thead><tr><th>Fecha</th><th>Índice</th><th>Estado</th><th>Votaron</th><th>Origen</th></tr></thead><tbody>
       ${pts.slice().reverse().map(p=>`<tr><td>${fecha(p.fecha)}</td><td class="n">${nf(p.valor,1)}</td><td>${p.suficiente?icono(ESTL[p.estado][0])+' '+p.estado:'pocos datos'}</td><td class="n">${p.votan} de ${p.de}</td><td>${p.origen}</td></tr>`).join('')}
       </tbody></table></details>`;
-  const hit=document.getElementById('mem-hit'), dot=document.getElementById('mem-dot'), x2=document.getElementById('mem-x2'), svg=hit.ownerSVGElement;
-  hit.addEventListener('mousemove',e=>{
-    const b=svg.getBoundingClientRect(), mx=(e.clientX-b.left)*W/b.width, tv=x0+(mx-ml)/(W-ml-mr)*(x1-x0);
-    const p=pts.reduce((a,q)=>Math.abs(t(q.fecha)-tv)<Math.abs(t(a.fecha)-tv)?q:a);
-    const px=X(t(p.fecha));
+  const svgs=el.querySelectorAll('svg'), hit=svgs[0].querySelector('.hit'), dot=svgs[0].querySelector('.punto'), x2=svgs[1].querySelector('.xh');
+  alPasar(hit, e=>{
+    const b=svgs[0].getBoundingClientRect(), tv=x0+((e.clientX-b.left)*W/b.width-ml)/(W-ml-mr)*(x1-x0);
+    const p=pts.reduce((a,q)=>Math.abs(t(q.fecha)-tv)<Math.abs(t(a.fecha)-tv)?q:a), px=X(t(p.fecha));
     dot.setAttribute('cx',px); dot.setAttribute('cy',Y(p.valor)); dot.style.display=p.suficiente?'':'none';
     x2.setAttribute('x1',px); x2.setAttribute('x2',px); x2.style.display='';
     const [k,l]=ESTL[p.estado];
-    tt.innerHTML=`<b>${fecha(p.fecha)}</b><br>`+(p.suficiente?`Índice ${nf(p.valor,1)} · ${icono(k)} ${l}`:`Pocos datos: no se dibuja (daría ${nf(p.valor,1)})`)+
-      `<br>Votaron ${p.votan} de ${p.de} indicadores<br><span style="color:var(--text-muted)">${p.origen==='en vivo'?'calculado ese día por el robot':'reconstruido con los datos de entonces'}</span>`;
-    tt.style.display='block'; tt.style.left=Math.min(e.clientX+14, innerWidth-260)+'px'; tt.style.top=(e.clientY-10)+'px';
-  });
-  hit.addEventListener('mouseleave',()=>{tt.style.display='none';dot.style.display='none';x2.style.display='none';});
-})();
+    mostrarTip(e, `<b>${fecha(p.fecha)}</b><br>`+(p.suficiente?`Índice ${nf(p.valor,1)} · ${icono(k)} ${l}`:`Pocos datos: no se dibuja (daría ${nf(p.valor,1)})`)+
+      `<br>Votaron ${p.votan} de ${p.de} indicadores<br><span style="color:var(--text-muted)">${p.origen==='en vivo'?'calculado ese día por el robot':'reconstruido con los datos de entonces'}</span>`);
+  }, ()=>{ ocultarTip(); dot.style.display='none'; x2.style.display='none'; });
+}
+
+// ---------- ¿Habría avisado? Barras del índice anual desde 1980 (datos oficiales) ----------
+function rangos(anios){ // [1981,1982,1983,2020] -> "1981-1983, 2020"
+  const r=[]; anios.forEach(a=>{ const u=r[r.length-1]; if(u && a===u[1]+1) u[1]=a; else r.push([a,a]); });
+  return r.map(([a,b])=>a===b?`${a}`:`${a}-${b}`).join(', ');
+}
+function dibujarHistoria(){
+  const A=P.historia_anual, el=document.getElementById('historia');
+  if(!A || !A.length){ el.style.display='none'; return; }
+  const W=anchoUtil(el), H=W<500?200:230, ml=32, mr=12, mt=12, mb=34;
+  const paso=(W-ml-mr)/A.length, bw=Math.max(2, Math.min(22, paso-2));
+  const X=i=>ml+paso*i+paso/2, Y=v=>mt+(1-v/100)*(H-mt-mb);
+  const ref=(v,txt)=>`<g class="ref adentro"><line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${ml+4}" y="${Y(v)-4}">${txt}</text></g>`;
+  const cadaAnios = W<500 ? 10 : 5;
+  const g = `<g class="grid"><line x1="${ml}" x2="${W-mr}" y1="${Y(0)}" y2="${Y(0)}"/></g>
+    <g class="axis">${[0,35,60,100].map(v=>`<text x="${ml-6}" y="${Y(v)+3}" text-anchor="end">${v}</text>`).join('')}
+    ${A.map((r,i)=>r.anio%cadaAnios===0?`<text x="${X(i)}" y="${H-6}" text-anchor="middle">${r.anio}</text>`:'').join('')}</g>
+    ${A.map((r,i)=>{const v=Math.max(r.indice,1.5), rr=Math.min(3,bw/3,(Y(0)-Y(v))/2);  // índice 0: barra mínima visible
+      // barra: esquinas redondeadas arriba, base recta; clara si votó menos de la mitad de los indicadores
+      return `<path d="M${X(i)-bw/2},${Y(0)}V${Y(v)+rr}q0,-${rr} ${rr},-${rr}H${X(i)+bw/2-rr}q${rr},0 ${rr},${rr}V${Y(0)}Z" fill="var(--${ESTL[r.estado][0]})" opacity="${2*r.votan>r.de?1:0.45}"/>`
+        + (r.episodio?`<circle cx="${X(i)}" cy="${Y(0)+8}" r="2.5" fill="var(--text-secondary)"/>`:'');}).join('')}
+    ${ref(60,'alerta desde 60')}${ref(35,'vigilancia desde 35')}
+    <line class="xh" y1="${mt}" y2="${Y(0)}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/>
+    <rect class="hit" x="${ml}" y="0" width="${W-ml-mr}" height="${H}" fill="transparent"/>`;
+  const alerta=A.filter(r=>r.estado==='alerta').map(r=>r.anio);
+  el.innerHTML = `<h3>Índice de cada año, calculado con datos oficiales</h3>
+    <div class="sub">FMI, BCB y Banco Mundial, con las reglas del tipo de cambio fijo. Un punto bajo la barra marca un año de crisis o episodio conocido.</div>
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Índice de riesgo de cada año desde 1980">${g}</svg>
+    <div class="nota">En alerta: ${rangos(alerta)}. Barras claras: ese año votó menos de la mitad de los indicadores (antes de 2002 no hay series de liquidez ni de brecha).</div>
+    <div class="solo-aprendiz">Así se comprueba que el índice sirve: debía encenderse antes y durante las crisis conocidas y apagarse en los años buenos. Las pruebas automáticas del sistema exigen que lo siga haciendo.</div>
+    <details style="margin-top:10px"><summary>Ver la tabla año por año</summary>
+      <table><thead><tr><th>Año</th><th>Índice</th><th>Estado</th><th>Votaron</th><th>Episodio</th></tr></thead><tbody>
+      ${A.slice().reverse().map(r=>`<tr><td>${r.anio}</td><td class="n">${nf(r.indice,1)}</td><td>${icono(ESTL[r.estado][0])} ${r.estado}</td><td class="n">${r.votan} de ${r.de}</td><td>${r.episodio||''}</td></tr>`).join('')}
+      </tbody></table></details>`;
+  const svg=el.querySelector('svg'), hit=svg.querySelector('.hit'), ln=svg.querySelector('.xh');
+  alPasar(hit, e=>{
+    const b=svg.getBoundingClientRect(), i=Math.max(0,Math.min(A.length-1,Math.floor(((e.clientX-b.left)*W/b.width-ml)/paso))), r=A[i];
+    ln.setAttribute('x1',X(i)); ln.setAttribute('x2',X(i)); ln.style.display='';
+    const [k,l]=ESTL[r.estado];
+    mostrarTip(e, `<b>${r.anio}</b><br>Índice ${nf(r.indice,1)} · ${icono(k)} ${l}<br>Votaron ${r.votan} de ${r.de} indicadores${r.episodio?`<br><span style="color:var(--text-muted)">${r.episodio}</span>`:''}`);
+  }, ()=>{ ocultarTip(); ln.style.display='none'; });
+}
+
+// ---------- dibujar todo, y redibujar si cambia el ancho de la pantalla ----------
+const H_ = P.historia, N_ = P.notas_graficos || {};
+document.getElementById('charts').innerHTML = ['g-dolar','g-rin','g-inflacion','g-embi'].map(id=>`<div class="card chart" id="${id}"></div>`).join('');
+function dibujarTodo(){
+  chart({el:document.getElementById('g-dolar'), titulo:'Dólar oficial y paralelo', sub:'Bs por dólar, desde el inicio de la flotación', unidad:'Bs',
+    series:[{nombre:'Oficial (BCB)',datos:H_.tco},{nombre:'Paralelo',datos:H_.paralelo}], desde:'2026-06-29', nota:N_.dolar});
+  chart({el:document.getElementById('g-rin'), titulo:'Reservas internacionales netas', sub:'Millones de dólares', unidad:'MM USD', dec:0, base0:true,
+    series:[{nombre:'RIN',datos:H_.rin}], nota:N_.rin});
+  chart({el:document.getElementById('g-inflacion'), titulo:'Inflación a 12 meses', sub:'Porcentaje', unidad:'%', base0:true,
+    series:[{nombre:'Inflación',datos:H_.inflacion_12m}], nota:N_.inflacion});
+  chart({el:document.getElementById('g-embi'), titulo:'Riesgo país (EMBI)', sub:'Puntos básicos', unidad:'pb', dec:0, base0:true,
+    series:[{nombre:'EMBI',datos:H_.embi}], nota:N_.embi});
+  dibujarMemoria();
+  dibujarHistoria();
+}
+dibujarTodo();
+let ultimoAncho = innerWidth, espera;
+addEventListener('resize', ()=>{ if(innerWidth===ultimoAncho) return; ultimoAncho=innerWidth; clearTimeout(espera); espera=setTimeout(dibujarTodo,150); });
 
 // salud
 const S=P.salud;

@@ -73,11 +73,18 @@ def main(argv=None) -> dict:
     # el estado del día es el de la memoria: con histéresis, bajar de estado exige margen
     pul["estado_sin_histeresis"] = pul["estado"]
     pul["estado"] = filas[-1]["estado"]
-    P.guardar(pul)
+    pul["semana"] = memoria.resumen_semana(filas)
 
-    # Prueba retrospectiva anual con series oficiales (reports/historia.md)
+    # Prueba retrospectiva anual con series oficiales (reports/historia.md y el Pulso)
+    anual = historia.prueba_retrospectiva(series, 1980, a.hoy.year - 1)
     with open(os.path.join(store.RAIZ, "reports", "historia.md"), "w", encoding="utf-8") as fh:
-        fh.write(historia.informe(historia.prueba_retrospectiva(series, 1980, a.hoy.year - 1)))
+        fh.write(historia.informe(anual))
+    pul["historia_anual"] = [{k: r[k] for k in ("anio", "indice", "estado", "votan", "de", "episodio")} for r in anual]
+
+    # Textos para el lector, armados con los datos del día
+    pul["notas_graficos"] = P.notas_graficos(series)
+    pul["resumen"] = P.resumen(pul)
+    P.guardar(pul)
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)
     estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)

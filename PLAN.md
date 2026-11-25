@@ -12,7 +12,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 4 | Dólar paralelo automático | ✅ hecha (25-nov-2026) |
 | 5 | Más series oficiales automáticas | ✅ hecha (25-nov-2026) |
 | 6 | El motor con datos reales | ✅ hecha (25-nov-2026) |
-| 7 | El Pulso para el lector | pendiente |
+| 7 | El Pulso para el lector | ✅ hecha (25-nov-2026) |
 | 8 | Carga semanal asistida por IA | pendiente |
 | 9 | Informe semanal verificado | pendiente |
 
@@ -145,13 +145,20 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 - **Umbrales del régimen flotante: no se cambian todavía.** Cinco meses de flotación no alcanzan para recalibrar. Lo que se vio es coherente: la depreciación > 5 % en 30 días se encendió en el episodio real de septiembre y la brecha cercana a 0 marca confianza. Se revisarán al cumplir 12 meses (jun-2027).
 - **Déficit fiscal:** la prueba histórica usa el del gobierno general (FMI), que es algo menor que el del sector público no financiero que publica el MEFP. Por ejemplo, para 2016 el motor usaba 7,2 % y el FMI da 6,0 %. Se eligió la serie oficial consistente aunque sea más benigna.
 
-## 7. El Pulso para el lector
+## 7. El Pulso para el lector ✅
 
-- Mostrar qué cambió desde la semana pasada y por qué se movió el índice.
-- Agregar una ficha por indicador: qué mide, por qué importa y su último dato con la fuente enlazada.
-- Revisar que se lea bien en el celular y que sea accesible. Ya se sabe que en un celular la página se desborda a la derecha (se cortan las tarjetas de arriba) y que el texto del gráfico del índice queda muy chico.
+**Hecho:**
+- **"En pocas palabras"**, al inicio de la página: tres o cuatro frases en lenguaje simple, armadas cada día con los datos del día. Dicen el estado y qué significa, lo que más preocupa, lo que ayuda, cómo se movió la semana y qué no votó. Cada indicador tiene su frase, por ejemplo "el déficit del Estado (11,0 % del PIB)".
+- **"Qué cambió esta semana"**: compara con hace 7 días el índice, el estado y los indicadores que cambiaron de color.
+- **Gráficos al ancho real de la pantalla.** Se dibujaban a 540 o 1.080 px y se achicaban; en un celular las letras del gráfico del índice medían 4 px, y ahora son de tamaño normal. Se redibujan si cambia el ancho y responden al dedo, no solo al mouse.
+- **Notas de los gráficos generadas con los datos** (`notas_graficos`), en lugar del texto fijo que envejecía. Por ejemplo, la nota de la inflación decía que había repuntado "en octubre".
+- **"¿Habría avisado? El índice desde 1980"**: barras por año con el color del estado, los umbrales, un punto en los años de crisis conocida, barras claras donde votó menos de la mitad de los indicadores, y una tabla año por año.
+- En el celular, las barras de "Qué empuja el índice" usan el ancho disponible, y las tablas tienen desplazamiento horizontal propio.
+- 4 pruebas nuevas (77 en total).
 
-**Listo cuando:** una persona sin formación económica puede explicar el estado actual después de leer la página.
+**Corrección:** el "desborde a la derecha en el celular" anotado en la sesión 3 **no existía**. Edge en modo headless no achica la ventana por debajo de unos 500 px, así que la captura se dibujaba a ~500 px y se recortaba a 390. Medido en un marco de 360 px, la página no se desborda. El problema real era el tamaño de las letras de los gráficos, que sí se corrigió.
+
+**Pendiente menor:** los gráficos de dólar, reservas, inflación y EMBI no tienen tabla de datos para quien no puede usar el mouse ni el tacto; sus notas dicen los valores clave.
 
 ## 8. Carga semanal asistida por IA
 
