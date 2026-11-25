@@ -177,6 +177,11 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
   Comenta el resultado en el *pull request* y falla si alguna fila no pasa. Una persona abre los enlaces y aprueba.
 - `python -m pipeline.propuesta pendientes` lista las series manuales de la más urgente a la menos.
 - La rutina necesita la **app de Claude en GitHub** instalada en el repositorio para poder hacer push y abrir el *pull request*. Se instaló el 25-nov-2026.
+- **Primera corrida de prueba (25-nov-2026):** descargó el repositorio, corrió `pendientes` y buscó en la web. Terminó bien y **no abrió ningún *pull request***, lo cual fue correcto.
+  - Para el EMBI solo halló una cifra posterior (595 pb hacia el 20-nov, en MarketData), pero apareció solo en el resumen del buscador y no pudo abrir la página para verificarla.
+  - El Programa Monetario de noviembre todavía no estaba publicado.
+  - Todavía no se probó el push ni la creación del *pull request*, porque no hubo dato que proponer.
+- **Pendiente:** la nube de Claude bloquea los sitios que no están en la lista de dominios permitidos del entorno (falló `eaduana.com` y `marketdata.com.py`). Hay que permitir las fuentes en la configuración de red del entorno "Default" de claude.ai/code. Las fuentes son: `bcb.gob.bo`, `economia.gob.bo`, `ine.gob.bo`, `imf.org`, `worldbank.org`, `bloomberglinea.com`, `eldeber.com.bo`, `eju.tv`, `correodelsur.com`, `lostiempos.com`, `eaduana.com`, `ambito.com`, `reuters.com`, `reduno.com.bo`.
 - 8 pruebas nuevas (85 en total).
 
 ## 9. Informe semanal verificado
