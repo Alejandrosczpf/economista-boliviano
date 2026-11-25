@@ -20,6 +20,7 @@ Tu tarea es **proponer** los datos que no tienen recolector automático. Los pro
 4. Trabaja en una rama `carga/AAAA-MM-DD`. Corre `python -m tests` y `python -m pipeline.propuesta revisar <copia de entradas.csv de main>`. Todo debe pasar.
 5. Abre el *pull request* con el título `Carga semanal AAAA-MM-DD`. En el cuerpo, por cada fila, pon la **cita textual** de la fuente donde aparece el número y su enlace. Así quien revisa compara sin buscar.
 6. **No hagas merge.** No toques `data/manual/aprobados.csv`, el código ni las series que llegan solas (el workflow las rechaza).
+7. **Bitácora, siempre, aunque no hayas propuesto nada:** comenta en el issue #8 "Bitácora de las rutinas" con tus herramientas de GitHub (por ejemplo `mcp__github__add_issue_comment`). La **primera línea** debe ser exactamente `<!-- bitacora: carga AAAA-MM-DD -->`, con la fecha de hoy. Después va tu resumen: series revisadas, qué encontraste, el enlace al *pull request* si lo abriste, y los dominios que no pudiste abrir. Si falta este comentario, el robot avisa el martes que la rutina falló.
 
 ## Series y fuentes
 

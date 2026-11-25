@@ -19,6 +19,7 @@ Las fechas ("25 de noviembre") y los años no cuentan como cifras.
 3. Escribe `informes/AAAA-MM-DD.md`, con la misma fecha de la ficha, en una rama `informe/AAAA-MM-DD`.
 4. Corre `python -m engine.verificador informes/AAAA-MM-DD.md`. Si alguna cifra no pasa, **corrige el texto**: usa la cifra de la ficha, nombra el tema en la misma oración o quita la cifra. Repite hasta que diga que todas coinciden.
 5. Corre `python -m tests`. Abre el *pull request* con el título `Informe semanal AAAA-MM-DD`. No hagas merge. No toques nada fuera de `informes/`.
+6. **Bitácora, siempre, aunque el informe ya existiera:** comenta en el issue #8 "Bitácora de las rutinas" con tus herramientas de GitHub (por ejemplo `mcp__github__add_issue_comment`). La **primera línea** debe ser exactamente `<!-- bitacora: informe AAAA-MM-DD -->`, con la fecha de hoy. Después va tu resumen: la ficha usada, cuántas cifras pasaron el verificador y el enlace al *pull request*. Si falta este comentario, el robot avisa el martes que la rutina falló.
 
 ## Forma del informe
 

@@ -86,6 +86,55 @@ def test_dato_en_cuarentena_avisa_y_explica_como_aprobarlo():
     assert "aprobados.csv" in av[0].detalle and "9.9%" in av[0].detalle
 
 
+# ---------- Vigilancia de las rutinas y de propuestas sin revisar ----------
+
+from datetime import datetime, timezone  # noqa: E402
+
+from pipeline.avisos import avisos_prs, avisos_rutinas, lunes_de_referencia  # noqa: E402
+
+UTC = timezone.utc
+BITACORA_DESDE = datetime(2026, 11, 25, tzinfo=UTC)
+MARTES = datetime(2026, 12, 1, 13, 17, tzinfo=UTC)       # el robot del martes
+LUNES_TEMPRANO = datetime(2026, 11, 30, 13, 17, tzinfo=UTC)  # el robot del lunes, antes de las rutinas
+
+
+def _c(rutina, cuando):
+    return {"body": f"<!-- bitacora: {rutina} {cuando[:10]} -->\nresumen", "created_at": cuando}
+
+
+def test_lunes_de_referencia():
+    assert lunes_de_referencia(MARTES).date() == date(2026, 11, 30)
+    assert lunes_de_referencia(LUNES_TEMPRANO).date() == date(2026, 11, 23)  # el de hoy aún no terminó
+
+
+def test_rutinas_al_dia_no_avisan():
+    c = [_c("carga", "2026-11-30T12:06:00Z"), _c("informe", "2026-11-30T14:03:00Z")]
+    assert avisos_rutinas(c, MARTES, BITACORA_DESDE) == []
+
+
+def test_rutina_desactivada_avisa_el_martes():
+    # la condición de "listo" de la sesión 11: se desactiva una rutina y el martes llega el aviso
+    c = [_c("carga", "2026-11-30T12:06:00Z")]
+    assert _claves(avisos_rutinas(c, MARTES, BITACORA_DESDE)) == ["rutina:informe"]
+
+
+def test_comentario_viejo_no_cuenta():
+    c = [_c("carga", "2026-11-25T18:00:00Z"), _c("informe", "2026-11-25T18:10:00Z")]  # de la semana anterior
+    assert _claves(avisos_rutinas(c, MARTES, BITACORA_DESDE)) == ["rutina:carga", "rutina:informe"]
+
+
+def test_bitacora_nueva_no_exige_lunes_anteriores():
+    # el miércoles en que se crea la bitácora no se puede exigir el comentario del lunes anterior
+    miercoles = datetime(2026, 11, 25, 20, 0, tzinfo=UTC)
+    assert avisos_rutinas([], miercoles, BITACORA_DESDE) == []
+
+
+def test_propuesta_olvidada_avisa_despues_de_7_dias():
+    prs = [{"number": 7, "title": "Sesión 10", "created_at": "2026-11-25T19:02:00Z", "html_url": "u"}]
+    assert avisos_prs(prs, datetime(2026, 12, 1, tzinfo=UTC)) == []
+    assert _claves(avisos_prs(prs, datetime(2026, 12, 3, 20, 0, tzinfo=UTC))) == ["pr-sin-revisar:7"]
+
+
 # ---------- Sincronización con issues de GitHub ----------
 
 class GitHubFalso:
