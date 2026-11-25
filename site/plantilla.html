@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pulso — Economista Boliviano</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f4f3ef; --surface-1:#fcfcfb; --surface-2:#efeee9; --line:#dcdad3;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7873;
+  --series-1:#2a78d6; --series-2:#eb6834;
+  --good:#0ca30c; --warning:#fab219; --critical:#d03b3b; --none:#9a988f;
+  --accent:#1c5cab;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --bg:#121211; --surface-1:#1a1a19; --surface-2:#232321; --line:#34332f;
+    --text-primary:#f0efec; --text-secondary:#c3c2b7; --text-muted:#8f8d85;
+    --series-1:#3987e5; --series-2:#d95926; --accent:#86b6ef;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text-primary);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+header{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+h1{font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 4px;font-weight:600}
+h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary);margin:34px 0 12px;font-weight:600}
+.sub{color:var(--text-muted);font-size:13px}
+.toggle{font-size:13px;color:var(--text-secondary);display:flex;gap:8px;align-items:center;cursor:pointer}
+.hero{display:grid;grid-template-columns:minmax(260px,1fr) 2fr;gap:16px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.card{background:var(--surface-1);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.indice .num{font-size:64px;font-weight:650;line-height:1;font-variant-numeric:tabular-nums}
+.indice .num small{font-size:20px;color:var(--text-muted);font-weight:500}
+.estado{display:inline-flex;align-items:center;gap:8px;font-weight:600;margin-top:10px;font-size:16px}
+.bar{position:relative;height:10px;border-radius:5px;margin:18px 0 6px;background:linear-gradient(90deg,var(--good) 0 35%,var(--warning) 35% 60%,var(--critical) 60% 100%);opacity:.85}
+.bar i{position:absolute;top:-5px;width:3px;height:20px;background:var(--text-primary);border-radius:2px;outline:2px solid var(--surface-1)}
+.escala{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted)}
+.lectura{margin-top:14px;color:var(--text-secondary);font-size:14px}
+.aportes{display:flex;flex-direction:column;gap:7px}
+.aporte{display:grid;grid-template-columns:200px 1fr 46px;gap:10px;align-items:center;font-size:13px}
+.aporte .track{height:12px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.aporte .fill{height:100%;border-radius:0 4px 4px 0}
+.aporte .pts{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-secondary)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.tile{position:relative}
+.tile .t{font-size:13px;color:var(--text-secondary);display:flex;justify-content:space-between;gap:8px}
+.tile .v{font-size:30px;font-weight:620;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.tile .v small{font-size:13px;color:var(--text-muted);font-weight:500;margin-left:4px}
+.tile .m{font-size:12px;color:var(--text-muted)}
+.sem{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+.sem svg{flex:none}
+/* tooltip educativo: hover y foco (WCAG 1.4.13: persistente, se cierra con Esc) */
+.tt{position:relative}
+.tt .tip{visibility:hidden;opacity:0;transition:opacity .12s;position:absolute;z-index:20;left:0;right:0;top:calc(100% + 6px);
+  background:var(--surface-1);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.45;
+  box-shadow:0 8px 24px rgba(0,0,0,.16);color:var(--text-primary)}
+.tt:hover .tip,.tt:focus-within .tip{visibility:visible;opacity:1}
+.tip b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-top:8px}
+.tip b:first-child{margin-top:0}
+.tile:focus{outline:2px solid var(--accent);outline-offset:2px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:820px){.charts{grid-template-columns:1fr}}
+.chart h3{margin:0 0 2px;font-size:14px;font-weight:600}
+.chart .leg{display:flex;gap:14px;font-size:12px;color:var(--text-secondary);margin:4px 0 6px}
+.chart .leg span{display:inline-flex;align-items:center;gap:6px}
+.chart .leg i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart .axis text{font-size:10px;fill:var(--text-muted)}
+.chart .grid line{stroke:var(--line);stroke-width:1}
+.ttip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,.15);display:none;z-index:50}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--text-muted);font-weight:600;font-size:12px}
+td.n{font-variant-numeric:tabular-nums}
+details summary{cursor:pointer;color:var(--text-secondary);font-size:13px}
+.nota{font-size:12px;color:var(--text-muted);margin-top:8px}
+footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
+.aprendiz-off .solo-aprendiz{display:none}
+.solo-aprendiz{font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:8px 10px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header>
+    <div>
+      <h1>Pulso · Economista Boliviano</h1>
+      <div class="sub" id="meta"></div>
+    </div>
+    <label class="toggle"><input type="checkbox" id="aprendiz" checked> Modo aprendiz (explicaciones visibles)</label>
+  </header>
+
+  <section class="hero">
+    <div class="card indice tt" tabindex="0">
+      <div class="sub">Índice de riesgo macro</div>
+      <div class="num" id="indice"></div>
+      <div class="estado" id="estado"></div>
+      <div class="bar"><i id="marca"></i></div>
+      <div class="escala"><span>0 calma</span><span>35</span><span>60</span><span>100 alerta</span></div>
+      <div class="lectura" id="lectura"></div>
+      <div class="tip"><b>Qué es</b>Promedio ponderado de señales de alerta temprana (método KLR). Cada indicador vota verde (0), amarillo (½) o rojo (1); los que no tienen dato fresco no votan.<b>Cómo leerlo</b>Menos de 35: calma. 35 a 60: vigilancia. Más de 60: alerta, la zona donde Bolivia estuvo en 2023 y 2024.</div>
+    </div>
+    <div class="card">
+      <div class="sub" style="margin-bottom:10px">Qué empuja el índice (puntos que aporta cada indicador)</div>
+      <div class="aportes" id="aportes"></div>
+      <div class="solo-aprendiz">Las barras suman el índice. Un indicador en gris no votó: le falta un dato reciente, y el sistema prefiere no adivinar.</div>
+    </div>
+  </section>
+
+  <h2>Indicadores</h2>
+  <div class="grid" id="tiles"></div>
+
+  <h2>Cómo se movieron</h2>
+  <div class="charts" id="charts"></div>
+
+  <h2>Salud del sistema</h2>
+  <div class="card" id="salud"></div>
+
+  <footer id="pie"></footer>
+</div>
+<div class="ttip" id="ttip"></div>
+
+<script id="pulso-data" type="application/json">/*PULSO*/</script>
+<script>
+(function(){
+const P = JSON.parse(document.getElementById('pulso-data').textContent);
+const nf = (v,d=2)=> v==null? '—' : new Intl.NumberFormat('es-BO',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v);
+const fecha = s => { if(!s) return '—'; const [y,m,d]=s.split('-'); return `${+d} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][m-1]} ${y}`; };
+const ESTADO = {calma:['good','Calma'], vigilancia:['warning','Vigilancia'], alerta:['critical','Alerta']};
+const SEM = {verde:['good','Verde'], amarillo:['warning','Amarillo'], rojo:['critical','Rojo'], gris:['none','Sin dato fresco']};
+// ícono + etiqueta: el color nunca va solo
+const icono = k => ({good:'<svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5.5" fill="var(--good)"/><path d="M3.2 6.2l1.8 1.8 3.8-3.8" stroke="#fff" stroke-width="1.6" fill="none"/></svg>',
+  warning:'<svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 .8l5.4 10H.6z" fill="var(--warning)"/><path d="M6 4.3v3" stroke="#000" stroke-width="1.3"/><circle cx="6" cy="8.9" r=".75" fill="#000"/></svg>',
+  critical:'<svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" rx="2" fill="var(--critical)"/><path d="M3.8 3.8l4.4 4.4M8.2 3.8l-4.4 4.4" stroke="#fff" stroke-width="1.5"/></svg>',
+  none:'<svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="none" stroke="var(--none)" stroke-width="1.5" stroke-dasharray="2 1.6"/></svg>'}[k]);
+
+document.getElementById('meta').textContent =
+  `Calculado el ${fecha(P.generado)} · régimen cambiario ${P.regimen==='flotante'?'flexible (flotación) desde el '+fecha(P.regimen_desde):'fijo'}`;
+document.getElementById('indice').innerHTML = `${nf(P.indice,0)}<small> /100</small>`;
+const [ek,el]=ESTADO[P.estado];
+document.getElementById('estado').innerHTML = `${icono(ek)} ${el}`;
+document.getElementById('marca').style.left = `calc(${Math.min(99.5,P.indice)}% - 1.5px)`;
+const rojos = P.tarjetas.filter(t=>t.semaforo==='rojo').map(t=>t.titulo.toLowerCase());
+const verdes = P.tarjetas.filter(t=>t.semaforo==='verde').map(t=>t.titulo.toLowerCase());
+document.getElementById('lectura').textContent =
+  `En rojo: ${rojos.join(', ')||'ninguno'}. A favor: ${verdes.join(', ')||'nada todavía'}.`;
+
+// aportes
+// la barra más larga posible = el indicador de mayor peso en rojo
+const votan = P.tarjetas.filter(x=>x.semaforo!=='gris');
+const maxPts = 100*Math.max(...votan.map(x=>x.peso))/votan.reduce((s,x)=>s+x.peso,0);
+document.getElementById('aportes').innerHTML = P.tarjetas.slice().sort((a,b)=>b.puntos-a.puntos).map(t=>{
+  const [k,l]=SEM[t.semaforo];
+  return `<div class="aporte"><span>${icono(k)} ${t.titulo}</span>
+    <div class="track"><div class="fill" style="width:${(t.puntos/maxPts*100).toFixed(1)}%;background:var(--${k})"></div></div>
+    <span class="pts">${t.semaforo==='gris'?'no vota':nf(t.puntos,1)}</span></div>`;
+}).join('');
+
+// tarjetas
+document.getElementById('tiles').innerHTML = P.tarjetas.map(t=>{
+  const [k,l]=SEM[t.semaforo];
+  const u=t.umbrales, dir=u.mayor?'≥':'≤';
+  const dec = Math.abs(t.valor)>=100?0:2;
+  return `<div class="card tile tt" tabindex="0">
+    <div class="t"><span>${t.titulo}</span><span class="sem">${icono(k)} ${l}</span></div>
+    <div class="v">${t.valor==null?'—':nf(t.valor,dec)}<small>${t.unidad}</small></div>
+    <div class="m">${t.fecha?fecha(t.fecha)+' · ':''}${t.fuente||'sin fuente reciente'}</div>
+    ${t.nota?`<div class="m">${t.nota}</div>`:''}
+    <div class="solo-aprendiz">${t.familia}</div>
+    <div class="tip"><b>Qué es</b>${t.que}<b>Cómo leerlo</b>${t.lectura} Umbral amarillo ${dir} ${nf(u.amarillo,u.amarillo%1?1:0)}, rojo ${dir} ${nf(u.rojo,u.rojo%1?1:0)}.<b>Para una familia</b>${t.familia}${t.url?`<b>Fuente</b><a href="${t.url}" target="_blank" rel="noopener">${t.fuente}</a>`:''}</div>
+  </div>`;
+}).join('');
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.activeElement) document.activeElement.blur(); });
+document.getElementById('aprendiz').addEventListener('change',e=>document.getElementById('app').classList.toggle('aprendiz-off',!e.target.checked));
+
+// ---------- gráficos SVG (una sola escala por gráfico, líneas de 2px, puntos ≥8px al pasar el mouse) ----------
+const tt = document.getElementById('ttip');
+function chart({titulo, sub, series, unidad, dec=2, desde, nota, base0=false}){
+  const W=540,H=210,ml=46,mr=14,mt=10,mb=26;
+  const pts = series.flatMap(s=>s.datos.filter(d=>!desde||d.fecha>=desde));
+  if(!pts.length) return '';
+  const t = d=>new Date(d.fecha).getTime();
+  let x0=Math.min(...pts.map(t)), x1=Math.max(...pts.map(t));
+  let y0=Math.min(...pts.map(d=>d.valor)), y1=Math.max(...pts.map(d=>d.valor));
+  if(base0) y0=Math.min(0,y0);
+  const pad=(y1-y0)*0.12||1; y0=base0?y0:y0-pad; y1+=pad;
+  const X=v=>ml+(v-x0)/(x1-x0||1)*(W-ml-mr), Y=v=>mt+(1-(v-y0)/(y1-y0))*(H-mt-mb);
+  const ticks=4, yt=[...Array(ticks+1)].map((_,i)=>y0+(y1-y0)*i/ticks);
+  const nx = 4, xt=[...Array(nx+1)].map((_,i)=>x0+(x1-x0)*i/nx);
+  const id='c'+Math.random().toString(36).slice(2,7);
+  let g = `<g class="grid">${yt.map(v=>`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>
+   <g class="axis">${yt.map(v=>`<text x="${ml-6}" y="${Y(v)+3}" text-anchor="end">${nf(v,Math.abs(y1)>=100?0:1)}</text>`).join('')}
+   ${xt.map(v=>{const d=new Date(v);return `<text x="${X(v)}" y="${H-8}" text-anchor="middle">${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][d.getUTCMonth()]} ${String(d.getUTCFullYear()).slice(2)}</text>`}).join('')}</g>`;
+  series.forEach((s,i)=>{
+    const d=s.datos.filter(p=>!desde||p.fecha>=desde);
+    const path=d.map((p,j)=>`${j?'L':'M'}${X(t(p)).toFixed(1)},${Y(p.valor).toFixed(1)}`).join('');
+    g+=`<path d="${path}" fill="none" stroke="var(--series-${i+1})" stroke-width="2" stroke-linejoin="round"/>`;
+    g+=d.map(p=>`<circle cx="${X(t(p))}" cy="${Y(p.valor)}" r="3" fill="var(--series-${i+1})" stroke="var(--surface-1)" stroke-width="1.5"/>`).join('');
+  });
+  // capa de interacción: el punto más cercano en x
+  const all = series.flatMap((s,i)=>s.datos.filter(p=>!desde||p.fecha>=desde).map(p=>({...p,s:s.nombre,i})));
+  g+=`<line id="${id}x" y1="${mt}" y2="${H-mb}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/>
+      <rect x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}" fill="transparent" data-c="${id}"/>`;
+  setTimeout(()=>{
+    const r=document.querySelector(`rect[data-c="${id}"]`), ln=document.getElementById(id+'x'), svg=r.ownerSVGElement;
+    r.addEventListener('mousemove',e=>{
+      const b=svg.getBoundingClientRect(), mx=(e.clientX-b.left)*W/b.width;
+      const tv=x0+(mx-ml)/(W-ml-mr)*(x1-x0);
+      const near=all.reduce((a,p)=>Math.abs(t(p)-tv)<Math.abs(t(a)-tv)?p:a);
+      const same=all.filter(p=>p.fecha===near.fecha);
+      ln.setAttribute('x1',X(t(near)));ln.setAttribute('x2',X(t(near)));ln.style.display='';
+      tt.innerHTML=`<b>${fecha(near.fecha)}</b><br>`+same.map(p=>`<span style="color:var(--series-${p.i+1})">●</span> ${p.s}: ${nf(p.valor,dec)} ${unidad}`).join('<br>');
+      tt.style.display='block'; tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY-10)+'px';
+    });
+    r.addEventListener('mouseleave',()=>{tt.style.display='none';ln.style.display='none';});
+  });
+  const leg = series.length>1? `<div class="leg">${series.map((s,i)=>`<span><i style="background:var(--series-${i+1})"></i>${s.nombre}</span>`).join('')}</div>`:'';
+  return `<div class="card chart"><h3>${titulo}</h3><div class="sub">${sub}</div>${leg}
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${titulo}">${g}</svg>${nota?`<div class="nota">${nota}</div>`:''}</div>`;
+}
+const H_ = P.historia;
+document.getElementById('charts').innerHTML =
+  chart({titulo:'Dólar oficial y paralelo', sub:'Bs por dólar, desde el inicio de la flotación', unidad:'Bs',
+    series:[{nombre:'Oficial (BCB)',datos:H_.tco},{nombre:'Paralelo',datos:H_.paralelo}], desde:'2026-06-29',
+    nota:'Cuando la línea naranja queda debajo de la azul, el paralelo está más barato que el oficial: señal de confianza.'}) +
+  chart({titulo:'Reservas internacionales netas', sub:'Millones de dólares', unidad:'MM USD', dec:0, base0:true,
+    series:[{nombre:'RIN',datos:H_.rin}], nota:'Mínimo en 2023; la recuperación de 2026 es sobre todo oro revalorizado y compras genuinas.'}) +
+  chart({titulo:'Inflación a 12 meses', sub:'Porcentaje', unidad:'%', base0:true,
+    series:[{nombre:'Inflación',datos:H_.inflacion_12m}], nota:'Bajó de 21 % a 5 %, pero repuntó a 7,08 % en octubre por el nuevo precio del diésel.'}) +
+  chart({titulo:'Riesgo país (EMBI)', sub:'Puntos básicos', unidad:'pb', dec:0, base0:true,
+    series:[{nombre:'EMBI',datos:H_.embi}], nota:'Puntos sueltos tomados de la prensa: la serie diaria llegará con el recolector de mercado.'});
+
+// salud
+const S=P.salud;
+const viejas=S.frescura.filter(f=>f.estado!=='fresco');
+document.getElementById('salud').innerHTML = `
+  <div style="display:flex;flex-wrap:wrap;gap:28px;margin-bottom:10px">
+    <div><div class="sub">Datos nuevos esta corrida</div><div style="font-size:22px;font-weight:600">${S.datos_nuevos}</div></div>
+    <div><div class="sub">En cuarentena</div><div style="font-size:22px;font-weight:600">${S.en_cuarentena.length}</div></div>
+    <div><div class="sub">Fuentes con error</div><div style="font-size:22px;font-weight:600">${Object.keys(S.fuentes_con_error).length}</div></div>
+    <div><div class="sub">Series sin dato fresco</div><div style="font-size:22px;font-weight:600">${viejas.length} de ${S.frescura.length}</div></div>
+  </div>
+  <details><summary>Ver frescura de cada serie</summary>
+  <table><thead><tr><th>Serie</th><th>Último dato</th><th>Edad (días)</th><th>Límite</th><th>Estado</th></tr></thead><tbody>
+  ${S.frescura.map(f=>`<tr><td>${f.nombre}</td><td>${fecha(f.ultimo)}</td><td class="n">${f.edad_dias??'—'}</td><td class="n">${f.limite_dias}</td>
+   <td>${f.estado==='fresco'?icono('good')+' fresco':f.estado==='viejo'?icono('warning')+' viejo':icono('none')+' sin datos'}</td></tr>`).join('')}
+  </tbody></table></details>
+  <div class="solo-aprendiz">Cada dato tiene un contrato (rango posible y salto creíble). Si lo rompe, queda en cuarentena y no entra al cálculo hasta que alguien lo revise.</div>`;
+document.getElementById('pie').innerHTML = `Datos: BCB, INE, FMI, Banco Mundial, JP Morgan (vía prensa). Cada cifra enlaza a su fuente desde su tarjeta.
+  Este tablero es una herramienta de análisis, no una recomendación financiera.`;
+})();
+</script>
+</body>
+</html>

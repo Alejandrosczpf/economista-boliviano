@@ -1,0 +1,567 @@
+{
+ "generado": "2026-11-25",
+ "regimen": "flotante",
+ "regimen_desde": "2026-06-29",
+ "indice": 55.0,
+ "estado": "vigilancia",
+ "no_votan": [
+  "brecha"
+ ],
+ "tarjetas": [
+  {
+   "id": "inflacion_12m",
+   "titulo": "Inflación a 12 meses",
+   "unidad": "%",
+   "que": "Cuánto subieron los precios de la canasta familiar en el último año.",
+   "lectura": "Verde hasta 5 %, amarillo hasta 12 %, rojo por encima.",
+   "familia": "Con 7 % anual, lo que hoy cuesta Bs 100 costará unos Bs 107 en un año.",
+   "valor": 7.08,
+   "fecha": "2026-10-31",
+   "fuente": "INE",
+   "url": "https://eju.tv/?p=4659483",
+   "nota": "",
+   "semaforo": "amarillo",
+   "peso": 1,
+   "puntos": 5.0,
+   "umbrales": {
+    "amarillo": 5,
+    "rojo": 12,
+    "mayor": true
+   }
+  },
+  {
+   "id": "inflacion_mensual",
+   "titulo": "Inflación del último mes",
+   "unidad": "%",
+   "que": "Subida de precios en un solo mes: anticipa hacia dónde va la inflación anual.",
+   "lectura": "Más de 0,8 % al mes equivale a más de 10 % al año.",
+   "familia": "Un mes de 2 % se siente en el mercado esa misma semana.",
+   "valor": 2.07,
+   "fecha": "2026-10-31",
+   "fuente": "INE",
+   "url": "https://eju.tv/?p=4659483",
+   "nota": "",
+   "semaforo": "rojo",
+   "peso": 1,
+   "puntos": 10.0,
+   "umbrales": {
+    "amarillo": 0.8,
+    "rojo": 1.5,
+    "mayor": true
+   }
+  },
+  {
+   "id": "rin_var_12m",
+   "titulo": "Reservas: cambio en un año",
+   "unidad": "%",
+   "que": "Cuánto crecieron o cayeron los ahorros en moneda extranjera y oro del BCB en 12 meses.",
+   "lectura": "Caer más de 15 % en un año es la señal clásica antes de una crisis cambiaria.",
+   "familia": "Reservas que crecen dan respaldo para importar combustible, medicinas y alimentos.",
+   "valor": 21.87,
+   "fecha": "2026-09-30",
+   "fuente": "BCB informe 3T-2026",
+   "url": "https://www.bcb.gob.bo/webdocs/publicacionesbcb/2026/10/21/INFORME%20SEM%20RIN%203T-2026%20%284%29.pdf",
+   "nota": "frente a 3.227 millones (31 oct 2025)",
+   "semaforo": "verde",
+   "peso": 2,
+   "puntos": 0.0,
+   "umbrales": {
+    "amarillo": -5,
+    "rojo": -15,
+    "mayor": false
+   }
+  },
+  {
+   "id": "liquidez_rin",
+   "titulo": "Reservas líquidas",
+   "unidad": "% del total",
+   "que": "Parte de las reservas que está en divisas listas para usarse (no en oro).",
+   "lectura": "Bolivia guarda la mayor parte en oro: menos de 25 % en divisas es poco margen.",
+   "familia": "El oro no paga importaciones directamente: hay que venderlo primero.",
+   "valor": 16.56,
+   "fecha": "2026-07-17",
+   "fuente": "análisis F. Romero con datos BCB",
+   "url": "https://eju.tv/?p=5046284",
+   "nota": "606 de 3.659 millones",
+   "semaforo": "rojo",
+   "peso": 1,
+   "puntos": 10.0,
+   "umbrales": {
+    "amarillo": 40,
+    "rojo": 25,
+    "mayor": false
+   }
+  },
+  {
+   "id": "deficit_fiscal",
+   "titulo": "Déficit fiscal",
+   "unidad": "% del PIB",
+   "que": "Cuánto gasta el Estado por encima de lo que recauda, como parte de la economía.",
+   "lectura": "Más de 7 % del PIB por varios años lleva a deuda cara o a imprimir dinero.",
+   "familia": "Un déficit que se financia imprimiendo billetes termina en precios más altos.",
+   "valor": 11.0,
+   "fecha": "2025-12-31",
+   "fuente": "MEFP/FMI",
+   "url": "",
+   "nota": "",
+   "semaforo": "rojo",
+   "peso": 1.5,
+   "puntos": 15.0,
+   "umbrales": {
+    "amarillo": 4,
+    "rojo": 7,
+    "mayor": true
+   }
+  },
+  {
+   "id": "brecha",
+   "titulo": "Brecha cambiaria",
+   "unidad": "%",
+   "que": "Diferencia entre el dólar paralelo y el dólar oficial.",
+   "lectura": "Con flotación, una brecha cercana a cero indica que la gente cree en el nuevo régimen.",
+   "familia": "Si la brecha vuelve a abrirse, conseguir dólares se encarece otra vez.",
+   "valor": null,
+   "fecha": "2026-10-23",
+   "fuente": "dolarboliviahoy vía prensa",
+   "url": "https://correodelsur.com/economia/20261023/el-dolar-oficial-mantiene-su-tendencia-al-alza.html",
+   "nota": "último paralelo: Bs 11,93 del 23 oct 2026, con 33 días; se necesita uno de menos de 10",
+   "semaforo": "gris",
+   "peso": 1.5,
+   "puntos": 0,
+   "umbrales": {
+    "amarillo": 3,
+    "rojo": 10,
+    "mayor": true
+   }
+  },
+  {
+   "id": "embi",
+   "titulo": "Riesgo país",
+   "unidad": "puntos básicos",
+   "que": "Interés extra que los inversionistas exigen a Bolivia frente a EE. UU. (100 pb = 1 %).",
+   "lectura": "Menos de 400 es aceptable; más de 800 deja al país casi sin crédito externo.",
+   "familia": "Crédito externo caro significa menos dinero para obras y más presión sobre el dólar.",
+   "valor": 494.0,
+   "fecha": "2026-11-02",
+   "fuente": "JP Morgan vía eaduana",
+   "url": "https://www.eaduana.com/articulos/riesgo-pais-en-america-latina-en-noviembre-2026",
+   "nota": "",
+   "semaforo": "amarillo",
+   "peso": 1,
+   "puntos": 5.0,
+   "umbrales": {
+    "amarillo": 400,
+    "rojo": 800,
+    "mayor": true
+   }
+  },
+  {
+   "id": "pib_proy",
+   "titulo": "Crecimiento esperado del año",
+   "unidad": "%",
+   "que": "Promedio de lo que proyectan FMI, BCB y Banco Mundial para la economía este año.",
+   "lectura": "Por debajo de 0 % es recesión: la economía produce menos que el año anterior.",
+   "familia": "Recesión suele traer menos empleo formal y menos ingresos en el comercio.",
+   "valor": -2.5,
+   "fecha": "2026-10-13",
+   "fuente": "FMI WEO oct-2026",
+   "url": "https://correodelsur.com/economia/20261014/fmi-bolivia-decrecera-un-3-en-2026-y-otro-1-5-en-2027.html",
+   "nota": "promedio de FMI WEO oct-2026: -3,00 %; BCB RIPoM III-2026: -3,39 %; Banco Mundial vía Bloomberg Línea: -1,10 %",
+   "semaforo": "rojo",
+   "peso": 1,
+   "puntos": 10.0,
+   "umbrales": {
+    "amarillo": 1.5,
+    "rojo": 0,
+    "mayor": false
+   }
+  },
+  {
+   "id": "depreciacion_30d",
+   "titulo": "Dólar oficial: cambio en un mes",
+   "unidad": "%",
+   "que": "Cuánto subió (o bajó) el dólar oficial en los últimos ~30 días.",
+   "lectura": "Con flotación, moverse es normal; más de 5 % en un mes indica presión.",
+   "familia": "Un dólar que sube rápido encarece lo importado en pocas semanas.",
+   "valor": -0.08,
+   "fecha": "2026-11-25",
+   "fuente": "BCB",
+   "url": "https://www.bcb.gob.bo/bcb_tco_publico_ultima_cotizacion.php",
+   "nota": "de Bs 11,84 (23 oct 2026) a Bs 11,83",
+   "semaforo": "verde",
+   "peso": 1.5,
+   "puntos": 0.0,
+   "umbrales": {
+    "amarillo": 2,
+    "rojo": 5,
+    "mayor": true
+   }
+  }
+ ],
+ "cifras": {
+  "tco": 11.83,
+  "rin": 3932.8,
+  "embi": 494.0,
+  "inflacion_12m": 7.08
+ },
+ "historia": {
+  "tco": [
+   {
+    "fecha": "2026-06-29",
+    "valor": 9.73
+   },
+   {
+    "fecha": "2026-07-20",
+    "valor": 10.85
+   },
+   {
+    "fecha": "2026-07-21",
+    "valor": 10.9
+   },
+   {
+    "fecha": "2026-07-22",
+    "valor": 11.0
+   },
+   {
+    "fecha": "2026-07-23",
+    "valor": 11.13
+   },
+   {
+    "fecha": "2026-07-24",
+    "valor": 11.21
+   },
+   {
+    "fecha": "2026-07-25",
+    "valor": 11.37
+   },
+   {
+    "fecha": "2026-07-28",
+    "valor": 11.54
+   },
+   {
+    "fecha": "2026-08-01",
+    "valor": 12.15
+   },
+   {
+    "fecha": "2026-08-04",
+    "valor": 12.08
+   },
+   {
+    "fecha": "2026-08-05",
+    "valor": 12.02
+   },
+   {
+    "fecha": "2026-08-06",
+    "valor": 11.86
+   },
+   {
+    "fecha": "2026-08-14",
+    "valor": 11.62
+   },
+   {
+    "fecha": "2026-08-15",
+    "valor": 11.58
+   },
+   {
+    "fecha": "2026-08-19",
+    "valor": 11.52
+   },
+   {
+    "fecha": "2026-09-05",
+    "valor": 12.58
+   },
+   {
+    "fecha": "2026-10-19",
+    "valor": 11.69
+   },
+   {
+    "fecha": "2026-10-22",
+    "valor": 11.75
+   },
+   {
+    "fecha": "2026-10-23",
+    "valor": 11.84
+   },
+   {
+    "fecha": "2026-11-25",
+    "valor": 11.83
+   }
+  ],
+  "paralelo": [
+   {
+    "fecha": "2026-07-23",
+    "valor": 11.525
+   },
+   {
+    "fecha": "2026-08-15",
+    "valor": 11.43
+   },
+   {
+    "fecha": "2026-10-23",
+    "valor": 11.93
+   }
+  ],
+  "rin": [
+   {
+    "fecha": "2019-12-31",
+    "valor": 6468.0
+   },
+   {
+    "fecha": "2020-12-31",
+    "valor": 5276.0
+   },
+   {
+    "fecha": "2021-12-31",
+    "valor": 4752.0
+   },
+   {
+    "fecha": "2022-12-31",
+    "valor": 3796.0
+   },
+   {
+    "fecha": "2023-12-31",
+    "valor": 1709.0
+   },
+   {
+    "fecha": "2024-12-31",
+    "valor": 1977.0
+   },
+   {
+    "fecha": "2025-10-31",
+    "valor": 3227.0
+   },
+   {
+    "fecha": "2025-12-31",
+    "valor": 3713.2
+   },
+   {
+    "fecha": "2026-06-30",
+    "valor": 3617.3
+   },
+   {
+    "fecha": "2026-07-17",
+    "valor": 3659.0
+   },
+   {
+    "fecha": "2026-09-30",
+    "valor": 3932.8
+   }
+  ],
+  "inflacion_12m": [
+   {
+    "fecha": "2025-11-30",
+    "valor": 20.96
+   },
+   {
+    "fecha": "2025-12-31",
+    "valor": 20.4
+   },
+   {
+    "fecha": "2026-01-31",
+    "valor": 19.64
+   },
+   {
+    "fecha": "2026-06-30",
+    "valor": 9.2
+   },
+   {
+    "fecha": "2026-08-31",
+    "valor": 5.02
+   },
+   {
+    "fecha": "2026-09-30",
+    "valor": 5.7
+   },
+   {
+    "fecha": "2026-10-31",
+    "valor": 7.08
+   }
+  ],
+  "embi": [
+   {
+    "fecha": "2024-09-04",
+    "valor": 2328.0
+   },
+   {
+    "fecha": "2025-11-07",
+    "valor": 955.0
+   },
+   {
+    "fecha": "2026-01-02",
+    "valor": 704.0
+   },
+   {
+    "fecha": "2026-02-18",
+    "valor": 466.0
+   },
+   {
+    "fecha": "2026-05-26",
+    "valor": 639.0
+   },
+   {
+    "fecha": "2026-11-02",
+    "valor": 494.0
+   }
+  ]
+ },
+ "salud": {
+  "fecha": "2026-11-25",
+  "datos_nuevos": 0,
+  "en_cuarentena": [],
+  "fuentes_con_error": {},
+  "frescura": [
+   {
+    "serie": "tco",
+    "nombre": "Tipo de cambio oficial",
+    "ultimo": "2026-11-25",
+    "edad_dias": 0,
+    "limite_dias": 5,
+    "estado": "fresco"
+   },
+   {
+    "serie": "paralelo",
+    "nombre": "Dólar paralelo/digital (promedio compra-venta)",
+    "ultimo": "2026-10-23",
+    "edad_dias": 33,
+    "limite_dias": 10,
+    "estado": "viejo"
+   },
+   {
+    "serie": "rin",
+    "nombre": "Reservas internacionales netas",
+    "ultimo": "2026-09-30",
+    "edad_dias": 56,
+    "limite_dias": 70,
+    "estado": "fresco"
+   },
+   {
+    "serie": "rin_divisas",
+    "nombre": "Reservas en divisas (parte líquida)",
+    "ultimo": "2026-07-17",
+    "edad_dias": 131,
+    "limite_dias": 160,
+    "estado": "fresco"
+   },
+   {
+    "serie": "inflacion_12m",
+    "nombre": "Inflación a 12 meses",
+    "ultimo": "2026-10-31",
+    "edad_dias": 25,
+    "limite_dias": 45,
+    "estado": "fresco"
+   },
+   {
+    "serie": "inflacion_mensual",
+    "nombre": "Inflación del mes",
+    "ultimo": "2026-10-31",
+    "edad_dias": 25,
+    "limite_dias": 45,
+    "estado": "fresco"
+   },
+   {
+    "serie": "embi",
+    "nombre": "Riesgo país (EMBI)",
+    "ultimo": "2026-11-02",
+    "edad_dias": 23,
+    "limite_dias": 30,
+    "estado": "fresco"
+   },
+   {
+    "serie": "pib_proy_fmi",
+    "nombre": "Proyección PIB del año (FMI)",
+    "ultimo": "2026-10-13",
+    "edad_dias": 43,
+    "limite_dias": 200,
+    "estado": "fresco"
+   },
+   {
+    "serie": "pib_proy_bcb",
+    "nombre": "Proyección PIB del año (BCB)",
+    "ultimo": "2026-10-08",
+    "edad_dias": 48,
+    "limite_dias": 120,
+    "estado": "fresco"
+   },
+   {
+    "serie": "pib_proy_bm",
+    "nombre": "Proyección PIB del año (Banco Mundial)",
+    "ultimo": "2026-06-10",
+    "edad_dias": 168,
+    "limite_dias": 200,
+    "estado": "fresco"
+   },
+   {
+    "serie": "deficit_fiscal",
+    "nombre": "Déficit fiscal",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 400,
+    "estado": "fresco"
+   },
+   {
+    "serie": "base_monetaria_var_acum",
+    "nombre": "Variación acumulada de la base monetaria en el año",
+    "ultimo": "2026-10-31",
+    "edad_dias": 25,
+    "limite_dias": 45,
+    "estado": "fresco"
+   },
+   {
+    "serie": "wb_inflacion",
+    "nombre": "Inflación anual (Banco Mundial)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "wb_pib_crec",
+    "nombre": "Crecimiento PIB real (Banco Mundial)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "wb_reservas",
+    "nombre": "Reservas totales con oro (Banco Mundial)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "wb_exportaciones",
+    "nombre": "Exportaciones de bienes y servicios (Banco Mundial)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "wb_dinero_amplio_pib",
+    "nombre": "Dinero en sentido amplio (% del PIB)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "fmi_weo_pib",
+    "nombre": "Crecimiento PIB real (FMI DataMapper)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   },
+   {
+    "serie": "fmi_weo_inflacion",
+    "nombre": "Inflación promedio (FMI DataMapper)",
+    "estado": "sin datos",
+    "ultimo": null,
+    "edad_dias": null,
+    "limite_dias": 800
+   }
+  ]
+ }
+}

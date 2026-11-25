@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# Lo privado (bitácora, notas, preferencias) NO va aquí: vive en el almacenamiento propio.
+privado/
+.env

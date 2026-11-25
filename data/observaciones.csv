@@ -1,0 +1,59 @@
+serie,fecha,valor,fuente,url,nota,capturado
+base_monetaria_var_acum,2026-10-31,-5792.0,BCB Programa Monetario oct-2026,https://www.bcb.gob.bo/webdocs/programamonetario/Programa_Monetario_Octubre_2026.pdf,enero-octubre,2026-11-25T12:59Z
+deficit_fiscal,2025-12-31,11.0,MEFP/FMI,,cifra registrada en el documento base,2026-11-25T12:59Z
+embi,2024-09-04,2328.0,JP Morgan vía Bloomberg Línea,https://www.bloomberglinea.com/latinoamerica/riesgo-pais-mejora-en-bolivia-pero-sigue-entre-los-mas-altos-de-latinoamerica-asi-esta-el-podio-regional/,máximo histórico,2026-11-25T12:59Z
+embi,2025-11-07,955.0,JP Morgan vía Bloomberg Línea,https://www.bloomberglinea.com/mercados/continua-el-desplome-del-riesgo-pais-en-argentina-ecuador-y-bolivia-los-hitos-en-2025/,,2026-11-25T12:59Z
+embi,2026-01-02,704.0,JP Morgan vía eaduana,https://www.eaduana.com/articulos/riesgo-pais-en-america-latina-en-noviembre-2026,inicio de año (fecha aproximada),2026-11-25T12:59Z
+embi,2026-02-18,466.0,JP Morgan vía F. Romero,https://eju.tv/2026/02/riesgo-pais-de-bolivia-cae-en-77-1-532-puntos-en-un-ano/,mínimo del año a esa fecha,2026-11-25T12:59Z
+embi,2026-05-26,639.0,JP Morgan vía Bloomberg Línea,https://bloomberglinea.com/latinoamerica/bolivia/los-bonos-de-bolivia-se-recuperan-y-retrocede-el-riesgo-pais-a-pesar-de-los-bloqueos/,pico por bloqueos,2026-11-25T12:59Z
+embi,2026-11-02,494.0,JP Morgan vía eaduana,https://www.eaduana.com/articulos/riesgo-pais-en-america-latina-en-noviembre-2026,,2026-11-25T12:59Z
+inflacion_12m,2025-11-30,20.96,INE vía MEFP,https://eju.tv/?p=4659483,,2026-11-25T12:59Z
+inflacion_12m,2025-12-31,20.4,INE vía BCB,https://www.bcb.gob.bo/webdocs/ripm/RESUMEN%20RIPoM.pdf,acumulada 2025,2026-11-25T12:59Z
+inflacion_12m,2026-01-31,19.64,INE vía finanzasdigital,https://finanzasdigital.com/inflacion-por-pais/bolivia/,,2026-11-25T12:59Z
+inflacion_12m,2026-06-30,9.2,BCB RIPoM III-2026,https://eju.tv/?p=5112858,,2026-11-25T12:59Z
+inflacion_12m,2026-08-31,5.02,INE,https://www.ine.gob.bo/?p=77023,,2026-11-25T12:59Z
+inflacion_12m,2026-09-30,5.7,INE,https://www.riotimesonline.com/bolivia-inflation-september-2026/,,2026-11-25T12:59Z
+inflacion_12m,2026-10-31,7.08,INE,https://eju.tv/?p=4659483,,2026-11-25T12:59Z
+inflacion_mensual,2026-08-31,1.1,INE,https://www.ine.gob.bo/?p=77023,,2026-11-25T12:59Z
+inflacion_mensual,2026-09-30,0.85,INE,https://www.riotimesonline.com/bolivia-inflation-september-2026/,,2026-11-25T12:59Z
+inflacion_mensual,2026-10-31,2.07,INE,https://eju.tv/?p=4659483,efecto del nuevo precio del diésel,2026-11-25T12:59Z
+paralelo,2026-07-23,11.525,dolarboliviahoy vía prensa,https://eju.tv/?p=4689946,compra 11.56 / venta 11.49,2026-11-25T12:59Z
+paralelo,2026-08-15,11.43,dolarboliviahoy vía prensa,https://correodelsur.com/economia/20260815/dolar-paralelo-registra-volatilidad-y-cierra-en-bs-11-43-mientras-el-oficial-baja-a-bs-11-58.html,cierre del día,2026-11-25T12:59Z
+paralelo,2026-10-23,11.93,dolarboliviahoy vía prensa,https://correodelsur.com/economia/20261023/el-dolar-oficial-mantiene-su-tendencia-al-alza.html,compra 11.94 / venta 11.92,2026-11-25T12:59Z
+pib_proy_bcb,2026-10-08,-3.39,BCB RIPoM III-2026,https://eju.tv/?p=5113536,,2026-11-25T12:59Z
+pib_proy_bm,2026-06-10,-1.1,Banco Mundial vía Bloomberg Línea,https://www.bloomberglinea.com/latinoamerica/bolivia/exclusiva-economia-de-bolivia-vera-crecimiento-positivo-en-2026-dice-ministro-espinoza/,fecha aproximada (informe de junio),2026-11-25T12:59Z
+pib_proy_fmi,2026-10-13,-3.0,FMI WEO oct-2026,https://correodelsur.com/economia/20261014/fmi-bolivia-decrecera-un-3-en-2026-y-otro-1-5-en-2027.html,2027: -1.5,2026-11-25T12:59Z
+rin,2019-12-31,6468.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2020-12-31,5276.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2021-12-31,4752.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2022-12-31,3796.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2023-12-31,1709.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2024-12-31,1977.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin,2025-10-31,3227.0,BCB CP53/2025,https://www.bcb.gob.bo/webdocs/files_noticias/CP%2053%20RIN%20octubre%202025%20ok.pdf,,2026-11-25T12:59Z
+rin,2025-12-31,3713.2,BCB (derivado),https://www.infobae.com/america/agencias/2026/07/23/las-reservas-internacionales-de-bolivia-llegan-a-36173-millones-de-dolares-hasta-junio/,3617.3 + 95.9 de caída reportada,2026-11-25T12:59Z
+rin,2026-06-30,3617.3,BCB informe 1S-2026,https://www.bcb.gob.bo/webdocs/publicacionesbcb/2026/07/33/INFORME%20SEM%20RIN%201-2026cs%20%281%29.pdf,,2026-11-25T12:59Z
+rin,2026-07-17,3659.0,análisis F. Romero con datos BCB,https://eju.tv/?p=5046284,no oficial,2026-11-25T12:59Z
+rin,2026-09-30,3932.8,BCB informe 3T-2026,https://www.bcb.gob.bo/webdocs/publicacionesbcb/2026/10/21/INFORME%20SEM%20RIN%203T-2026%20%284%29.pdf,,2026-11-25T12:59Z
+rin_divisas,2025-12-02,75.0,BCB,https://www.bcb.gob.bo/webdocs/presppt/CONF%20PRENSA%20BCB%20final%20apec%20btv.pdf,,2026-11-25T12:59Z
+rin_divisas,2026-06-30,666.1,BCB informe 1S-2026,https://www.infobae.com/america/agencias/2026/07/23/las-reservas-internacionales-de-bolivia-llegan-a-36173-millones-de-dolares-hasta-junio/,,2026-11-25T12:59Z
+rin_divisas,2026-07-17,606.0,análisis F. Romero con datos BCB,https://eju.tv/?p=5046284,no oficial,2026-11-25T12:59Z
+tco,2026-06-29,9.73,BCB vía prensa,https://eju.tv/?p=5045299,primer día del régimen flexible,2026-11-25T12:59Z
+tco,2026-07-20,10.85,BCB vía prensa,https://eju.tv/?p=5046270,,2026-11-25T12:59Z
+tco,2026-07-21,10.9,BCB vía prensa,https://eju.tv/?p=5046270,,2026-11-25T12:59Z
+tco,2026-07-22,11.0,BCB vía prensa,https://eju.tv/?p=5046270,,2026-11-25T12:59Z
+tco,2026-07-23,11.13,BCB vía prensa,https://eju.tv/?p=4689946,,2026-11-25T12:59Z
+tco,2026-07-24,11.21,BCB vía prensa,https://eju.tv/?p=5045299,,2026-11-25T12:59Z
+tco,2026-07-25,11.37,BCB vía prensa,https://eju.tv/?p=5046270,vigente sáb-lun,2026-11-25T12:59Z
+tco,2026-07-28,11.54,BCB vía prensa,https://correodelsur.com/economia/20260728/el-dolar-sube-17-centavos-hoy-se-cotiza-en-bs-11-54.html,,2026-11-25T12:59Z
+tco,2026-08-01,12.15,BCB vía prensa,https://correodelsur.com/economia/20260806/dolar-oficial-registra-su-cuarta-baja-consecutiva.html,,2026-11-25T12:59Z
+tco,2026-08-04,12.08,BCB vía prensa,https://correodelsur.com/economia/20260806/dolar-oficial-registra-su-cuarta-baja-consecutiva.html,,2026-11-25T12:59Z
+tco,2026-08-05,12.02,BCB vía prensa,https://correodelsur.com/economia/20260806/dolar-oficial-registra-su-cuarta-baja-consecutiva.html,,2026-11-25T12:59Z
+tco,2026-08-06,11.86,BCB vía prensa,https://correodelsur.com/economia/20260806/dolar-oficial-registra-su-cuarta-baja-consecutiva.html,vigente por feriado largo,2026-11-25T12:59Z
+tco,2026-08-14,11.62,BCB vía prensa,https://correodelsur.com/economia/20260815/dolar-paralelo-registra-volatilidad-y-cierra-en-bs-11-43-mientras-el-oficial-baja-a-bs-11-58.html,,2026-11-25T12:59Z
+tco,2026-08-15,11.58,BCB vía prensa,https://correodelsur.com/economia/20260815/dolar-paralelo-registra-volatilidad-y-cierra-en-bs-11-43-mientras-el-oficial-baja-a-bs-11-58.html,,2026-11-25T12:59Z
+tco,2026-08-19,11.52,BCB vía prensa,https://correodelsur.com/economia/20260819/el-dolar-se-mantiene-en-bs-11-52-y-no-registra-variacion-por-primera-vez-bajo-el-nuevo-esquema-del-bcb.html,,2026-11-25T12:59Z
+tco,2026-09-05,12.58,BCB,https://www.bcb.gob.bo/bcb_tco_publico_ultima_cotizacion.php,captura de la página del BCB,2026-11-25T12:59Z
+tco,2026-10-19,11.69,BCB tabla 195-26,https://www.bcb.gob.bo/librerias/indicadores/otras/otras_imprimir.php?qdd=24,,2026-11-25T12:59Z
+tco,2026-10-22,11.75,BCB vía prensa,https://correodelsur.com/economia/20261023/el-dolar-oficial-mantiene-su-tendencia-al-alza.html,,2026-11-25T12:59Z
+tco,2026-10-23,11.84,BCB vía prensa,https://correodelsur.com/economia/20261023/el-dolar-oficial-mantiene-su-tendencia-al-alza.html,,2026-11-25T12:59Z
+tco,2026-11-25,11.83,BCB,https://www.bcb.gob.bo/bcb_tco_publico_ultima_cotizacion.php,fecha de corte 24-nov; vigente desde 25-nov,2026-11-25T12:59Z

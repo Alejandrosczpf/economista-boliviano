@@ -1,0 +1,217 @@
+{
+ "_nota": "Contrato de cada serie. Un dato que rompe su contrato va a cuarentena y no entra al cálculo. min/max = rango físicamente posible; max_salto_pct = cambio máximo creíble frente al dato anterior; frescura_dias = edad máxima antes de marcarlo como viejo.",
+ "series": [
+  {
+   "id": "tco",
+   "nombre": "Tipo de cambio oficial",
+   "unidad": "Bs por USD",
+   "frecuencia": "diaria",
+   "fuente": "BCB",
+   "min": 5,
+   "max": 40,
+   "max_salto_pct": 8,
+   "frescura_dias": 5,
+   "quiebres": [
+    "2026-06-29"
+   ]
+  },
+  {
+   "id": "paralelo",
+   "nombre": "Dólar paralelo/digital (promedio compra-venta)",
+   "unidad": "Bs por USD",
+   "frecuencia": "diaria",
+   "fuente": "dolarboliviahoy.com vía prensa",
+   "min": 5,
+   "max": 60,
+   "max_salto_pct": 12,
+   "frescura_dias": 10
+  },
+  {
+   "id": "rin",
+   "nombre": "Reservas internacionales netas",
+   "unidad": "USD millones",
+   "frecuencia": "mensual",
+   "fuente": "BCB",
+   "min": 0,
+   "max": 20000,
+   "max_salto_pct": 60,
+   "frescura_dias": 70
+  },
+  {
+   "id": "rin_divisas",
+   "nombre": "Reservas en divisas (parte líquida)",
+   "unidad": "USD millones",
+   "frecuencia": "mensual",
+   "fuente": "BCB",
+   "min": 0,
+   "max": 15000,
+   "max_salto_pct": 900,
+   "frescura_dias": 160
+  },
+  {
+   "id": "inflacion_12m",
+   "nombre": "Inflación a 12 meses",
+   "unidad": "%",
+   "frecuencia": "mensual",
+   "fuente": "INE",
+   "min": -10,
+   "max": 30000,
+   "max_salto_pts": 15,
+   "frescura_dias": 45
+  },
+  {
+   "id": "inflacion_mensual",
+   "nombre": "Inflación del mes",
+   "unidad": "%",
+   "frecuencia": "mensual",
+   "fuente": "INE",
+   "min": -5,
+   "max": 200,
+   "max_salto_pts": 10,
+   "frescura_dias": 45
+  },
+  {
+   "id": "embi",
+   "nombre": "Riesgo país (EMBI)",
+   "unidad": "puntos básicos",
+   "frecuencia": "diaria",
+   "fuente": "JP Morgan vía prensa",
+   "min": 0,
+   "max": 10000,
+   "max_salto_pct": 80,
+   "frescura_dias": 30
+  },
+  {
+   "id": "pib_proy_fmi",
+   "nombre": "Proyección PIB del año (FMI)",
+   "unidad": "%",
+   "frecuencia": "semestral",
+   "fuente": "FMI WEO",
+   "min": -30,
+   "max": 30,
+   "max_salto_pts": 8,
+   "frescura_dias": 200
+  },
+  {
+   "id": "pib_proy_bcb",
+   "nombre": "Proyección PIB del año (BCB)",
+   "unidad": "%",
+   "frecuencia": "trimestral",
+   "fuente": "BCB RIPoM",
+   "min": -30,
+   "max": 30,
+   "max_salto_pts": 8,
+   "frescura_dias": 120
+  },
+  {
+   "id": "pib_proy_bm",
+   "nombre": "Proyección PIB del año (Banco Mundial)",
+   "unidad": "%",
+   "frecuencia": "semestral",
+   "fuente": "Banco Mundial",
+   "min": -30,
+   "max": 30,
+   "max_salto_pts": 8,
+   "frescura_dias": 200
+  },
+  {
+   "id": "deficit_fiscal",
+   "nombre": "Déficit fiscal",
+   "unidad": "% del PIB",
+   "frecuencia": "anual",
+   "fuente": "MEFP / FMI",
+   "min": -10,
+   "max": 40,
+   "max_salto_pts": 15,
+   "frescura_dias": 400
+  },
+  {
+   "id": "base_monetaria_var_acum",
+   "nombre": "Variación acumulada de la base monetaria en el año",
+   "unidad": "Bs millones",
+   "frecuencia": "mensual",
+   "fuente": "BCB Programa Monetario",
+   "min": -100000,
+   "max": 100000,
+   "max_salto_pct": null,
+   "frescura_dias": 45
+  },
+  {
+   "id": "wb_inflacion",
+   "nombre": "Inflación anual (Banco Mundial)",
+   "unidad": "%",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial FP.CPI.TOTL.ZG",
+   "min": -10,
+   "max": 30000,
+   "max_salto_pts": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "wb_pib_crec",
+   "nombre": "Crecimiento PIB real (Banco Mundial)",
+   "unidad": "%",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial NY.GDP.MKTP.KD.ZG",
+   "min": -30,
+   "max": 30,
+   "max_salto_pts": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "wb_reservas",
+   "nombre": "Reservas totales con oro (Banco Mundial)",
+   "unidad": "USD",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial FI.RES.TOTL.CD",
+   "min": 0,
+   "max": 50000000000.0,
+   "max_salto_pct": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "wb_exportaciones",
+   "nombre": "Exportaciones de bienes y servicios (Banco Mundial)",
+   "unidad": "USD",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial NE.EXP.GNFS.CD",
+   "min": 0,
+   "max": 100000000000.0,
+   "max_salto_pct": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "wb_dinero_amplio_pib",
+   "nombre": "Dinero en sentido amplio (% del PIB)",
+   "unidad": "% del PIB",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial FM.LBL.BMNY.GD.ZS",
+   "min": 0,
+   "max": 300,
+   "max_salto_pts": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "fmi_weo_pib",
+   "nombre": "Crecimiento PIB real (FMI DataMapper)",
+   "unidad": "%",
+   "frecuencia": "anual",
+   "fuente": "FMI DataMapper NGDP_RPCH",
+   "min": -30,
+   "max": 30,
+   "max_salto_pts": null,
+   "frescura_dias": 800
+  },
+  {
+   "id": "fmi_weo_inflacion",
+   "nombre": "Inflación promedio (FMI DataMapper)",
+   "unidad": "%",
+   "frecuencia": "anual",
+   "fuente": "FMI DataMapper PCPIPCH",
+   "min": -10,
+   "max": 30000,
+   "max_salto_pts": null,
+   "frescura_dias": 800
+  }
+ ]
+}

@@ -1,0 +1,56 @@
+name: Recolectar y publicar el Pulso
+
+on:
+  schedule:
+    - cron: "17 13 * * 1-5"   # lunes a viernes, 09:17 hora de Bolivia (tras la cotización del BCB)
+  workflow_dispatch: {}        # botón "Run workflow" para correrlo a mano
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pulso
+  cancel-in-progress: false
+
+jobs:
+  recolectar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pruebas (si fallan, no se publica nada)
+        run: |
+          pip install pytest
+          python -m pytest -q
+
+      - name: Recolectar, validar y calcular
+        run: python run.py
+
+      - name: Guardar datos nuevos en el repositorio (cada commit es una "vintage")
+        run: |
+          git config user.name "economista-bot"
+          git config user.email "economista-bot@users.noreply.github.com"
+          git add data/ site/pulso.json reports/salud.md
+          git diff --cached --quiet || git commit -m "Datos $(date -u +%F)"
+          git push
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    needs: recolectar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
