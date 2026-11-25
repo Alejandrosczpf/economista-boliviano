@@ -81,6 +81,18 @@ def _carpeta_con(texto):
     return d
 
 
+def test_la_ficha_de_un_dia_no_se_reescribe():
+    import engine.hechos as H
+    original = H.CARPETA
+    H.CARPETA = tempfile.mkdtemp()
+    try:
+        H.guardar({"fecha": "2026-11-25", "hechos": [{"id": "x", "valor": 1.0}]})
+        H.guardar({"fecha": "2026-11-25", "hechos": [{"id": "x", "valor": 2.0}]})  # segunda corrida del día
+        assert H.leer("2026-11-25")["hechos"][0]["valor"] == 1.0
+    finally:
+        H.CARPETA = original
+
+
 def test_solo_se_publica_el_informe_verificado(monkeypatch=None):
     import engine.hechos as H
     original = H.leer

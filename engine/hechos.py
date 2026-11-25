@@ -76,8 +76,13 @@ def construir(pul: dict, series: dict) -> dict:
 
 
 def guardar(ficha: dict) -> str:
+    """La ficha de cada fecha se escribe UNA sola vez (la primera corrida del día) y queda fija.
+    Si se reescribiera en una segunda corrida del mismo día, un informe ya aprobado con esa fecha
+    dejaría de coincidir con su ficha y desaparecería de la página. Lo nuevo entra en la ficha del día siguiente."""
     os.makedirs(CARPETA, exist_ok=True)
     ruta = os.path.join(CARPETA, f"{ficha['fecha']}.json")
+    if os.path.exists(ruta):
+        return ruta
     with open(ruta, "w", encoding="utf-8") as f:
         json.dump(ficha, f, ensure_ascii=False, indent=1)
         f.write("\n")
