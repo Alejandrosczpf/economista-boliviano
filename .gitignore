@@ -9,3 +9,5 @@ reports/avisos.json
 # Páginas generadas en cada corrida (las publica el robot; no se guardan en git).
 site/metodologia.html
 site/archivo.html
+site/og.png
+site/informes.xml

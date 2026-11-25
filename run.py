@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import hechos, historia, memoria, paginas
+from engine import compartir, hechos, historia, memoria, paginas
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -91,7 +91,11 @@ def main(argv=None) -> dict:
     pul["informe"] = P.informe_publicable()
     P.guardar(pul)
     # Páginas que se generan con el propio sistema: metodología y archivo
-    paginas.guardar(contratos, filas, anual)
+    informes = paginas.informes_verificados()
+    paginas.guardar(contratos, filas, anual, informes)
+    # Compartir: imagen de vista previa (WhatsApp, redes) y RSS de los informes
+    compartir.imagen_og(pul)
+    compartir.rss(informes)
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)
     estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)

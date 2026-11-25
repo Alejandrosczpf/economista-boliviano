@@ -33,6 +33,7 @@ def _pagina(titulo: str, cuerpo: str, script: str = "") -> str:
     return f"""<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(titulo)} · Pulso · Economista Boliviano</title>
+<link rel="alternate" type="application/rss+xml" title="Informes semanales del Pulso" href="informes.xml">
 <style>{_estilos()}
 .doc{{max-width:880px}} .doc h2{{margin-top:30px}} .doc p,.doc li{{line-height:1.6}} .doc table{{margin:8px 0 4px}}
 .nav{{font-size:13px;display:flex;gap:16px;flex-wrap:wrap;margin-bottom:6px}}
@@ -177,7 +178,7 @@ def archivo(filas_indice: list[dict], informes: list[dict]) -> str:
     bloques = []
     for inf in informes:
         if inf["ok"]:
-            bloques.append(f'<details class="card" style="margin:8px 0"><summary><b>Informe del {fe(inf["fecha"])}</b> · '
+            bloques.append(f'<details class="card" style="margin:8px 0" id="informe-{inf["fecha"]}"><summary><b>Informe del {fe(inf["fecha"])}</b> · '
                            f'las {inf["cifras"]} cifras fueron verificadas contra los datos de ese día</summary>{inf["html"]}</details>')
         else:
             bloques.append(f'<div class="card" style="margin:8px 0">Informe del {fe(inf["fecha"])}: <b>no publicado</b>, '
@@ -222,8 +223,9 @@ inp.addEventListener('change', mostrar); mostrar();
     return _pagina("Archivo", cuerpo, script)
 
 
-def guardar(contratos: dict, filas_indice: list[dict], anual: list[dict]) -> None:
+def guardar(contratos: dict, filas_indice: list[dict], anual: list[dict], informes: list[dict] | None = None) -> None:
+    informes = informes_verificados() if informes is None else informes
     for nombre, contenido in (("metodologia.html", metodologia(contratos, anual)),
-                              ("archivo.html", archivo(filas_indice, informes_verificados()))):
+                              ("archivo.html", archivo(filas_indice, informes))):
         with open(os.path.join(SITIO, nombre), "w", encoding="utf-8") as f:
             f.write(contenido)

@@ -27,7 +27,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 | 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | ✅ hecha (25-nov-2026) |
 | 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | ✅ hecha (25-nov-2026) |
 | 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | ✅ hecha (25-nov-2026) |
-| 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | pendiente |
+| 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | ✅ hecha (25-nov-2026) |
 | 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | pendiente |
 | 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | pendiente |
 | 16 | Revisión de umbrales del régimen flotante | Programada para **junio de 2027**, al cumplirse 12 meses de flotación | programada |
@@ -115,6 +115,23 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 - Revisar el contraste y los textos alternativos con una herramienta automática.
 
 **Listo cuando:** al compartir el enlace se ve el estado del día, y la página pasa una revisión automática de accesibilidad sin errores graves.
+
+**Hecho** (`engine/compartir.py`):
+- **Vista previa al compartir** (Open Graph y Twitter):
+  - el título y la descripción del día, por ejemplo "Pulso · Economista Boliviano: índice 48/100, vigilancia (25 nov 2026)";
+  - una imagen `og.png` de 1200×630 que se genera cada día: el índice grande, el estado con su color y su nombre, y la barra con los umbrales.
+
+  La imagen necesita Pillow, que se instala solo en GitHub Actions. Si falta, el Pulso se publica sin imagen. La URL lleva la fecha (`og.png?v=AAAA-MM-DD`) para que WhatsApp no muestre la imagen de otro día.
+- **RSS** (`informes.xml`): los informes verificados (los no verificados no se publican), cada uno enlazado a su ancla en el archivo. Las tres páginas lo anuncian con `<link rel="alternate">`.
+- **Gráficos accesibles**:
+  - tabla "Ver los datos" debajo de los 4 gráficos de "Cómo se movieron";
+  - los 6 gráficos se recorren con teclado (Tab, flechas, Mayúscula para saltos, Inicio, Fin y Esc), con `role="slider"` y una etiqueta que explica cómo usarlos.
+- **Revisión de accesibilidad.** La auditoría con axe-core, una herramienta externa, quedó **bloqueada por el control de permisos**, porque ejecutaba código descargado en el navegador. Se hizo en cambio una revisión propia, sin código de terceros: idioma declarado, textos alternativos, campos con etiqueta, ids únicos, orden de títulos y contraste WCAG de cada color de texto sobre cada fondo, en modo claro y oscuro. Se encontró y corrigió lo siguiente:
+  - el gris de los textos chicos daba entre 3,8 y 4,3 de contraste en modo claro; pasó a `#6c6a65`, que da 4,5 o más sobre los tres fondos;
+  - los títulos del informe salían como `h4` debajo de un `h2`; ahora son `h3`.
+
+  Queda una advertencia aceptada: el amarillo de "vigilancia" tiene poco contraste como color, pero nunca va solo, siempre lleva su ícono y su palabra.
+- 4 pruebas nuevas (111 en total).
 
 ## 14. "A un paso de cambiar"
 

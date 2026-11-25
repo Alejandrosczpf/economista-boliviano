@@ -42,7 +42,7 @@ jobs:
 
       - name: Pruebas (si fallan, no se publica nada)
         run: |
-          pip install pytest
+          pip install pytest pillow   # pillow: solo para la imagen de vista previa (og.png)
           python -m pytest -q
 
       - name: Recolectar, validar y calcular

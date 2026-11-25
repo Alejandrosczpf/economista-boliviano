@@ -177,7 +177,8 @@ INFORMES = os.path.join(RAIZ, "informes")
 
 
 def _md_a_html(md: str) -> str:
-    """Markdown mínimo y seguro (se escapa todo el HTML): ## títulos, listas con '- ', **negrita**, párrafos."""
+    """Markdown mínimo y seguro (se escapa todo el HTML): ## títulos (como <h3>, debajo del <h2> de la sección),
+    listas con '- ', **negrita**, párrafos."""
     import html as H
     import re
     out, lista, parrafo = [], False, []
@@ -205,7 +206,7 @@ def _md_a_html(md: str) -> str:
             cerrar_parrafo()
         elif t.startswith("#"):
             cerrar_parrafo()
-            out.append(f"<h4>{linea(t.lstrip('#').strip())}</h4>")
+            out.append(f"<h3>{linea(t.lstrip('#').strip())}</h3>")
         else:
             parrafo.append(t)
     cerrar_parrafo()
@@ -248,8 +249,14 @@ def guardar(pulso: dict, ruta: str | None = None) -> str:
     # La página lleva los datos adentro: un solo archivo que se abre sin servidor.
     plantilla = os.path.join(RAIZ, "site", "plantilla.html")
     if os.path.exists(plantilla):
-        html = open(plantilla, encoding="utf-8").read()
+        import html as H
+        from engine.compartir import metas
+        pagina = open(plantilla, encoding="utf-8").read()
         datos = json.dumps(pulso, ensure_ascii=False).replace("</", "<\\/")
+        m = metas(pulso)  # vista previa al compartir el enlace (WhatsApp, redes)
+        for clave, valor in (("__OG_TITULO__", m["titulo"]), ("__OG_DESC__", m["descripcion"]),
+                             ("__OG_URL__", m["url"]), ("__OG_IMAGEN__", m["imagen"])):
+            pagina = pagina.replace(clave, H.escape(valor, quote=True))
         with open(os.path.join(RAIZ, "site", "index.html"), "w", encoding="utf-8") as f:
-            f.write(html.replace("/*PULSO*/", datos))
+            f.write(pagina.replace("/*PULSO*/", datos))
     return ruta

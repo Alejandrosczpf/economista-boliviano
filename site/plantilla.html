@@ -4,11 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pulso — Economista Boliviano</title>
+<meta name="description" content="__OG_DESC__">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pulso · Economista Boliviano">
+<meta property="og:title" content="__OG_TITULO__">
+<meta property="og:description" content="__OG_DESC__">
+<meta property="og:url" content="__OG_URL__">
+<meta property="og:image" content="__OG_IMAGEN__">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="__OG_TITULO__">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="Informes semanales del Pulso" href="informes.xml">
 <style>
 :root{
   color-scheme: light;
   --bg:#f4f3ef; --surface-1:#fcfcfb; --surface-2:#efeee9; --line:#dcdad3;
-  --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7873;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#6c6a65; /* ≥4,5:1 sobre los tres fondos (WCAG AA) */
   --series-1:#2a78d6; --series-2:#eb6834;
   --good:#0ca30c; --warning:#fab219; --critical:#d03b3b; --none:#9a988f;
   --accent:#1c5cab;
@@ -93,11 +105,13 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 .resumen p{margin:0 0 6px}
 .resumen p:first-of-type{font-size:18px;font-weight:600}
 .informe{margin-bottom:16px;font-size:15px;line-height:1.6}
-.informe h4{font-size:15px;margin:12px 0 4px}
+.informe h3{font-size:15px;margin:12px 0 4px}
 .informe p{margin:0 0 8px}
 .informe .sello{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:4px 8px;margin-bottom:8px}
 .cambios-semana{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px;font-size:14px}
 .cambios-semana li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chart .hit:focus{outline:none}
+.chart svg:has(.hit:focus){outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 .chart .ref.adentro text{paint-order:stroke;stroke:var(--surface-1);stroke-width:3px}
 .aprendiz-off .solo-aprendiz{display:none}
 .solo-aprendiz{font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:8px 10px;margin-top:10px}
@@ -256,9 +270,37 @@ function mostrarTip(e, html){
 }
 function ocultarTip(){ tt.style.display = 'none'; }
 function anchoUtil(el){ const cs = getComputedStyle(el); return Math.max(260, el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)); }
-function alPasar(hit, mover, salir){
+function alPasar(hit, mover, salir, etiqueta){
   ['pointermove','pointerdown'].forEach(ev => hit.addEventListener(ev, mover));
   hit.addEventListener('pointerleave', salir);
+  // Teclado: Tab llega al gráfico; ← → lo recorren (con Mayúscula, saltos de 10 %); Esc sale.
+  hit.setAttribute('tabindex', '0');
+  hit.setAttribute('role', 'slider');
+  hit.setAttribute('aria-label', (etiqueta || 'Gráfico') + ': use las flechas izquierda y derecha para recorrer los datos');
+  let pos = 1;
+  const enPos = () => { const b = hit.getBoundingClientRect(); return {clientX: b.left + pos*b.width, clientY: b.top + b.height/2}; };
+  hit.addEventListener('focus', () => mover(enPos()));
+  hit.addEventListener('blur', salir);
+  hit.addEventListener('keydown', e => {
+    const paso = e.shiftKey ? 0.1 : 0.01;
+    if (e.key === 'ArrowLeft') pos = Math.max(0, pos - paso);
+    else if (e.key === 'ArrowRight') pos = Math.min(1, pos + paso);
+    else if (e.key === 'Home') pos = 0;
+    else if (e.key === 'End') pos = 1;
+    else if (e.key === 'Escape') { hit.blur(); return; }
+    else return;
+    e.preventDefault(); mover(enPos());
+  });
+}
+// Tabla con los mismos datos del gráfico (para lectores de pantalla y para quien prefiera los números)
+function tablaDatos(series, unidad, dec, desde){
+  const filas = {};
+  series.forEach((s,i)=>s.datos.filter(p=>!desde||p.fecha>=desde).forEach(p=>{ (filas[p.fecha] ||= [])[i] = p.valor; }));
+  const fechas = Object.keys(filas).sort().reverse();
+  return `<details style="margin-top:8px"><summary>Ver los datos (${fechas.length} fechas)</summary>
+    <table><thead><tr><th>Fecha</th>${series.map(s=>`<th>${s.nombre} (${unidad})</th>`).join('')}</tr></thead><tbody>
+    ${fechas.map(f=>`<tr><td>${fecha(f)}</td>${series.map((_,i)=>`<td class="n">${filas[f][i]==null?'—':nf(filas[f][i],dec)}</td>`).join('')}</tr>`).join('')}
+    </tbody></table></details>`;
 }
 
 function chart({el, titulo, sub, series, unidad, dec=2, desde, nota, base0=false}){
@@ -286,14 +328,15 @@ function chart({el, titulo, sub, series, unidad, dec=2, desde, nota, base0=false
       <rect class="hit" x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}" fill="transparent"/>`;
   const leg = series.length>1 ? `<div class="leg">${series.map((s,i)=>`<span><i style="background:var(--series-${i+1})"></i>${s.nombre}</span>`).join('')}</div>` : '';
   el.innerHTML = `<h3>${titulo}</h3><div class="sub">${sub}</div>${leg}
-    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${titulo}">${g}</svg>${nota?`<div class="nota">${nota}</div>`:''}`;
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${titulo}">${g}</svg>${nota?`<div class="nota">${nota}</div>`:''}
+    ${tablaDatos(series, unidad, dec, desde)}`;
   const svg=el.querySelector('svg'), hit=svg.querySelector('.hit'), ln=svg.querySelector('.xh');
   alPasar(hit, e=>{
     const b=svg.getBoundingClientRect(), tv=x0+((e.clientX-b.left)*W/b.width-ml)/(W-ml-mr)*(x1-x0);
     const near=all.reduce((a,p)=>Math.abs(t(p)-tv)<Math.abs(t(a)-tv)?p:a);
     ln.setAttribute('x1',X(t(near))); ln.setAttribute('x2',X(t(near))); ln.style.display='';
     mostrarTip(e, `<b>${fecha(near.fecha)}</b><br>`+all.filter(p=>p.fecha===near.fecha).map(p=>`<span style="color:var(--series-${p.i+1})">●</span> ${p.s}: ${nf(p.valor,dec)} ${unidad}`).join('<br>'));
-  }, ()=>{ ocultarTip(); ln.style.display='none'; });
+  }, ()=>{ ocultarTip(); ln.style.display='none'; }, titulo);
 }
 
 // ---------- memoria del índice: línea (0-100) + franja de cobertura con el mismo eje x ----------
@@ -344,7 +387,7 @@ function dibujarMemoria(){
     const [k,l]=ESTL[p.estado];
     mostrarTip(e, `<b>${fecha(p.fecha)}</b><br>`+(p.suficiente?`Índice ${nf(p.valor,1)} · ${icono(k)} ${l}`:`Pocos datos: no se dibuja (daría ${nf(p.valor,1)})`)+
       `<br>Votaron ${p.votan} de ${p.de} indicadores<br><span style="color:var(--text-muted)">${p.origen==='en vivo'?'calculado ese día por el robot':'reconstruido con los datos de entonces'}</span>`);
-  }, ()=>{ ocultarTip(); dot.style.display='none'; x2.style.display='none'; });
+  }, ()=>{ ocultarTip(); dot.style.display='none'; x2.style.display='none'; }, 'Índice de riesgo día por día');
 }
 
 // ---------- ¿Habría avisado? Barras del índice anual desde 1980 (datos oficiales) ----------
@@ -386,7 +429,7 @@ function dibujarHistoria(){
     ln.setAttribute('x1',X(i)); ln.setAttribute('x2',X(i)); ln.style.display='';
     const [k,l]=ESTL[r.estado];
     mostrarTip(e, `<b>${r.anio}</b><br>Índice ${nf(r.indice,1)} · ${icono(k)} ${l}<br>Votaron ${r.votan} de ${r.de} indicadores${r.episodio?`<br><span style="color:var(--text-muted)">${r.episodio}</span>`:''}`);
-  }, ()=>{ ocultarTip(); ln.style.display='none'; });
+  }, ()=>{ ocultarTip(); ln.style.display='none'; }, 'Índice de cada año desde 1980');
 }
 
 // ---------- dibujar todo, y redibujar si cambia el ancho de la pantalla ----------

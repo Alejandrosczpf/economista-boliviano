@@ -71,7 +71,7 @@ def test_miles_con_punto_no_cortan_la_oracion():
 def test_el_markdown_se_escapa():
     html = _md_a_html("## Título\n\nTexto con **negrita** y <script>alert(1)</script>\n\n- uno\n- dos")
     assert "<script>" not in html and "&lt;script&gt;" in html
-    assert "<h4>Título</h4>" in html and "<b>negrita</b>" in html and "<li>uno</li>" in html
+    assert "<h3>Título</h3>" in html and "<b>negrita</b>" in html and "<li>uno</li>" in html
 
 
 def _carpeta_con(texto):
