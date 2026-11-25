@@ -11,7 +11,7 @@ import json
 import os
 from datetime import date
 
-from collectors.fuentes import RECOLECTORES
+from collectors.fuentes import RECOLECTORES, FallaParcial
 from engine import pulso as P
 from pipeline import store, validate
 
@@ -32,6 +32,10 @@ def main(argv=None) -> dict:
             got = RECOLECTORES[nombre]()
             nuevas += got
             print(f"  {nombre}: {len(got)} datos")
+        except FallaParcial as e:  # algunos indicadores sí llegaron: se usan, y se anota el resto
+            nuevas += e.obs
+            errores[nombre] = ("parcial: " + str(e))[:300]
+            print(f"  {nombre}: {len(e.obs)} datos; ERROR PARCIAL {e}")
         except Exception as e:  # noqa: BLE001 - una fuente caída no detiene al sistema
             errores[nombre] = str(e)[:300]
             print(f"  {nombre}: ERROR {errores[nombre]}")

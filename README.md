@@ -7,6 +7,8 @@ recolectar → validar (contratos + cuarentena) → guardar (CSV con historial e
           → calcular (motor de riesgo) → publicar (site/index.html) → informe de salud
 ```
 
+The work plan, session by session, is in [PLAN.md](PLAN.md).
+
 ## Running it on your PC
 
 Requires Python 3.10 or newer. No packages need to be installed: only Python's standard library is used.
@@ -14,7 +16,7 @@ Requires Python 3.10 or newer. No packages need to be installed: only Python's s
 ```bash
 python run.py --sin-red     # solo datos de data/manual/entradas.csv
 python run.py               # además BCB, Banco Mundial y FMI por internet
-python -m pytest -q         # 20 pruebas (necesita pytest)
+python -m pytest -q         # 23 pruebas (necesita pytest)
 ```
 
 Then open `site/index.html` in a browser. The page carries its data inside, so it doesn't need a server.
@@ -24,7 +26,7 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | Folder | What it holds |
 |---|---|
 | `config/series.json` | **Contract** for each series: possible range, credible jump, maximum age, known breaks (e.g. 29 Jun 2026) |
-| `collectors/fuentes.py` | Collectors: manual, BCB official exchange rate, World Bank API, IMF DataMapper API |
+| `collectors/fuentes.py` | Collectors: manual, BCB official exchange rate, World Bank API, IMF API (SDMX 3.0, with DataMapper as fallback) |
 | `pipeline/validate.py` | Quarantine: data that breaks its contract doesn't enter the calculation. The allowed jump grows with elapsed time |
 | `pipeline/store.py` | `data/observaciones.csv`. Each git commit is a "vintage": you can see what the system knew on any date |
 | `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, plus historical episodes |

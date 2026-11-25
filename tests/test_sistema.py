@@ -3,7 +3,8 @@ from datetime import date
 import json
 import os
 
-from collectors.fuentes import parsear_bm, parsear_fmi, parsear_tco
+from collectors.fuentes import (AGENTE, FallaParcial, _por_indicador, parsear_bm, parsear_fmi,
+                                parsear_fmi_sdmx, parsear_tco)
 from engine.motor import evaluar, evaluar_anio, regimen_en, senal
 from engine.verificador import verificar, numeros
 from pipeline.store import Obs, cargar_contratos
@@ -117,6 +118,34 @@ def test_fmi_separa_historia_de_proyecciones():
     cuerpo = json.dumps({"values": {"NGDP_RPCH": {"BOL": {"2024": 0.7, "2026": -3.0}}}})
     obs = parsear_fmi("fmi_weo_pib", cuerpo, hasta_anio=2025)
     assert [o.fecha for o in obs] == ["2024-12-31"]
+
+
+def test_parsea_api_nueva_del_fmi():
+    # respuesta real de api.imf.org (WEO oct-2026), recortada a 2020-2027
+    cuerpo = open(os.path.join(FIX, "fmi_sdmx_bol_pib.json"), encoding="utf-8").read()
+    obs = parsear_fmi_sdmx("fmi_weo_pib", cuerpo, hasta_anio=2025)
+    assert [o.fecha[:4] for o in obs] == [str(a) for a in range(2020, 2026)]
+    assert round(obs[0].valor, 1) == -12.7  # pandemia 2020
+    assert all(o.fuente == "FMI WEO" for o in obs)
+
+
+def test_identificacion_solo_ascii():
+    # con una tilde en el User-Agent, el Banco Mundial responde 403 (pasó en la 1.ª corrida)
+    assert AGENTE.isascii()
+
+
+def test_un_indicador_caido_no_borra_los_demas():
+    def bien():
+        return [Obs("wb_inflacion", "2024-12-31", 5.1)]
+
+    def mal():
+        raise RuntimeError("HTTP Error 403")
+
+    try:
+        _por_indicador({"wb_inflacion": bien, "wb_pib_crec": mal})
+        assert False, "debía avisar la falla parcial"
+    except FallaParcial as e:
+        assert len(e.obs) == 1 and "wb_pib_crec" in e.errores
 
 
 # ---------- Verificador de cifras ----------
