@@ -14,6 +14,13 @@
    "rezago_dias": 0,
    "quiebres": [
     "2026-06-29"
+   ],
+   "cambios_metodologia": [
+    {
+     "fecha": "2026-09-26",
+     "nota": "RD 142/2026 del BCB (24-sep-2026): el TCO pasa de promedio ponderado a mediana ponderada por monto de las compras de divisas de los bancos. Primer efecto: de Bs 12,22 a Bs 12,05.",
+     "url": "https://eldeber.com.bo/economia/dolar-oficial-baja-bs-12-22-bs-12-05-nueva-formula-bcb_1790421412"
+    }
    ]
   },
   {
@@ -240,6 +247,30 @@
    "fuente": "FMI DataMapper PCPIPCH",
    "min": -10,
    "max": 30000,
+   "max_salto_pts": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
+  },
+  {
+   "id": "fmi_weo_inflacion_fin",
+   "nombre": "Inflación a fin de año (FMI WEO)",
+   "unidad": "%",
+   "frecuencia": "anual",
+   "fuente": "FMI WEO PCPIEPCH",
+   "min": -10,
+   "max": 30000,
+   "max_salto_pts": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
+  },
+  {
+   "id": "fmi_weo_balance",
+   "nombre": "Balance fiscal del gobierno general (FMI WEO)",
+   "unidad": "% del PIB",
+   "frecuencia": "anual",
+   "fuente": "FMI WEO GGXCNL_NGDP",
+   "min": -60,
+   "max": 30,
    "max_salto_pts": null,
    "frescura_dias": 800,
    "rezago_dias": 120

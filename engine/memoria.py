@@ -22,7 +22,8 @@ import csv
 import os
 from datetime import date, timedelta
 
-from engine.motor import INICIO_FLOTACION, PESOS, evaluar, indicadores_actuales, regimen_en
+from engine.motor import (INICIO_FLOTACION, PESOS, estado_con_memoria, evaluar, indicadores_actuales,
+                          regimen_en)
 from pipeline.store import RAIZ
 
 RUTA = os.path.join(RAIZ, "data", "indice.csv")
@@ -42,13 +43,15 @@ def conocido_en(series: dict, contratos: dict, dia: date) -> dict:
     return out
 
 
-def calcular_dia(series: dict, contratos: dict, dia: date, origen: str) -> dict:
-    """Fila del índice para 'dia'. En vivo usa todo lo guardado; reconstruido, solo lo ya publicado."""
+def calcular_dia(series: dict, contratos: dict, dia: date, origen: str, previo: str | None = None) -> dict:
+    """Fila del índice para 'dia'. En vivo usa todo lo guardado; reconstruido, solo lo ya publicado.
+    'previo' es el estado del día anterior: bajar de estado exige margen (histéresis, ver motor)."""
     datos = series if origen == EN_VIVO else conocido_en(series, contratos, dia)
     regimen = regimen_en(dia)
     valores, _ = indicadores_actuales(datos, contratos, dia)
     res = evaluar(valores, regimen)
-    fila = {"fecha": dia.isoformat(), "indice": res.indice, "estado": res.estado, "regimen": regimen,
+    fila = {"fecha": dia.isoformat(), "indice": res.indice, "estado": estado_con_memoria(res.indice, previo),
+            "regimen": regimen,
             "votan": len(res.senales), "de": len(PESOS[regimen]), "origen": origen}
     for ind in INDICADORES:
         s = res.senales.get(ind)
@@ -78,10 +81,13 @@ def actualizar(previas: list[dict], series: dict, contratos: dict, hoy: date,
     vivas = {r["fecha"]: r for r in previas if r.get("origen") == EN_VIVO and r["fecha"] < hoy.isoformat()}
     filas = []
     d = desde
+    previo = None
     while d < hoy:
-        filas.append(vivas.get(d.isoformat()) or calcular_dia(series, contratos, d, RECONSTRUIDO))
+        fila = vivas.get(d.isoformat()) or calcular_dia(series, contratos, d, RECONSTRUIDO, previo)
+        filas.append(fila)
+        previo = fila["estado"]
         d += timedelta(days=1)
-    filas.append(calcular_dia(series, contratos, hoy, EN_VIVO))
+    filas.append(calcular_dia(series, contratos, hoy, EN_VIVO, previo))
     return filas
 
 

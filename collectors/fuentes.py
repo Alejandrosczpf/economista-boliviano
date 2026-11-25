@@ -196,7 +196,10 @@ def banco_mundial() -> list[Obs]:
 #  2) DataMapper (la API vieja): trae todos los países (~120 KB) y bloquea a los
 #     servidores de GitHub con 403. Queda como respaldo.
 
-FMI = {"fmi_weo_pib": "NGDP_RPCH", "fmi_weo_inflacion": "PCPIPCH"}
+FMI = {"fmi_weo_pib": "NGDP_RPCH",               # crecimiento real
+       "fmi_weo_inflacion": "PCPIPCH",          # inflación promedio del año
+       "fmi_weo_inflacion_fin": "PCPIEPCH",     # inflación a fin de año (la que mide el motor: 12 meses)
+       "fmi_weo_balance": "GGXCNL_NGDP"}        # balance fiscal del gobierno general, % del PIB
 URL_FMI_PERFIL = "https://www.imf.org/external/datamapper/profile/BOL"
 
 

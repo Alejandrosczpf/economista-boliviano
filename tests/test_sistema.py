@@ -6,9 +6,10 @@ import os
 from collectors.fuentes import (AGENTE, FallaParcial, _por_indicador, es_comunicado_ipc, parsear_bm,
                                 parsear_comunicado_ipc, parsear_fmi, parsear_fmi_sdmx, parsear_paralelo,
                                 parsear_rin_xlsx, parsear_tco, parsear_tco_periodos, verificar_ipc)
-from engine.motor import evaluar, evaluar_anio, indicadores_actuales, regimen_en, senal
+from engine.historia import evaluar_anio, indicadores_anio
+from engine.motor import estado_con_memoria, evaluar, indicadores_actuales, regimen_en, senal
 from engine.verificador import verificar, numeros
-from pipeline.store import Obs, cargar_aprobados, cargar_contratos, deduplicar
+from pipeline.store import Obs, cargar_aprobados, cargar_contratos, deduplicar, leer, por_serie
 from pipeline.validate import revisar
 
 C = cargar_contratos()
@@ -81,28 +82,73 @@ def test_un_rechazo_no_bloquea_los_siguientes():
     assert [o.valor for o in ok] == [11.82] and len(malos) == 1
 
 
-# ---------- Motor: pruebas de regresión histórica ----------
-# Ningún cambio de fórmula se acepta si el sistema deja de reconocer estas crisis.
+# ---------- Motor: pruebas de regresión histórica CON DATOS OFICIALES ----------
+# Ningún cambio de fórmula (ni revisión de datos) se acepta si el sistema deja de reconocer estas crisis.
+# Los datos son los del repositorio: FMI WEO, BCB (Excel de RIN), Banco Mundial y paralelo.bo.
+
+SERIES_REPO = por_serie(leer())
+
+
+def _anio(a):
+    return evaluar_anio(SERIES_REPO, a)
+
 
 def test_hiperinflacion_1985_es_alerta():
-    assert evaluar_anio(1985).estado == "alerta"
+    assert _anio(1985).estado == "alerta"
 
 
-def test_auge_2014_es_calma():
-    assert evaluar_anio(2014).estado == "calma"
+def test_la_hiperinflacion_se_anticipo_desde_1981():
+    assert all(_anio(a).estado == "alerta" for a in range(1981, 1986))
+
+
+def test_auge_del_gas_2005_a_2014_es_calma():
+    assert all(_anio(a).estado == "calma" for a in range(2005, 2015))
 
 
 def test_caida_del_gas_2016_enciende_vigilancia():
-    assert evaluar_anio(2016).estado in ("vigilancia", "alerta")
+    assert _anio(2016).estado in ("vigilancia", "alerta")
 
 
 def test_crisis_de_dolares_2023_y_2024_son_alerta():
-    assert evaluar_anio(2023).estado == "alerta"
-    assert evaluar_anio(2024).estado == "alerta"
+    assert _anio(2023).estado == "alerta"
+    assert _anio(2024).estado == "alerta"
+
+
+def test_2022_avisaba_un_anio_antes_de_la_escasez_de_dolares():
+    assert _anio(2022).estado in ("vigilancia", "alerta") and _anio(2022).indice > 50
 
 
 def test_2019_ya_mostraba_vigilancia_antes_de_la_crisis():
-    assert evaluar_anio(2019).indice > evaluar_anio(2014).indice + 30
+    assert _anio(2019).indice > _anio(2014).indice + 30
+
+
+def test_historia_cita_la_fuente_de_cada_valor():
+    valores, fuentes = indicadores_anio(SERIES_REPO, 2023)
+    assert set(valores) == set(fuentes) and "BCB" in fuentes["rin_var_12m"]
+    assert "FMI" in fuentes["deficit_fiscal"] and "FMI" in fuentes["inflacion_12m"]
+
+
+# ---------- Histéresis y mayoría ----------
+
+def test_subir_de_estado_es_inmediato():
+    assert estado_con_memoria(60.0, "vigilancia") == "alerta"
+    assert estado_con_memoria(35.0, "calma") == "vigilancia"
+
+
+def test_bajar_de_estado_exige_margen():
+    assert estado_con_memoria(58.0, "alerta") == "alerta"        # 58 >= 60 - 3
+    assert estado_con_memoria(56.9, "alerta") == "vigilancia"
+    assert estado_con_memoria(33.3, "vigilancia") == "vigilancia"  # caso real de ago-2026
+    assert estado_con_memoria(31.0, "vigilancia") == "calma"
+
+
+def test_sin_estado_previo_no_hay_histeresis():
+    assert estado_con_memoria(58.0, None) == "vigilancia"
+
+
+def test_mayoria_de_indicadores():
+    assert evaluar({"inflacion_12m": 5, "embi": 300, "brecha": 0, "pib_proy": 3, "deficit_fiscal": 2}, "flotante").suficiente
+    assert not evaluar({"inflacion_12m": 20}, "flotante").suficiente
 
 
 def test_regimen_cambia_el_29_de_junio_de_2026():

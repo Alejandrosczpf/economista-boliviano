@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import memoria
+from engine import historia, memoria
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -70,7 +70,14 @@ def main(argv=None) -> dict:
     filas = memoria.actualizar(memoria.leer(), series, contratos, a.hoy)
     memoria.escribir(filas)
     pul["indice_historia"] = memoria.para_pulso(filas)
+    # el estado del día es el de la memoria: con histéresis, bajar de estado exige margen
+    pul["estado_sin_histeresis"] = pul["estado"]
+    pul["estado"] = filas[-1]["estado"]
     P.guardar(pul)
+
+    # Prueba retrospectiva anual con series oficiales (reports/historia.md)
+    with open(os.path.join(store.RAIZ, "reports", "historia.md"), "w", encoding="utf-8") as fh:
+        fh.write(historia.informe(historia.prueba_retrospectiva(series, 1980, a.hoy.year - 1)))
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)
     estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)

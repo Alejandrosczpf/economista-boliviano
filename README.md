@@ -31,7 +31,8 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | `data/manual/aprobados.csv` | Data a person reviewed after quarantine and confirmed as real, with the reason and a link. Skips the jump check, not the range check |
 | `pipeline/validate.py` | Quarantine: data that breaks its contract doesn't enter the calculation. The allowed jump grows with elapsed time |
 | `pipeline/store.py` | `data/observaciones.csv`. Each git commit is a "vintage": you can see what the system knew on any date |
-| `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, plus historical episodes |
+| `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, with asymmetric hysteresis between states |
+| `engine/historia.py` | Year-by-year backtest since 1980 with official series (IMF WEO, BCB, World Bank, paralelo.bo), each value with its source. Written to `reports/historia.md` |
 | `engine/memoria.py` | The index for each day since 29 Jun 2026 (`data/indice.csv`): "en vivo" rows are frozen; the rest are rebuilt using only data that had been published by each date (`rezago_dias`) |
 | `engine/pulso.py` | Builds `site/pulso.json` and `site/index.html` with educational explanations |
 | `engine/verificador.py` | Compares every number in an AI-written report against the data; if one doesn't match, publication is blocked |
@@ -44,7 +45,8 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 1. **No guessing.** An indicator without fresh data does not vote in the index; it shows as "Sin dato fresco".
 2. **No unchecked data gets in.** Anything out of range or with an impossible jump goes to quarantine with its reason.
 3. **No unverified number gets published.** That is the job of `verificador.py`.
-4. **No formula change goes through if it breaks history.** The tests require it to keep recognizing 1985, 2016, 2019, 2023 and 2024.
+4. **No formula change goes through if it breaks history.** With official data stored in the repository, the tests require it to keep recognizing 1981-1985, 2016, 2019, 2023 and 2024, calm in 2005-2014, and the warning of 2022.
+5. **No state change from a one-day wobble.** Moving up a state is immediate; moving down requires falling 3 points below the threshold.
 
 ## Alerts
 

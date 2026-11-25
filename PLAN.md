@@ -11,7 +11,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 3 | Memoria del índice | ✅ hecha (25-nov-2026) |
 | 4 | Dólar paralelo automático | ✅ hecha (25-nov-2026) |
 | 5 | Más series oficiales automáticas | ✅ hecha (25-nov-2026) |
-| 6 | El motor con datos reales | pendiente |
+| 6 | El motor con datos reales | ✅ hecha (25-nov-2026) |
 | 7 | El Pulso para el lector | pendiente |
 | 8 | Carga semanal asistida por IA | pendiente |
 | 9 | Informe semanal verificado | pendiente |
@@ -123,18 +123,27 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 **Siguen a mano:** el EMBI, las proyecciones del PIB, el déficit fiscal y la base monetaria. Pasan a la sesión 8 (carga semanal asistida).
 
-## 6. El motor con datos reales
+## 6. El motor con datos reales ✅
 
-**Por qué:** los episodios históricos que validan el motor (1985, 2014-2024) son valores aproximados. Desde la sesión 1, el sistema recibe las series oficiales del Banco Mundial y el FMI, que todavía no usa.
+**Hecho:**
+- **Prueba retrospectiva con datos oficiales** (`engine/historia.py` y `reports/historia.md`, que se regenera en cada corrida). Calcula el índice año por año desde 1980 con:
+  - inflación a fin de año, balance fiscal y crecimiento del FMI WEO;
+  - RIN neta del BCB desde 2003 (antes, reservas totales del Banco Mundial);
+  - liquidez del BCB desde 2002;
+  - brecha de paralelo.bo desde 2024. Para 1985 se usa una aproximación documentada.
 
-- Reemplazar los valores aproximados de `HISTORIA` por las series oficiales, citando la fuente.
-- Prueba retrospectiva: calcular el índice año por año desde 1980 y revisar si anticipó cada crisis.
-- Revisar los umbrales del régimen flotante con la experiencia de jun-nov 2026 y documentar cada cambio.
-- Decidir si el índice del día debe exigir un mínimo de indicadores votando, como ya lo exige el gráfico (regla de mayoría de la sesión 3).
-- **Histéresis de estados:** que cambiar de estado exija cruzar el umbral con un margen o por varios días seguidos. Hoy el índice reconstruido pasa de calma a vigilancia y vuelve de un día para otro (sesión 5).
-- Revisar las señales de depreciación alrededor del cambio de metodología del BCB en septiembre de 2026.
+  Cada valor cita su fuente. Se eliminaron los valores aproximados que el motor tenía escritos a mano (`HISTORIA`).
+- **Resultado:** alerta desde **1981** (la hiperinflación, con 4 años de anticipación); calma en 1987-2001 y en todo el auge 2005-2014; vigilancia en 2002, 2016 y 2019; alerta en 2020 (pandemia); **vigilancia con 57,7 en 2022, un año antes de la escasez de dólares**; alerta en 2023-2025.
+- **Las pruebas de regresión usan los datos oficiales del repositorio.** Siguen reconociendo 1985, 2016, 2019, 2023 y 2024, y se agregaron 1981-1985, el auge 2005-2014 y la anticipación de 2022. Si una revisión de datos del FMI o el BCB las rompe, la corrida falla y avisa.
+- **Histéresis asimétrica:** subir de estado es inmediato; bajar exige quedar 3 puntos por debajo del umbral. La reconstrucción de 2026 pasó de 7 cambios de estado a 3, todos con sentido.
+- **Mayoría en el índice diario:** si vota menos de la mitad de los indicadores, la página lo advierte. El índice se sigue calculando, porque las pruebas históricas anteriores a 2002 tienen solo 4 de 8.
+- **Cambio de metodología del BCB (RD 142/2026)**: desde el 26-sep-2026 el dólar oficial es una mediana ponderada en vez de un promedio. Quedó registrado en el contrato del TCO, y la nota de la depreciación lo menciona si su ventana lo cruza.
+- 7 pruebas nuevas (73 en total).
 
-**Listo cuando:** las pruebas históricas usan datos oficiales y siguen reconociendo 1985, 2016, 2019, 2023 y 2024.
+**Decisiones:**
+- **Señales de depreciación de sep-oct 2026: se mantienen.** El cambio de metodología solo bajó el valor un 1,4 % (de 12,22 a 12,05). Los grandes vaivenes (12,64 → 9,83 → 12,26) fueron anteriores y se calcularon con el método antiguo, así que son movimientos del mercado.
+- **Umbrales del régimen flotante: no se cambian todavía.** Cinco meses de flotación no alcanzan para recalibrar. Lo que se vio es coherente: la depreciación > 5 % en 30 días se encendió en el episodio real de septiembre y la brecha cercana a 0 marca confianza. Se revisarán al cumplir 12 meses (jun-2027).
+- **Déficit fiscal:** la prueba histórica usa el del gobierno general (FMI), que es algo menor que el del sector público no financiero que publica el MEFP. Por ejemplo, para 2016 el motor usaba 7,2 % y el FMI da 6,0 %. Se eligió la serie oficial consistente aunque sea más benigna.
 
 ## 7. El Pulso para el lector
 

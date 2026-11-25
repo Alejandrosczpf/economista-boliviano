@@ -108,7 +108,7 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
       <div class="bar"><i id="marca"></i></div>
       <div class="escala"><span>0 calma</span><span>35</span><span>60</span><span>100 alerta</span></div>
       <div class="lectura" id="lectura"></div>
-      <div class="tip"><b>Qué es</b>Promedio ponderado de señales de alerta temprana (método KLR). Cada indicador vota verde (0), amarillo (½) o rojo (1); los que no tienen dato fresco no votan.<b>Cómo leerlo</b>Menos de 35: calma. 35 a 60: vigilancia. Más de 60: alerta, la zona donde Bolivia estuvo en 2023 y 2024.</div>
+      <div class="tip"><b>Qué es</b>Promedio ponderado de señales de alerta temprana (método KLR). Cada indicador vota verde (0), amarillo (½) o rojo (1); los que no tienen dato fresco no votan.<b>Cómo leerlo</b>Menos de 35: calma. 35 a 60: vigilancia. Más de 60: alerta, la zona donde Bolivia estuvo de 2023 a 2025. Subir de estado es inmediato; para bajar, el índice debe quedar 3 puntos por debajo del umbral.<b>¿Funciona?</b>Calculado año por año con datos oficiales desde 1980, marca alerta en la hiperinflación (desde 1981), calma en el auge 2005-2014 y vigilancia en 2022, un año antes de la escasez de dólares.</div>
     </div>
     <div class="card">
       <div class="sub" style="margin-bottom:10px">Qué empuja el índice (puntos que aporta cada indicador)</div>
@@ -155,8 +155,13 @@ document.getElementById('estado').innerHTML = `${icono(ek)} ${el}`;
 document.getElementById('marca').style.left = `calc(${Math.min(99.5,P.indice)}% - 1.5px)`;
 const rojos = P.tarjetas.filter(t=>t.semaforo==='rojo').map(t=>t.titulo.toLowerCase());
 const verdes = P.tarjetas.filter(t=>t.semaforo==='verde').map(t=>t.titulo.toLowerCase());
-document.getElementById('lectura').textContent =
-  `En rojo: ${rojos.join(', ')||'ninguno'}. A favor: ${verdes.join(', ')||'nada todavía'}.`;
+const PISO = {alerta:60, vigilancia:35};
+let lectura = `En rojo: ${rojos.join(', ')||'ninguno'}. A favor: ${verdes.join(', ')||'nada todavía'}.`;
+if (P.estado_sin_histeresis && P.estado !== P.estado_sin_histeresis)
+  lectura += ` Se mantiene en ${P.estado}: para bajar de estado, el índice debe quedar por debajo de ${PISO[P.estado]-3} (así no cambia de estado por oscilaciones de un día).`;
+if (P.suficiente === false)
+  lectura += ' Atención: hoy votó menos de la mitad de los indicadores, así que el índice depende más de cuáles votaron que de la economía.';
+document.getElementById('lectura').textContent = lectura;
 
 // aportes
 // la barra más larga posible = el indicador de mayor peso en rojo

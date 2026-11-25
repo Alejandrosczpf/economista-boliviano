@@ -73,6 +73,7 @@ def construir(series: dict, contratos: dict, salud: dict, hoy: date) -> dict:
         "regimen_desde": INICIO_FLOTACION.isoformat(),
         "indice": res.indice,
         "estado": res.estado,
+        "suficiente": res.suficiente,
         "no_votan": res.no_votan,
         "tarjetas": tarjetas,
         "cifras": {"tco": ultimo("tco"), "rin": ultimo("rin"), "embi": ultimo("embi"),

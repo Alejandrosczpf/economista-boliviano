@@ -73,6 +73,24 @@ def estado(indice: float) -> str:
     return "alerta"
 
 
+# Histéresis ASIMÉTRICA: subir de estado es inmediato (una alerta temprana debe ser temprana); bajar exige
+# quedar MARGEN puntos por debajo del umbral. Sin esto, el índice reconstruido pasaba de calma a vigilancia
+# y de vuelta de un día para otro (7 cambios en dos meses de 2026).
+MARGEN_HISTERESIS = 3.0
+_ORDEN = {"calma": 0, "vigilancia": 1, "alerta": 2}
+_PISO = {nombre: lo for lo, _, nombre in ESTADOS}  # umbral de entrada de cada estado
+
+
+def estado_con_memoria(indice: float, previo: str | None) -> str:
+    nuevo = estado(indice)
+    if previo is None or previo not in _ORDEN or _ORDEN[nuevo] >= _ORDEN[previo]:
+        return nuevo
+    # quiere bajar: solo si cruzó el umbral del estado previo con margen
+    if indice >= _PISO[previo] - MARGEN_HISTERESIS:
+        return previo
+    return nuevo
+
+
 @dataclass
 class Resultado:
     indice: float
@@ -82,6 +100,12 @@ class Resultado:
     valores: dict = field(default_factory=dict)       # indicador -> valor usado
     no_votan: list = field(default_factory=list)      # indicadores sin dato fresco
     contribuciones: dict = field(default_factory=dict)
+
+    @property
+    def suficiente(self) -> bool:
+        """Vota la mayoría de los indicadores del régimen. Si no, el índice depende más de
+        CUÁLES votaron que de la economía, y la página lo advierte."""
+        return 2 * len(self.senales) > len(self.senales) + len(self.no_votan)
 
 
 def evaluar(valores: dict[str, float | None], regimen: str) -> Resultado:
@@ -190,8 +214,12 @@ def indicadores_actuales(series: dict, contratos: dict, hoy: date) -> tuple[dict
 
     if tco:
         prev = _anterior(series["tco"], tco.dia, 25, 40)
-        reg("depreciacion_30d", (tco.valor / prev.valor - 1) * 100 if prev else None, tco,
-            f"de Bs {es(prev.valor)} ({fe(prev.fecha)}) a Bs {es(tco.valor)}" if prev else "sin dato de hace ~30 días")
+        nota = f"de Bs {es(prev.valor)} ({fe(prev.fecha)}) a Bs {es(tco.valor)}" if prev else "sin dato de hace ~30 días"
+        # si la ventana cruza un cambio de metodología del BCB, se avisa (el voto se mantiene: ver PLAN, sesión 6)
+        for c in contratos.get("tco", {}).get("cambios_metodologia", []):
+            if prev and prev.fecha < c["fecha"] <= tco.fecha:
+                nota += f"; incluye el cambio de metodología del BCB del {fe(c['fecha'])}"
+        reg("depreciacion_30d", (tco.valor / prev.valor - 1) * 100 if prev else None, tco, nota)
     else:
         reg("depreciacion_30d", None, None)
 
@@ -210,22 +238,5 @@ def indicadores_actuales(series: dict, contratos: dict, hoy: date) -> tuple[dict
     return v, det
 
 
-# ---------- Episodios históricos para pruebas de regresión ----------
-# Datos anuales. "aprox" = valor de referencia a confirmar con la serie oficial
-# cuando el recolector histórico esté completo; las pruebas solo exigen el ORDEN
-# correcto de los estados, no decimales.
-HISTORIA = {
-    1985: dict(inflacion_12m=8170, deficit_fiscal=10, brecha=200, fuente="aprox: hiperinflación 1984-85"),
-    2014: dict(inflacion_12m=5.2, rin_var_12m=4.8, deficit_fiscal=3.4, brecha=0, fuente="aprox: auge del gas"),
-    2015: dict(inflacion_12m=3.0, rin_var_12m=-13.7, deficit_fiscal=6.9, brecha=0, fuente="aprox"),
-    2016: dict(inflacion_12m=4.0, rin_var_12m=-22.8, deficit_fiscal=7.2, brecha=0, fuente="aprox: caída del precio del gas"),
-    2019: dict(inflacion_12m=1.5, rin_var_12m=-27.7, deficit_fiscal=7.2, brecha=0, fuente="aprox; RIN BCB"),
-    2022: dict(inflacion_12m=3.1, rin_var_12m=-20.1, deficit_fiscal=7.1, brecha=0, fuente="RIN BCB 4752→3796"),
-    2023: dict(inflacion_12m=2.1, rin_var_12m=-55.0, deficit_fiscal=10.9, brecha=8, fuente="RIN BCB 3796→1709"),
-    2024: dict(inflacion_12m=9.97, rin_var_12m=15.7, deficit_fiscal=10.4, brecha=100, fuente="RIN BCB 1709→1977"),
-}
-
-
-def evaluar_anio(anio: int) -> Resultado:
-    d = {k: v for k, v in HISTORIA[anio].items() if k != "fuente"}
-    return evaluar(d, "fijo")
+# Los episodios históricos ya no son valores aproximados escritos aquí: la prueba retrospectiva
+# usa series oficiales guardadas en el repositorio (ver engine/historia.py).
