@@ -6,3 +6,6 @@ privado/
 .env
 # Avisos de la corrida: el robot los convierte en issues; no se guardan en git.
 reports/avisos.json
+# Páginas generadas en cada corrida (las publica el robot; no se guardan en git).
+site/metodologia.html
+site/archivo.html

@@ -26,7 +26,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 |---|---|---|---|
 | 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | ✅ hecha (25-nov-2026) |
 | 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | ✅ hecha (25-nov-2026) |
-| 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | pendiente |
+| 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | ✅ hecha (25-nov-2026) |
 | 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | pendiente |
 | 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | pendiente |
 | 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | pendiente |
@@ -92,6 +92,20 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 - **"Qué sabía el sistema el día X"**: elegir una fecha y ver el índice y los datos de ese día (salen de `data/indice.csv` y del historial de git).
 
 **Listo cuando:** desde el Pulso se llega a la metodología y al archivo, y una prueba confirma que la página de metodología refleja los umbrales reales del motor.
+
+**Hecho** (`engine/paginas.py`; el robot genera las páginas en cada corrida y no se guardan en git):
+- **`metodologia.html`, "Cómo se calcula"**: qué es el índice (método KLR, con su referencia), estados, histéresis, regla de mayoría y los dos regímenes. Incluye:
+  - la tabla de los 9 indicadores con sus umbrales, sus pesos en cada régimen y las series que los alimentan;
+  - el resumen de la prueba histórica (años en alerta);
+  - las fuentes de las 22 series, con su frecuencia, frescura y rezago;
+  - los controles de calidad y los límites conocidos.
+
+  Todo sale del motor y de `config/series.json`.
+- **`archivo.html`**:
+  - todos los informes semanales que pasan el verificador contra la ficha de su fecha; los que no pasan figuran como "no publicado";
+  - **"¿Qué decía el índice el día…?"**: se elige una fecha desde el 29-jun-2026 y se ve el índice, el estado, cuántos votaron, el origen (en vivo o reconstruido) y la señal de cada indicador. Sale de `data/indice.csv`.
+- Usan los mismos estilos del Pulso, con modo oscuro, y desde la cabecera del Pulso hay enlaces a las dos.
+- 5 pruebas nuevas (107 en total). Una exige que cada umbral y cada peso de la página coincidan con el motor.
 
 ## 13. Compartir y accesibilidad
 

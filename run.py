@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import hechos, historia, memoria
+from engine import hechos, historia, memoria, paginas
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -90,6 +90,8 @@ def main(argv=None) -> dict:
     # Informe semanal: se publica el más reciente SOLO si todas sus cifras pasan el verificador
     pul["informe"] = P.informe_publicable()
     P.guardar(pul)
+    # Páginas que se generan con el propio sistema: metodología y archivo
+    paginas.guardar(contratos, filas, anual)
 
     # Avisos: lo que una persona debe saber hoy (en GitHub se vuelven issues)
     estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)
