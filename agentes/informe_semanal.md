@@ -35,7 +35,9 @@ Las fechas ("25 de noviembre") y los años no cuentan como cifras.
 
   <Párrafo 3: qué ayuda (lo que está en verde), con sus cifras.>
 
-  **Qué mirar la próxima semana:** <una o dos cosas concretas, por ejemplo un dato que vence o una serie que se publica.>
+  **Qué mirar la próxima semana:** <una o dos cosas concretas. Si la ficha trae hechos "a un paso de cambiar"
+  (ids que empiezan con distancia_, umbral_ e indice_si_), úsalos: "la brecha cambiaria está a 1,56 de pasar a
+  amarillo; si pasara, el índice subiría a 54,3". No digas que va a pasar: solo cuánto le falta.>
   ```
 - **Tono:** sobrio. Explicas, no opinas ni recomiendas. Nada de "hay que comprar dólares". No predices: el índice mide señales y no adivina el futuro.
 - **Escribe cada cifra con su tema en la misma oración**, en formato boliviano: coma decimal y punto de miles, como en la ficha.

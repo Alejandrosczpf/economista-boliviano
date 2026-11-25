@@ -105,6 +105,7 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 .resumen p{margin:0 0 6px}
 .resumen p:first-of-type{font-size:18px;font-weight:600}
 .informe{margin-bottom:16px;font-size:15px;line-height:1.6}
+.informe h2{margin:0 0 8px}
 .informe h3{font-size:15px;margin:12px 0 4px}
 .informe p{margin:0 0 8px}
 .informe .sello{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);background:var(--surface-2);border-radius:6px;padding:4px 8px;margin-bottom:8px}
@@ -151,6 +152,9 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
 
   <h2>Qué cambió esta semana</h2>
   <div class="card" id="semana"></div>
+
+  <h2>A un paso de cambiar</h2>
+  <div class="card" id="a-un-paso"></div>
 
   <h2>El índice desde la flotación</h2>
   <div class="card chart" id="memoria"></div>
@@ -254,6 +258,29 @@ if (P.informe) {
         return `<li><b>${t?t.titulo:c.id}</b>: ${icono(ka)} ${la} → ${icono(kd)} ${ld}</li>`;}).join('')}</ul>`
     : `<div class="sub" style="margin-top:6px">Ningún indicador cambió de color en la semana.</div>`;
   el.innerHTML = h;
+})();
+
+// ---------- A un paso de cambiar (distancias a umbrales publicados; no es una predicción) ----------
+(function(){
+  const A = P.a_un_paso || [], el = document.getElementById('a-un-paso');
+  const K = {verde:'good', amarillo:'warning', rojo:'critical'};
+  const uni = u => u==='%'||u==='% del PIB'||u==='% del total' ? ' puntos porcentuales' : u==='puntos básicos' ? ' puntos básicos' : ' '+u;
+  const dec = r => Math.abs(r.valor) >= 100 ? 0 : 2;
+  const frase = r => `<b>${r.titulo}</b> (${nf(r.valor, dec(r))} ${r.unidad}, ${icono(K[r.senal])} ${r.senal}) está a
+    ${nf(r.distancia, dec(r))}${uni(r.unidad)} de pasar a ${icono(K[r.pasaria_a])} ${r.pasaria_a}
+    (umbral: ${nf(r.umbral, r.umbral%1?1:0)}). Si pasara, el índice ${r.cambio_indice>0?'subiría':'bajaría'} de ${nf(P.indice,1)} a
+    <b>${nf(r.indice_si_cambia,1)}</b>${r.estado_si_cambia!==P.estado?` y pasaría a <b>${r.estado_si_cambia}</b>`:` (seguiría en ${r.estado_si_cambia})`}.`;
+  const cerca = A.filter(r=>r.cerca);
+  el.innerHTML = (cerca.length
+      ? `<ul class="cambios-semana">${cerca.map(r=>`<li style="display:block">${frase(r)}</li>`).join('')}</ul>`
+      : `<div>Ningún indicador está cerca de cambiar de color: a todos les falta más de un cuarto de su franja amarilla.</div>`)
+    + `<div class="solo-aprendiz">No es una predicción: es cuánto le falta a cada dato para cruzar un umbral que ya está publicado.
+       "A un paso" = le falta menos de un cuarto de su franja amarilla (la distancia entre su umbral amarillo y el rojo).</div>
+    <details style="margin-top:8px"><summary>Ver la distancia de todos los indicadores</summary>
+    <table><thead><tr><th>Indicador</th><th>Hoy</th><th>Pasaría a</th><th>Umbral</th><th>Le falta</th><th>Índice si pasara</th></tr></thead><tbody>
+    ${A.map(r=>`<tr><td>${r.titulo}</td><td class="n">${nf(r.valor,dec(r))} ${icono(K[r.senal])}</td><td>${icono(K[r.pasaria_a])} ${r.pasaria_a}</td>
+      <td class="n">${nf(r.umbral, r.umbral%1?1:0)}</td><td class="n">${nf(r.distancia,dec(r))}</td><td class="n">${nf(r.indice_si_cambia,1)}</td></tr>`).join('')}
+    </tbody></table></details>`;
 })();
 
 // ---------- gráficos SVG ----------

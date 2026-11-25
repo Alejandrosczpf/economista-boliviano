@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import compartir, hechos, historia, memoria, paginas
+from engine import cercania, compartir, hechos, historia, memoria, paginas
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -74,6 +74,8 @@ def main(argv=None) -> dict:
     pul["estado_sin_histeresis"] = pul["estado"]
     pul["estado"] = filas[-1]["estado"]
     pul["semana"] = memoria.resumen_semana(filas)
+    # A un paso de cambiar: distancia de cada indicador a su próximo umbral (no es una predicción)
+    pul["a_un_paso"] = cercania.calcular(pul)
 
     # Prueba retrospectiva anual con series oficiales (reports/historia.md y el Pulso)
     anual = historia.prueba_retrospectiva(series, 1980, a.hoy.year - 1)

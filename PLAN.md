@@ -28,7 +28,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 | 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | ✅ hecha (25-nov-2026) |
 | 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | ✅ hecha (25-nov-2026) |
 | 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | ✅ hecha (25-nov-2026) |
-| 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | pendiente |
+| 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | ✅ hecha (25-nov-2026) |
 | 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | pendiente |
 | 16 | Revisión de umbrales del régimen flotante | Programada para **junio de 2027**, al cumplirse 12 meses de flotación | programada |
 
@@ -142,6 +142,19 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 - Agregar esas distancias a la ficha de hechos, para que el informe semanal pueda citarlas verificadas.
 
 **Listo cuando:** el Pulso muestra las distancias a los umbrales, y una prueba confirma que coinciden con los umbrales del motor.
+
+**Hecho** (`engine/cercania.py`):
+- Para cada indicador que vota se calculan el umbral siguiente hacia peor y hacia mejor, la distancia y **el índice si cambiara de color**. Este índice se recalcula con los pesos, y el estado resultante respeta la histéresis.
+- **"A un paso"** = le falta menos de **un cuarto de su franja amarilla** (|rojo − amarillo|). Así se comparan indicadores con unidades distintas.
+- **Hoy (25-nov):**
+  - la brecha (1,44 %, verde) está a 1,56 puntos de pasar a amarillo, y el índice subiría a 54,3;
+  - las reservas líquidas (21,57 %, rojo) están a 3,43 puntos del amarillo, y el índice bajaría a 43,5;
+  - el riesgo país (494, amarillo) está a 94 pb del verde, y el índice bajaría a 43,5.
+
+  Ninguno cambiaría el estado: seguiría en vigilancia.
+- En el Pulso, la sección "A un paso de cambiar" trae una frase por cada indicador cercano y una tabla con las distancias de todos. Aclara que no es una predicción.
+- **Ficha de hechos:** los cercanos agregan su distancia, su umbral y el índice si cambiara, así el informe semanal los puede citar verificados. Se actualizaron las instrucciones del informe.
+- 6 pruebas nuevas (117 en total). Comprueban que cruzar el umbral cambia la señal en el motor y que el índice "si cambiara" coincide con `evaluar`.
 
 ## 15. Nuevos indicadores con prueba histórica
 

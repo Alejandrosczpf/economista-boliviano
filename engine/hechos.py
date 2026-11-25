@@ -64,6 +64,19 @@ def construir(pul: dict, series: dict) -> dict:
     for sid, quien in (("pib_proy_fmi", "FMI"), ("pib_proy_bcb", "BCB"), ("pib_proy_bm", "Banco Mundial")):
         ultimo(sid, sid, f"proyección del {quien}", "%", CLAVES["pib_proy"] + [quien.lower()])
 
+    # a un paso de cambiar: la distancia al umbral, el umbral y el índice si cambiara (solo los cercanos)
+    for r in pul.get("a_un_paso") or []:
+        if not r["cerca"]:
+            continue
+        clave = f"{r['id']}_{r['direccion']}"
+        H.append(_h(f"distancia_{clave}", r["distancia"],
+                    f"a {es(r['distancia'], 2)} de pasar a {r['pasaria_a']} ({r['titulo'].lower()})", CLAVES[r["id"]]))
+        H.append(_h(f"umbral_{clave}", r["umbral"], f"umbral de {r['pasaria_a']}: {es(r['umbral'], 2)} ({r['titulo'].lower()})",
+                    CLAVES[r["id"]] + ["umbral"]))
+        H.append(_h(f"indice_si_{clave}", r["indice_si_cambia"],
+                    f"el índice pasaría a {es(r['indice_si_cambia'], 1)} si {r['titulo'].lower()} pasara a {r['pasaria_a']}",
+                    CLAVES["indice"]))
+
     s = pul.get("semana")
     if s:
         d = s["indice_hoy"] - s["indice_antes"]
