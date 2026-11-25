@@ -3,11 +3,19 @@
   "fallos_seguidos": 0,
   "ultima_lectura_ok": "2026-11-25"
  },
+ "bcb_rin": {
+  "fallos_seguidos": 0,
+  "ultima_lectura_ok": "2026-11-25"
+ },
  "bcb_tco": {
   "fallos_seguidos": 0,
   "ultima_lectura_ok": "2026-11-25"
  },
  "fmi": {
+  "fallos_seguidos": 0,
+  "ultima_lectura_ok": "2026-11-25"
+ },
+ "ine_ipc": {
   "fallos_seguidos": 0,
   "ultima_lectura_ok": "2026-11-25"
  },

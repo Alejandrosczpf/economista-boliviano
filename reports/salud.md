@@ -1,10 +1,10 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **47.8** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 841
+- Datos nuevos o corregidos: 1035
 - En cuarentena esta corrida: 0
 - Fuentes con error: 0
-- Series con dato viejo o sin datos: 0 de 19
+- Series con dato viejo o sin datos: 0 de 20
 - Indicadores que no votaron por falta de dato fresco: ninguno
 - Avisos vigentes: 1
 
@@ -18,8 +18,9 @@
 |---|---|---|---|---|
 | Tipo de cambio oficial | 2026-11-25 | 0 | 5 | fresco |
 | Dólar paralelo/digital (promedio compra-venta) | 2026-11-24 | 1 | 5 | fresco |
-| Reservas internacionales netas | 2026-09-30 | 56 | 70 | fresco |
-| Reservas en divisas (parte líquida) | 2026-07-17 | 131 | 160 | fresco |
+| Reservas internacionales netas | 2026-10-31 | 25 | 70 | fresco |
+| Reservas internacionales brutas | 2026-10-31 | 25 | 70 | fresco |
+| Reservas en divisas (parte líquida de las brutas) | 2026-10-31 | 25 | 70 | fresco |
 | Inflación a 12 meses | 2026-10-31 | 25 | 45 | fresco |
 | Inflación del mes | 2026-10-31 | 25 | 45 | fresco |
 | Riesgo país (EMBI) | 2026-11-02 | 23 | 30 | fresco |
