@@ -25,12 +25,16 @@ Tu tarea es **proponer** los datos que no tienen recolector automático. Los pro
 
 | Serie | Qué es | Fecha que va en la fila | Fuentes, en orden de preferencia | Cuándo hay dato nuevo |
 |---|---|---|---|---|
-| `embi` | Riesgo país de Bolivia (EMBI de JP Morgan), en puntos básicos | El día de la cotización | JP Morgan citado por Bloomberg Línea, El Deber, Ámbito, eju.tv o Reuters. Si dos fuentes difieren, la más reciente con fecha explícita | Cada semana |
+| `embi` | Riesgo país de Bolivia (EMBI de JP Morgan), en puntos básicos | El día de la cotización | JP Morgan citado por Bloomberg Línea, La Razón, El Deber, Ámbito, eju.tv o Reuters; también los comunicados del MEFP (economiayfinanzas.gob.bo). Si dos fuentes difieren, la más reciente con fecha explícita. "Menos de 500 puntos" no es un valor: hace falta el número exacto | Cada semana |
 | `pib_proy_fmi` | Proyección de crecimiento del PIB **del año en curso**, FMI | Fecha de publicación del informe | FMI, Perspectivas de la Economía Mundial (WEO) o comunicado de un Artículo IV | Abril y octubre |
 | `pib_proy_bm` | Lo mismo, Banco Mundial | Fecha de publicación | Banco Mundial: Perspectivas Económicas Mundiales (enero y junio) o informe semestral de América Latina (abril y octubre) | Enero, abril, junio y octubre |
 | `pib_proy_bcb` | Lo mismo, BCB | Fecha de publicación | BCB: Informe de Política Monetaria o presentaciones oficiales del presidente del BCB | Enero y julio (a veces más) |
-| `deficit_fiscal` | Déficit del sector público no financiero, % del PIB (positivo = déficit) | 31 de diciembre del año que mide | MEFP (Ministerio de Economía y Finanzas Públicas); si no, el FMI (Artículo IV) | Una vez al año (primer trimestre) |
+| `deficit_fiscal` | Déficit del sector público no financiero, % del PIB (positivo = déficit) | 31 de diciembre del año que mide | MEFP (Ministerio de Economía y Finanzas Públicas, economiayfinanzas.gob.bo); si no, el FMI (Artículo IV) | Una vez al año (primer trimestre) |
 | `base_monetaria_var_acum` | Variación acumulada de la base monetaria en el año, en millones de Bs | Último día del mes de corte | BCB, Programa Monetario mensual (PDF en bcb.gob.bo/webdocs/programamonetario) | Cada mes |
+
+## Si una página no abre
+
+La nube solo deja abrir los dominios permitidos del entorno. Si una fuente útil falla con "ENOTFOUND", no la uses. En el resumen final, nombra el dominio para que la persona lo agregue a la lista de permitidos.
 
 ## Cuidados que ya costaron errores en este proyecto
 

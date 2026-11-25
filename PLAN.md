@@ -181,7 +181,10 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
   - Para el EMBI solo halló una cifra posterior (595 pb hacia el 20-nov, en MarketData), pero apareció solo en el resumen del buscador y no pudo abrir la página para verificarla.
   - El Programa Monetario de noviembre todavía no estaba publicado.
   - Todavía no se probó el push ni la creación del *pull request*, porque no hubo dato que proponer.
-- **Pendiente:** la nube de Claude bloquea los sitios que no están en la lista de dominios permitidos del entorno (falló `eaduana.com` y `marketdata.com.py`). Hay que permitir las fuentes en la configuración de red del entorno "Default" de claude.ai/code. Las fuentes son: `bcb.gob.bo`, `economia.gob.bo`, `ine.gob.bo`, `imf.org`, `worldbank.org`, `bloomberglinea.com`, `eldeber.com.bo`, `eju.tv`, `correodelsur.com`, `lostiempos.com`, `eaduana.com`, `ambito.com`, `reuters.com`, `reduno.com.bo`.
+- **Red del entorno:** la nube de Claude solo abre los dominios permitidos en el entorno "Default" (claude.ai/code → entornos → acceso a la red: "Limitado", un dominio por línea, cada uno con y sin `*.`).
+  - El 25-nov se agregaron 14 fuentes.
+  - En la segunda prueba aparecieron fuentes útiles fuera de la lista: `larazon.bo` (el riesgo país del 22-nov) y `economiayfinanzas.gob.bo`, que es el dominio real del MEFP; `economia.gob.bo` era un error.
+  - Si una fuente falla, la rutina lo dice en su resumen.
 - 8 pruebas nuevas (85 en total).
 
 ## 9. Informe semanal verificado
