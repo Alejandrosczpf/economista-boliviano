@@ -283,6 +283,10 @@
     "valor": 11.84
    },
    {
+    "fecha": "2026-11-24",
+    "valor": 11.83
+   },
+   {
     "fecha": "2026-11-25",
     "valor": 11.83
    }
@@ -406,9 +410,12 @@
  },
  "salud": {
   "fecha": "2026-11-25",
-  "datos_nuevos": 0,
+  "datos_nuevos": 1,
   "en_cuarentena": [],
-  "fuentes_con_error": {},
+  "fuentes_con_error": {
+   "banco_mundial": "no se pudo leer https://api.worldbank.org/v2/country/BOL/indicator/FP.CPI.TOTL.ZG?format=json&per_page=200: HTTP Error 403: Forbidden",
+   "fmi": "no se pudo leer https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/BOL: HTTP Error 403: Forbidden"
+  },
   "frescura": [
    {
     "serie": "tco",

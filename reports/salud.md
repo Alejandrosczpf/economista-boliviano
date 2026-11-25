@@ -1,11 +1,16 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **55.0** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 0
+- Datos nuevos o corregidos: 1
 - En cuarentena esta corrida: 0
-- Fuentes con error: 0
+- Fuentes con error: 2
 - Series con dato viejo o sin datos: 8 de 19
 - Indicadores que no votaron por falta de dato fresco: brecha
+
+## Fuentes con error
+
+- **banco_mundial**: no se pudo leer https://api.worldbank.org/v2/country/BOL/indicator/FP.CPI.TOTL.ZG?format=json&per_page=200: HTTP Error 403: Forbidden
+- **fmi**: no se pudo leer https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/BOL: HTTP Error 403: Forbidden
 
 ## Frescura de cada serie
 
