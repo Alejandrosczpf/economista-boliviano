@@ -99,13 +99,14 @@
    "id": "embi",
    "nombre": "Riesgo país (EMBI)",
    "unidad": "puntos básicos",
-   "frecuencia": "diaria",
-   "fuente": "JP Morgan vía prensa",
+   "frecuencia": "irregular",
+   "fuente": "JP Morgan (EMBI) vía prensa o MEFP",
    "min": 0,
    "max": 10000,
    "max_salto_pct": 80,
-   "frescura_dias": 30,
-   "rezago_dias": 1
+   "frescura_dias": 90,
+   "rezago_dias": 1,
+   "nota_frescura": "No hay fuente pública frecuente del EMBI de Bolivia (JP Morgan no lo publica; el BCRP publica 8 países, no Bolivia; los bonos no tienen cotización pública con permiso de uso). La prensa trae cifras con fecha cada 2-3 meses (18-feb, 22-may, 13-ago, 2-nov de 2026). Con 30 días quedaba vencido por diseño. 90 días: pesa 1 de 10,5 y sus umbrales son anchos; en crisis la prensa lo publica más seguido. Decisión de la sesión 10 (25-nov-2026)."
   },
   {
    "id": "pib_proy_fmi",

@@ -24,7 +24,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 
 | # | Sesión | Por qué ahora | Estado |
 |---|---|---|---|
-| 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | pendiente |
+| 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | ✅ hecha (25-nov-2026) |
 | 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | pendiente |
 | 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | pendiente |
 | 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | pendiente |
@@ -46,6 +46,19 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 - Agregar la fuente elegida a las instrucciones de la rutina y a los dominios permitidos.
 
 **Listo cuando:** el riesgo país tiene una fuente con frecuencia conocida y su contrato coincide con esa frecuencia, de modo que no queda "vencido" por diseño.
+
+**Hecho:**
+- **No existe una fuente pública frecuente del EMBI de Bolivia.** Se revisó:
+  - JP Morgan: no lo publica abiertamente.
+  - API pública del BCRP (Perú): publica el EMBI de 8 países (Argentina, Brasil, Chile, Colombia, Ecuador, México, Perú y Venezuela), **no el de Bolivia**.
+  - Bonos soberanos 2028 y 2030: no tienen cotización pública con permiso de uso, solo en servicios pagos. Además, el BCB los está canjeando por deuda local.
+  - MEFP: anuncia el dato cuando baja, por medio de la prensa.
+- **Frecuencia real:** la prensa trae cifras **con fecha explícita** cada 2 o 3 meses (18-feb, 22-may, 13-ago y 2-nov de 2026).
+- **Decisión:** frescura de **90 días** (antes 30) y frecuencia "irregular". La justificación quedó en `nota_frescura` del contrato. Con 30 días el indicador estaba vencido por diseño. Pesa 1 de 10,5, sus umbrales son anchos (400 y 800) y en una crisis la prensa lo publica más seguido.
+- **Dos valores recuperados y verificados**, con fecha explícita: 605 pb el 22-may (Bloomberg Línea) y 407 pb el 13-ago (La Patria, EMBI de JP Morgan). Los demás valores que aparecieron ("este lunes", "en febrero pasado", "en el último año") no se cargaron, por no tener fecha exacta.
+- La rutina de carga tiene una lista de fuentes ampliada. La Razón quedó descartada por su muro de pago.
+- **Resultado:** el EMBI vota los 150 días de la reconstrucción, y desaparece el aviso de "por vencer".
+- 1 prueba nueva (96 en total).
 
 ## 11. Vigilar a las rutinas
 
