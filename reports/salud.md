@@ -4,7 +4,7 @@
 - Datos nuevos o corregidos: 0
 - En cuarentena esta corrida: 0
 - Fuentes con error: 0
-- Series con dato viejo o sin datos: 0 de 22
+- Series con dato viejo o sin datos: 0 de 26
 - Indicadores que no votaron por falta de dato fresco: ninguno
 - Avisos vigentes: 0
 
@@ -34,3 +34,7 @@
 | Inflación promedio (FMI DataMapper) | 2025-12-31 | 329 | 800 | fresco |
 | Inflación a fin de año (FMI WEO) | 2025-12-31 | 329 | 800 | fresco |
 | Balance fiscal del gobierno general (FMI WEO) | 2025-12-31 | 329 | 800 | fresco |
+| Crédito al sector privado (% del PIB, Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Dinero en sentido amplio M2 (bolivianos corrientes, Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Tipo de cambio oficial, promedio anual (Banco Mundial) | 2025-12-31 | 329 | 800 | fresco |
+| Saldo de la cuenta corriente (% del PIB, FMI WEO) | 2025-12-31 | 329 | 800 | fresco |

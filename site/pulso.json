@@ -5632,6 +5632,38 @@
     "edad_dias": 329,
     "limite_dias": 800,
     "estado": "fresco"
+   },
+   {
+    "serie": "wb_credito_privado_pib",
+    "nombre": "Crédito al sector privado (% del PIB, Banco Mundial)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
+   },
+   {
+    "serie": "wb_m2_bs",
+    "nombre": "Dinero en sentido amplio M2 (bolivianos corrientes, Banco Mundial)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
+   },
+   {
+    "serie": "wb_tc_oficial",
+    "nombre": "Tipo de cambio oficial, promedio anual (Banco Mundial)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
+   },
+   {
+    "serie": "fmi_weo_cuenta_corriente",
+    "nombre": "Saldo de la cuenta corriente (% del PIB, FMI WEO)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
    }
   ]
  },
@@ -7566,6 +7598,36 @@
    "votan": 6,
    "de": 8,
    "episodio": "inflación más alta en 36 años"
+  }
+ ],
+ "contexto": [
+  {
+   "id": "m2_reservas",
+   "titulo": "Dinero (M2) sobre reservas",
+   "unidad": "veces",
+   "anio": 2025,
+   "valor": 10.04,
+   "semaforo": "rojo",
+   "por_que": "Si las reservas cubren menos del 20 % del dinero, no alcanzan a respaldarlo ante una corrida.",
+   "amarillo": 5,
+   "rojo": 10,
+   "mayor": true,
+   "fuente": "Banco Mundial (M2 en Bs, tipo de cambio) y RIN brutas del BCB (o reservas del BM antes de 2002)",
+   "ruido_senal": 0.0
+  },
+  {
+   "id": "exportaciones_var",
+   "titulo": "Exportaciones: cambio anual",
+   "unidad": "%",
+   "anio": 2024,
+   "valor": 0.33,
+   "semaforo": "verde",
+   "por_que": "Menos exportaciones son menos dólares que entran al país.",
+   "amarillo": 0,
+   "rojo": -10,
+   "mayor": false,
+   "fuente": "Banco Mundial (NE.EXP.GNFS.CD)",
+   "ruido_senal": 0.41
   }
  ],
  "notas_graficos": {
