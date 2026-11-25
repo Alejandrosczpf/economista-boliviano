@@ -162,6 +162,9 @@ footer{margin-top:40px;font-size:12px;color:var(--text-muted)}
   <h2>Indicadores</h2>
   <div class="grid" id="tiles"></div>
 
+  <h2 id="contexto-titulo" style="display:none">Contexto (no vota en el índice)</h2>
+  <div class="grid" id="contexto"></div>
+
   <h2>Cómo se movieron</h2>
   <div class="charts" id="charts"></div>
 
@@ -258,6 +261,24 @@ if (P.informe) {
         return `<li><b>${t?t.titulo:c.id}</b>: ${icono(ka)} ${la} → ${icono(kd)} ${ld}</li>`;}).join('')}</ul>`
     : `<div class="sub" style="margin-top:6px">Ningún indicador cambió de color en la semana.</div>`;
   el.innerHTML = h;
+})();
+
+// ---------- Contexto: candidatos informativos que no entraron al índice (sesión 15) ----------
+(function(){
+  const C = P.contexto || [];
+  if (!C.length) return;
+  document.getElementById('contexto-titulo').style.display = '';
+  const K = {verde:['good','Verde'], amarillo:['warning','Amarillo'], rojo:['critical','Rojo']};
+  document.getElementById('contexto').innerHTML = C.map(c=>{
+    const [k,l] = K[c.semaforo], d = c.mayor ? '≥' : '≤';
+    return `<div class="card tile tt" tabindex="0">
+      <div class="t"><span>${c.titulo}</span><span class="sem">${icono(k)} ${l}</span></div>
+      <div class="v">${nf(c.valor, Math.abs(c.valor)>=100?0:2)}<small>${c.unidad}</small></div>
+      <div class="m">${c.anio} · dato anual · no vota</div>
+      <div class="solo-aprendiz">${c.por_que}</div>
+      <div class="tip"><b>Por qué no vota</b>Se probó con la historia desde 1980: avisa bien por sí solo (ruido/señal ${nf(c.ruido_senal,2)}), pero agregado al índice empeoraba su desempeño en otras crisis. Se muestra como contexto.<b>Umbrales</b>Amarillo ${d} ${nf(c.amarillo,0)}, rojo ${d} ${nf(c.rojo,0)}.<b>Fuente</b>${c.fuente}</div>
+    </div>`;
+  }).join('');
 })();
 
 // ---------- A un paso de cambiar (distancias a umbrales publicados; no es una predicción) ----------

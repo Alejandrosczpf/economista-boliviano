@@ -29,7 +29,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 | 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | ✅ hecha (25-nov-2026) |
 | 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | ✅ hecha (25-nov-2026) |
 | 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | ✅ hecha (25-nov-2026) |
-| 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | pendiente |
+| 15 | Nuevos indicadores con prueba histórica | Comercio exterior, depósitos y bolivianización; solo entran si pasan la prueba desde 1980 | ✅ hecha (25-nov-2026): ninguno entra; dos como contexto |
 | 16 | Revisión de umbrales del régimen flotante | Programada para **junio de 2027**, al cumplirse 12 meses de flotación | programada |
 
 ---
@@ -165,10 +165,31 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 
 **Listo cuando:** cada candidato tiene su resultado documentado (entra o no entra, y por qué) y las pruebas históricas siguen pasando.
 
+**Hecho** (`engine/candidatos.py` y `reports/candidatos.md`, que se regenera en cada corrida):
+- **Reglas fijadas antes de ver los resultados:**
+  - umbrales tomados de la literatura de alerta temprana;
+  - períodos de crisis y su año previo: 1981-1985, 2001-2003 y 2022-2025; neutros: 1980, 1986, 2015-2016 y 2019-2021; el resto es calma;
+  - para entrar, un candidato debe cumplir las cuatro condiciones: ruido/señal menor a 1, mejor separación entre crisis y calma, ninguna falsa alarma nueva y las pruebas históricas en verde.
+- **Resultado: ninguno entra.**
+
+  | Candidato | Ruido/señal | Al agregarlo al índice |
+  |---|---|---|
+  | M2/reservas | **0,0** (rojo en 2023-2025, nunca en calma) | Diluye la hiperinflación: en los 80 el cociente era bajo porque la inflación había destruido el dinero. 1981-1985 dejan de estar todos en alerta. |
+  | Exportaciones | **0,41** | Diluye 1981-1985 y el aviso de 2022 (en 2022 crecieron 25,6 %). |
+  | Cuenta corriente | 1,33 | Empeora la separación y rompe 3 pruebas. |
+  | Crédito privado | 1,78 | Empeora la separación y rompe 3 pruebas. |
+
+  Con el índice actual la separación es de 46,7 puntos; con cualquiera de los candidatos baja.
+- **Contexto que no vota:** M2/reservas (10,04 veces en 2025, rojo) y exportaciones (+0,33 % en 2024, verde) se muestran en el Pulso porque avisan bien por sí solos. "Cómo se calcula" incluye la tabla de candidatos.
+- **Depósitos y bolivianización:** no tienen serie pública desde 1980, así que no se pudieron probar.
+- Series nuevas: cuenta corriente (FMI), crédito privado, M2 en bolivianos y tipo de cambio promedio (Banco Mundial).
+- 5 pruebas nuevas (122 en total).
+
 ## 16. Revisión de umbrales del régimen flotante (jun-2027)
 
 - Con 12 meses de flotación, revisar si los umbrales de depreciación, brecha y reservas siguen siendo razonables, usando la memoria del índice (`data/indice.csv`).
 - Cada cambio se documenta y debe seguir pasando las pruebas históricas.
+- **Propuesta pendiente de la sesión 15:** M2/reservas y exportaciones avisan bien por sí solos, pero diluyen el índice en crisis de otro tipo. Se puede probar un **peso según su calidad** (proporcional a 1 / ruido-señal, como en Kaminsky-Lizondo-Reinhart), o que voten solo en el régimen flotante. Para no acomodar las reglas a los datos, la decisión debe tomarse con los **datos nuevos de dic-2026 a jun-2027**, que no se usaron para diseñar la propuesta.
 
 ---
 

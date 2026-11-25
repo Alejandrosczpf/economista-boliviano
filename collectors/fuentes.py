@@ -167,6 +167,10 @@ BM = {
     "wb_reservas": "FI.RES.TOTL.CD",
     "wb_exportaciones": "NE.EXP.GNFS.CD",
     "wb_dinero_amplio_pib": "FM.LBL.BMNY.GD.ZS",
+    # candidatos de la sesión 15 (prueba histórica desde 1980)
+    "wb_credito_privado_pib": "FS.AST.PRVT.GD.ZS",   # crédito interno al sector privado, % del PIB
+    "wb_m2_bs": "FM.LBL.BMNY.CN",                    # dinero en sentido amplio (M2), en bolivianos corrientes
+    "wb_tc_oficial": "PA.NUS.FCRF",                  # tipo de cambio oficial, promedio del año (Bs por USD)
 }
 
 
@@ -199,7 +203,8 @@ def banco_mundial() -> list[Obs]:
 FMI = {"fmi_weo_pib": "NGDP_RPCH",               # crecimiento real
        "fmi_weo_inflacion": "PCPIPCH",          # inflación promedio del año
        "fmi_weo_inflacion_fin": "PCPIEPCH",     # inflación a fin de año (la que mide el motor: 12 meses)
-       "fmi_weo_balance": "GGXCNL_NGDP"}        # balance fiscal del gobierno general, % del PIB
+       "fmi_weo_balance": "GGXCNL_NGDP",        # balance fiscal del gobierno general, % del PIB
+       "fmi_weo_cuenta_corriente": "BCA_NGDPD"} # saldo de la cuenta corriente, % del PIB (candidato, sesión 15)
 URL_FMI_PERFIL = "https://www.imf.org/external/datamapper/profile/BOL"
 
 

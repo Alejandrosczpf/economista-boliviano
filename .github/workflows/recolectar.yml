@@ -52,7 +52,7 @@ jobs:
         run: |
           git config user.name "economista-bot"
           git config user.email "economista-bot@users.noreply.github.com"
-          git add data/ site/pulso.json reports/salud.md reports/historia.md
+          git add data/ site/pulso.json reports/salud.md reports/historia.md reports/candidatos.md
           git diff --cached --quiet || git commit -m "Datos $(date -u +%F)"
           git pull --rebase --autostash -q   # por si alguien subió cambios mientras corría el robot
           git push

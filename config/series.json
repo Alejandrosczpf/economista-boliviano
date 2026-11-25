@@ -275,6 +275,54 @@
    "max_salto_pts": null,
    "frescura_dias": 800,
    "rezago_dias": 120
+  },
+  {
+   "id": "wb_credito_privado_pib",
+   "nombre": "Crédito al sector privado (% del PIB, Banco Mundial)",
+   "unidad": "% del PIB",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial FS.AST.PRVT.GD.ZS",
+   "min": 0,
+   "max": 300,
+   "max_salto_pts": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
+  },
+  {
+   "id": "wb_m2_bs",
+   "nombre": "Dinero en sentido amplio M2 (bolivianos corrientes, Banco Mundial)",
+   "unidad": "Bs",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial FM.LBL.BMNY.CN",
+   "min": 0,
+   "max": 1000000000000000.0,
+   "max_salto_pct": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
+  },
+  {
+   "id": "wb_tc_oficial",
+   "nombre": "Tipo de cambio oficial, promedio anual (Banco Mundial)",
+   "unidad": "Bs por USD",
+   "frecuencia": "anual",
+   "fuente": "Banco Mundial PA.NUS.FCRF",
+   "min": 0,
+   "max": 1000,
+   "max_salto_pct": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
+  },
+  {
+   "id": "fmi_weo_cuenta_corriente",
+   "nombre": "Saldo de la cuenta corriente (% del PIB, FMI WEO)",
+   "unidad": "% del PIB",
+   "frecuencia": "anual",
+   "fuente": "FMI WEO BCA_NGDPD",
+   "min": -60,
+   "max": 60,
+   "max_salto_pts": null,
+   "frescura_dias": 800,
+   "rezago_dias": 120
   }
  ]
 }

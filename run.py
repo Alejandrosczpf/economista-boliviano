@@ -12,7 +12,7 @@ import os
 from datetime import date
 
 from collectors.fuentes import RECOLECTORES, FallaParcial
-from engine import cercania, compartir, hechos, historia, memoria, paginas
+from engine import candidatos, cercania, compartir, hechos, historia, memoria, paginas
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
@@ -82,6 +82,10 @@ def main(argv=None) -> dict:
     with open(os.path.join(store.RAIZ, "reports", "historia.md"), "w", encoding="utf-8") as fh:
         fh.write(historia.informe(anual))
     pul["historia_anual"] = [{k: r[k] for k in ("anio", "indice", "estado", "votan", "de", "episodio")} for r in anual]
+    # Candidatos a nuevos indicadores (sesión 15): evaluación con la historia y contexto que no vota
+    with open(os.path.join(store.RAIZ, "reports", "candidatos.md"), "w", encoding="utf-8") as fh:
+        fh.write(candidatos.informe(series))
+    pul["contexto"] = candidatos.contexto(series)
 
     # Textos para el lector, armados con los datos del día
     pul["notas_graficos"] = P.notas_graficos(series)
@@ -94,7 +98,7 @@ def main(argv=None) -> dict:
     P.guardar(pul)
     # Páginas que se generan con el propio sistema: metodología y archivo
     informes = paginas.informes_verificados()
-    paginas.guardar(contratos, filas, anual, informes)
+    paginas.guardar(contratos, filas, anual, informes, candidatos.evaluar_candidatos(series))
     # Compartir: imagen de vista previa (WhatsApp, redes) y RSS de los informes
     compartir.imagen_og(pul)
     compartir.rss(informes)

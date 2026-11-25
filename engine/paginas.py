@@ -55,7 +55,34 @@ def _num(v: float) -> str:
 
 # ---------- Cómo se calcula ----------
 
-def metodologia(contratos: dict, anual: list[dict] | None = None) -> str:
+def _candidatos_html(evaluacion: dict | None) -> str:
+    if not evaluacion:
+        return ""
+    from engine.candidatos import CANDIDATOS
+    filas = []
+    for cid, r in evaluacion["candidatos"].items():
+        c, rs = CANDIDATOS[cid], r["ruido_senal"]["ruido_senal"]
+        filas.append(f'<tr data-candidato="{cid}"><td><b>{E(c["titulo"])}</b><br><span class="sub">{E(c["por_que"])}</span></td>'
+                     f'<td class="n">{"—" if rs is None else es(rs, 2)}</td><td class="n">{es(r["con"]["separacion"], 1)}</td>'
+                     f'<td>{"sí" if r["entra"] else ("no; se muestra como contexto" if rs is not None and rs < 1 else "no")}</td></tr>')
+    return f"""
+<h2>Indicadores candidatos que se probaron</h2>
+<p>Un indicador nuevo entra al índice solo si, probado con la historia desde 1980, cumple cuatro condiciones fijadas
+<b>antes</b> de ver los resultados:</p>
+<ul>
+<li>por sí solo avisa más en crisis que en calma (relación ruido/señal menor a 1);</li>
+<li>agregado al índice, separa mejor los años de crisis de los años de calma;</li>
+<li>no crea falsas alarmas;</li>
+<li>las pruebas históricas siguen pasando.</li>
+</ul>
+<p>Con el índice actual, la separación entre crisis y calma es de {es(evaluacion["base"]["separacion"], 1)} puntos.</p>
+<table id="candidatos"><thead><tr><th>Candidato</th><th>Ruido/señal</th><th>Separación con él</th><th>¿Entra?</th></tr></thead>
+<tbody>{''.join(filas)}</tbody></table>
+<p class="sub">Un indicador puede ser bueno por sí solo y empeorar el índice, porque vota en verde en crisis que no son de
+su tipo. Los que avisan bien solos se muestran en el Pulso como contexto, sin votar.</p>"""
+
+
+def metodologia(contratos: dict, anual: list[dict] | None = None, evaluacion: dict | None = None) -> str:
     regimenes = list(PESOS)  # ["fijo", "flotante"]
     filas = []
     for ind, u in UMBRALES.items():
@@ -113,6 +140,8 @@ de cambio fijo. Estuvo en <b>alerta</b> en: {txt_alerta or "—"}. Las pruebas a
 siga reconociendo la hiperinflación (desde 1981), la calma del auge 2005-2014, la vigilancia de 2016 y 2019, el
 aviso de 2022 y la crisis de 2023-2024. Si un cambio de fórmula o una revisión de datos rompe eso, no se publica.
 El detalle año por año está en el <a href="index.html">Pulso</a> ("¿Habría avisado?").</p>
+
+{_candidatos_html(evaluacion)}
 
 <h2>Fuentes de cada serie</h2>
 <p><b>Frescura:</b> los días que un dato sigue valiendo. <b>Rezago:</b> los días entre la fecha del dato y su
@@ -223,9 +252,10 @@ inp.addEventListener('change', mostrar); mostrar();
     return _pagina("Archivo", cuerpo, script)
 
 
-def guardar(contratos: dict, filas_indice: list[dict], anual: list[dict], informes: list[dict] | None = None) -> None:
+def guardar(contratos: dict, filas_indice: list[dict], anual: list[dict], informes: list[dict] | None = None,
+            evaluacion: dict | None = None) -> None:
     informes = informes_verificados() if informes is None else informes
-    for nombre, contenido in (("metodologia.html", metodologia(contratos, anual)),
+    for nombre, contenido in (("metodologia.html", metodologia(contratos, anual, evaluacion)),
                               ("archivo.html", archivo(filas_indice, informes))):
         with open(os.path.join(SITIO, nombre), "w", encoding="utf-8") as f:
             f.write(contenido)
