@@ -27,7 +27,8 @@ Then open `site/index.html` in a browser. The page carries its data inside, so i
 | Folder | What it holds |
 |---|---|
 | `config/series.json` | **Contract** for each series: possible range, credible jump, maximum age, known breaks (e.g. 29 Jun 2026) |
-| `collectors/fuentes.py` | Collectors: manual, BCB official exchange rate, parallel dollar from [paralelo.bo](https://paralelo.bo) (data under CC-BY 4.0), World Bank API, IMF API (SDMX 3.0, with DataMapper as fallback) |
+| `collectors/fuentes.py` | Collectors: manual; BCB official exchange rate (daily table + day's page); BCB reserves (official Excel: net, gross, foreign currency); INE inflation (monthly CPI releases); parallel dollar from [paralelo.bo](https://paralelo.bo) (data under CC-BY 4.0); World Bank API; IMF API (SDMX 3.0, with DataMapper as fallback) |
+| `data/manual/aprobados.csv` | Data a person reviewed after quarantine and confirmed as real, with the reason and a link. Skips the jump check, not the range check |
 | `pipeline/validate.py` | Quarantine: data that breaks its contract doesn't enter the calculation. The allowed jump grows with elapsed time |
 | `pipeline/store.py` | `data/observaciones.csv`. Each git commit is a "vintage": you can see what the system knew on any date |
 | `engine/motor.py` | KLR-style risk index, **recalibrated to the June 2026 float**, plus historical episodes |
@@ -51,7 +52,7 @@ You don't need to check the report every day. When something needs attention, th
 
 ## Data that is still loaded by hand
 
-Some sources have no public API: EMBI, BCB reserves, INE inflation and agency projections. They are entered in `data/manual/entradas.csv`, each with a source and a link. The plan is for the AI to add them every week from the official bulletins, and over time to replace them with automatic collectors.
+Some sources have no public API: EMBI, agency GDP projections, the fiscal deficit and the monetary base. They are entered in `data/manual/entradas.csv`, each with a source and a link. The plan is for the AI to add them every week from the official bulletins, and over time to replace them with automatic collectors.
 
 ## Upload to GitHub (once)
 

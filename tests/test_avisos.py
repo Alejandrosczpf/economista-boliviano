@@ -79,6 +79,13 @@ def test_indicador_sin_voto_por_otra_razon_avisa():
     assert _claves(av) == ["sin-voto:rin_var_12m"] and "hace un año" in av[0].detalle
 
 
+def test_dato_en_cuarentena_avisa_y_explica_como_aprobarlo():
+    q = {"serie": "tco", "fecha": "2026-09-19", "valor": 11.0, "motivo": "salto de 9.9% en 1 días"}
+    av = calcular({}, [], [], {}, [q])
+    assert _claves(av) == ["cuarentena:tco:2026-09-19"]
+    assert "aprobados.csv" in av[0].detalle and "9.9%" in av[0].detalle
+
+
 # ---------- Sincronización con issues de GitHub ----------
 
 class GitHubFalso:

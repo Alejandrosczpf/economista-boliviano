@@ -17,15 +17,19 @@ from pipeline.store import CUARENTENA, Obs
 
 
 def revisar(nuevas: list[Obs], previas: dict[str, list[Obs]], contratos: dict,
-            hoy: date | None = None) -> tuple[list[Obs], list[tuple[Obs, str]]]:
+            hoy: date | None = None, aprobados: set | None = None) -> tuple[list[Obs], list[tuple[Obs, str]]]:
+    """aprobados: {(serie, fecha, valor)} revisados por una persona (data/manual/aprobados.csv).
+    Un dato aprobado se salta el control de salto, pero no el de rango posible."""
     hoy = hoy or date.today()
+    aprobados = aprobados or set()
     aceptadas: list[Obs] = []
     rechazadas: list[tuple[Obs, str]] = []
     # se procesan en orden cronológico para comparar cada dato con el anterior aceptado
     ultimo: dict[str, Obs] = {s: v[-1] for s, v in previas.items() if v}
     historia = {s: list(v) for s, v in previas.items()}
     for o in sorted(nuevas, key=lambda x: (x.serie, x.fecha)):
-        motivo = _motivo(o, contratos, historia.get(o.serie, []), hoy)
+        motivo = _motivo(o, contratos, historia.get(o.serie, []), hoy,
+                         revisado=(o.serie, o.fecha, round(o.valor, 6)) in aprobados)
         if motivo:
             rechazadas.append((o, motivo))
         else:
@@ -36,7 +40,7 @@ def revisar(nuevas: list[Obs], previas: dict[str, list[Obs]], contratos: dict,
     return aceptadas, rechazadas
 
 
-def _motivo(o: Obs, contratos: dict, historia: list[Obs], hoy: date) -> str | None:
+def _motivo(o: Obs, contratos: dict, historia: list[Obs], hoy: date, revisado: bool = False) -> str | None:
     c = contratos.get(o.serie)
     if c is None:
         return f"serie desconocida '{o.serie}'"
@@ -54,7 +58,7 @@ def _motivo(o: Obs, contratos: dict, historia: list[Obs], hoy: date) -> str | No
         return f"valor {o.valor} mayor al máximo posible {c['max']}"
     # dato anterior a esta fecha (ignora el mismo día: sería una corrección)
     previos = [h for h in historia if h.fecha < o.fecha]
-    if previos and o.fecha not in c.get("quiebres", []):
+    if previos and o.fecha not in c.get("quiebres", []) and not revisado:
         p = previos[-1]
         # El salto permitido crece con el tiempo transcurrido (como un paseo aleatorio: raíz del tiempo).
         dias = max((o.dia - p.dia).days, 1)
@@ -78,15 +82,23 @@ BASE_DIAS = {"diaria": 1, "semanal": 7, "mensual": 30, "trimestral": 91, "semest
 
 
 def guardar_cuarentena(rechazadas: list[tuple[Obs, str]], ruta: str = CUARENTENA) -> None:
+    """Registro de lo rechazado. Un mismo dato (serie, fecha, valor) se anota una sola vez,
+    aunque vuelva a rechazarse en cada corrida mientras nadie lo apruebe."""
     if not rechazadas:
         return
     nuevo = not os.path.exists(ruta)
+    ya = set()
+    if not nuevo:
+        with open(ruta, encoding="utf-8", newline="") as f:
+            ya = {(r["serie"], r["fecha"], r["valor"]) for r in csv.DictReader(f)}
     with open(ruta, "a", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
         if nuevo:
             w.writerow(["capturado", "serie", "fecha", "valor", "fuente", "motivo"])
         for o, m in rechazadas:
-            w.writerow([o.capturado, o.serie, o.fecha, o.valor, o.fuente, m])
+            if (o.serie, o.fecha, str(o.valor)) not in ya:
+                w.writerow([o.capturado, o.serie, o.fecha, o.valor, o.fuente, m])
+                ya.add((o.serie, o.fecha, str(o.valor)))
 
 
 def frescura(series: dict[str, list[Obs]], contratos: dict, hoy: date | None = None) -> list[dict]:

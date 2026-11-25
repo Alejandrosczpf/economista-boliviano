@@ -48,7 +48,7 @@ INSUMOS = {
     "inflacion_12m": ["inflacion_12m"],
     "inflacion_mensual": ["inflacion_mensual"],
     "rin_var_12m": ["rin"],
-    "liquidez_rin": ["rin_divisas", "rin"],
+    "liquidez_rin": ["rin_divisas", "rin_brutas"],
     "deficit_fiscal": ["deficit_fiscal"],
     "brecha": ["paralelo", "tco"],
     "depreciacion_30d": ["tco"],
@@ -162,11 +162,14 @@ def indicadores_actuales(series: dict, contratos: dict, hoy: date) -> tuple[dict
     else:
         reg("rin_var_12m", None, None)
 
+    # Liquidez: divisas sobre reservas BRUTAS del mismo mes (las divisas son un componente de las brutas;
+    # dividir por las netas mezclaría conceptos).
     div = _ultimo(series.get("rin_divisas"), hoy, lim["rin_divisas"])
-    if div and series.get("rin"):
-        base = min(series["rin"], key=lambda o: abs((o.dia - div.dia).days))
+    if div and series.get("rin_brutas"):
+        base = min(series["rin_brutas"], key=lambda o: abs((o.dia - div.dia).days))
         if abs((base.dia - div.dia).days) <= 20:
-            reg("liquidez_rin", 100 * div.valor / base.valor, div, f"{es(div.valor, 0)} de {es(base.valor, 0)} millones")
+            reg("liquidez_rin", 100 * div.valor / base.valor, div,
+                f"{es(div.valor, 0)} de {es(base.valor, 0)} millones de reservas brutas")
         else:
             reg("liquidez_rin", None, None)
     else:

@@ -10,7 +10,7 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 | 2 | Un robot que avisa | ✅ hecha (25-nov-2026) |
 | 3 | Memoria del índice | ✅ hecha (25-nov-2026) |
 | 4 | Dólar paralelo automático | ✅ hecha (25-nov-2026) |
-| 5 | Más series oficiales automáticas | pendiente |
+| 5 | Más series oficiales automáticas | ✅ hecha (25-nov-2026) |
 | 6 | El motor con datos reales | pendiente |
 | 7 | El Pulso para el lector | pendiente |
 | 8 | Carga semanal asistida por IA | pendiente |
@@ -99,15 +99,29 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 
 **Resultado:** entraron 841 días del paralelo sin ninguno en cuarentena. Por primera vez votan los 9 indicadores. La brecha es de 1,4 % (verde) y el índice pasó de 55,0 a 47,8, en vigilancia.
 
-## 5. Más series oficiales automáticas
+## 5. Más series oficiales automáticas ✅
 
-**Por qué:** las reservas (RIN), la inflación del INE y las proyecciones del BCB se cargan a mano.
+**Por qué:** el dólar oficial, las reservas y la inflación se cargaban a mano desde la prensa.
 
-- Revisar qué publica el BCB y el INE en formato estable (tablas, Excel, PDF con estructura fija).
-- Pasar a recolector automático al menos la RIN y la inflación mensual.
-- Cargar la **historia diaria del dólar oficial** desde el 29-jun-2026, con las tablas del BCB. Es lo que más mejora la reconstrucción del índice (sesión 3), porque la depreciación a 30 días vuelve a votar todos los días.
+**Hecho:**
+- **Dólar oficial diario** (BCB, [tabla por períodos](https://www.bcb.gob.bo/librerias/indicadores/dolar/periodos.php)): trae cada día desde el 27-jun-2026, fines de semana incluidos.
+  - Se contrasta con la página de la cotización del día. Si las dos traen el mismo día con valores distintos, el robot avisa.
+  - De los 20 datos cargados a mano desde la prensa, 19 coincidían exactamente. El del 1-ago decía 12,15 y el BCB registra 12,13.
+- **Inflación** (INE): se leen los comunicados mensuales del IPC a través de la API pública del sitio del INE, desde los datos de abril de 2026.
+  - El signo mensual sale de las palabras del título ("disminuyó", "negativa").
+  - Ese signo se comprueba con la inflación acumulada del mes anterior. Si no hay signo ni forma de comprobarlo, el dato no se guarda.
+  - Se llenaron los meses que faltaban: abril, mayo y julio (−2,79 %).
+- **Reservas** (BCB, Excel oficial "RIN por componentes", mensual desde 2002): ahora hay tres series separadas, **RIN neta**, **reservas brutas** y **divisas**.
+- **Aprobación de datos en cuarentena:** cuando una persona revisa un dato en cuarentena y confirma que es real, lo anota en `data/manual/aprobados.csv` con el motivo y un enlace. Ese dato se salta el control de salto, pero no el de rango posible, y la aprobación vale solo para ese valor exacto. Un dato en cuarentena ahora abre un aviso (issue) que explica cómo aprobarlo. El registro de cuarentena ya no repite filas.
+- Hay 17 pruebas nuevas, 66 en total, con archivos reales del BCB y del INE.
 
-**Listo cuando:** la RIN y la inflación se actualizan sin carga manual, con prueba cada una.
+**Hallazgos:**
+1. **La serie manual de reservas mezclaba dos conceptos.** Hasta 2024 tenía la RIN **neta**; desde 2025, las reservas **brutas**, que son la cifra que citan los informes y la prensa. En 2025-2026 la diferencia llegó a unos 750 millones de dólares en pasivos de operaciones con oro. Además, la liquidez (divisas sobre total) solo tiene sentido sobre las brutas, y ahora se calcula así.
+2. **Septiembre de 2026 fue un episodio real de volatilidad del tipo de cambio oficial**: de 12,64 (9-sep) bajó a 9,83 (17-sep) y rebotó a 12,06 (23-sep), poco antes de que el BCB cambiara la forma de calcularlo. La cuarentena frenó dos saltos diarios mayores al 8 %. Se confirmaron con la prensa (Bloomberg Línea) y se aprobaron.
+3. **Con datos completos, la historia del índice cambió.** Antes parecía en "alerta" casi todo el tiempo desde julio. Ahora muestra alerta en julio, calma a fines de agosto y vigilancia desde septiembre. Votan la mayoría de los indicadores los 150 días, frente a 116 antes.
+4. **El índice oscila alrededor de los umbrales.** Hubo 7 cambios de estado en dos meses, como alerta↔vigilancia o calma↔vigilancia de un día para otro. Queda para la sesión 6.
+
+**Siguen a mano:** el EMBI, las proyecciones del PIB, el déficit fiscal y la base monetaria. Pasan a la sesión 8 (carga semanal asistida).
 
 ## 6. El motor con datos reales
 
@@ -117,6 +131,8 @@ El orden va de lo que más mejora la confiabilidad a lo que más mejora la lectu
 - Prueba retrospectiva: calcular el índice año por año desde 1980 y revisar si anticipó cada crisis.
 - Revisar los umbrales del régimen flotante con la experiencia de jun-nov 2026 y documentar cada cambio.
 - Decidir si el índice del día debe exigir un mínimo de indicadores votando, como ya lo exige el gráfico (regla de mayoría de la sesión 3).
+- **Histéresis de estados:** que cambiar de estado exija cruzar el umbral con un margen o por varios días seguidos. Hoy el índice reconstruido pasa de calma a vigilancia y vuelve de un día para otro (sesión 5).
+- Revisar las señales de depreciación alrededor del cambio de metodología del BCB en septiembre de 2026.
 
 **Listo cuando:** las pruebas históricas usan datos oficiales y siguen reconociendo 1985, 2016, 2019, 2023 y 2024.
 

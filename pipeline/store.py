@@ -34,6 +34,17 @@ class Obs:
         return date.fromisoformat(self.fecha)
 
 
+APROBADOS = os.path.join(RAIZ, "data", "manual", "aprobados.csv")
+
+
+def cargar_aprobados(ruta: str = APROBADOS) -> set:
+    """Datos que una persona revisó y aprobó tras caer en cuarentena: {(serie, fecha, valor)}."""
+    if not os.path.exists(ruta):
+        return set()
+    with open(ruta, encoding="utf-8", newline="") as f:
+        return {(r["serie"], r["fecha"], round(float(r["valor"]), 6)) for r in csv.DictReader(f) if r.get("serie")}
+
+
 def cargar_contratos(ruta: str = CONTRATOS) -> dict:
     with open(ruta, encoding="utf-8") as f:
         return {s["id"]: s for s in json.load(f)["series"]}

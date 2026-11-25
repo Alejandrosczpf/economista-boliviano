@@ -1,6 +1,7 @@
 """Avisos: lo que una persona debe saber hoy, sin abrir el informe de salud.
 
-Cuatro clases de aviso:
+Cinco clases de aviso:
+- dato en cuarentena: rompió su contrato; una persona decide si se aprueba.
 - fuente caída: una fuente falló en DIAS_SEGUIDOS corridas (días) seguidas.
 - serie vencida: una serie que alimenta el índice tiene un dato más viejo que su límite.
 - serie por vencer: una serie cargada a mano vence en AVISO_ANTICIPADO_DIAS días o menos.
@@ -42,7 +43,7 @@ AUTOMATICAS = SERIES_AUTOMATICAS
 @dataclass
 class Aviso:
     clave: str    # estable de un día a otro: identifica su issue en GitHub
-    tipo: str     # fuente_caida | vencida | por_vencer | sin_voto
+    tipo: str     # cuarentena | fuente_caida | vencida | por_vencer | sin_voto
     titulo: str
     detalle: str
 
@@ -88,10 +89,22 @@ def _fecha(iso: str) -> str:
     return f"{int(d)}-{['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][int(m)-1]}-{a}"
 
 
-def calcular(estado: dict, frescura: list[dict], no_votan: list[str], notas: dict[str, str]) -> list[Aviso]:
+def calcular(estado: dict, frescura: list[dict], no_votan: list[str], notas: dict[str, str],
+             en_cuarentena: list[dict] | None = None) -> list[Aviso]:
     """estado: de actualizar_estado. frescura: de validate.frescura. no_votan: indicadores sin voto.
-    notas: indicador -> explicación del Pulso (por qué no vota)."""
+    notas: indicador -> explicación del Pulso (por qué no vota).
+    en_cuarentena: datos rechazados en esta corrida ({serie, fecha, valor, motivo})."""
     avisos: list[Aviso] = []
+
+    for q in en_cuarentena or []:
+        avisos.append(Aviso(
+            f"cuarentena:{q['serie']}:{q['fecha']}", "cuarentena",
+            f"Dato en cuarentena: {q['serie']} del {_fecha(q['fecha'])}",
+            f"El dato **{q['serie']} = {q['valor']}** del {_fecha(q['fecha'])} no entró al cálculo.\n\n"
+            f"Motivo: {q['motivo']}.\n\n"
+            "Si es un error de la fuente, no hay que hacer nada: queda fuera. Si se revisó y es real, se "
+            "aprueba agregando una fila en `data/manual/aprobados.csv` (serie, fecha, valor, motivo y enlace "
+            "que lo respalda); entra en la corrida siguiente y este aviso se cierra solo."))
 
     for fuente, e in sorted(estado.items()):
         n = e.get("fallos_seguidos", 0)

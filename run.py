@@ -16,7 +16,7 @@ from engine import memoria
 from engine import pulso as P
 from pipeline import avisos, store, validate
 
-RED = ["bcb_tco", "paralelo", "banco_mundial", "fmi"]
+RED = ["bcb_tco", "paralelo", "ine_ipc", "bcb_rin", "banco_mundial", "fmi"]
 
 
 def main(argv=None) -> dict:
@@ -50,7 +50,7 @@ def main(argv=None) -> dict:
     previas = store.por_serie(existentes)
     idx = {(o.serie, o.fecha): o.valor for o in existentes}
     candidatas = [o for o in nuevas if idx.get((o.serie, o.fecha)) != o.valor]
-    aceptadas, rechazadas = validate.revisar(candidatas, previas, contratos, a.hoy)
+    aceptadas, rechazadas = validate.revisar(candidatas, previas, contratos, a.hoy, store.cargar_aprobados())
     validate.guardar_cuarentena(rechazadas)
     todas, cambios = store.fusionar(existentes, aceptadas)
     store.escribir(todas)
@@ -76,7 +76,7 @@ def main(argv=None) -> dict:
     estado = avisos.actualizar_estado(avisos.leer_estado(), intentadas, errores, a.hoy)
     avisos.guardar_estado(estado)
     notas = {t["id"]: t.get("nota") for t in pul["tarjetas"]}
-    lista = avisos.calcular(estado, fresc, pul["no_votan"], notas)
+    lista = avisos.calcular(estado, fresc, pul["no_votan"], notas, salud["en_cuarentena"])
     avisos.guardar_avisos(lista, a.hoy)
 
     escribir_informe_salud(salud, pul, lista)

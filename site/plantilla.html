@@ -281,7 +281,7 @@ document.getElementById('charts').innerHTML =
     <div class="cob-t">Indicadores que votaron cada día (de 9)</div>
     <svg viewBox="0 0 ${W} ${H2+mb2}" role="img" aria-label="Cuántos indicadores votaron cada día">${g2}<line id="mem-x2" y1="0" y2="${H2}" stroke="var(--text-muted)" stroke-dasharray="3 3" style="display:none"/></svg>
     ${cambios}
-    <div class="solo-aprendiz">La línea se corta los días en que votó menos de la mitad de los indicadores. Con pocos votos, el índice depende más de cuáles votaron que de la economía. Los huecos de 2026 se deben sobre todo al dólar oficial, cargado a mano con saltos de semanas antes de que llegara el robot: sin él no votan la depreciación ni la brecha.</div>
+    <div class="solo-aprendiz">Si un día vota menos de la mitad de los indicadores, la línea se corta: con pocos votos, el índice depende más de cuáles votaron que de la economía. La franja de abajo muestra cuántos votaron cada día.</div>
     <details style="margin-top:10px"><summary>Ver la tabla día por día</summary>
       <table><thead><tr><th>Fecha</th><th>Índice</th><th>Estado</th><th>Votaron</th><th>Origen</th></tr></thead><tbody>
       ${pts.slice().reverse().map(p=>`<tr><td>${fecha(p.fecha)}</td><td class="n">${nf(p.valor,1)}</td><td>${p.suficiente?icono(ESTL[p.estado][0])+' '+p.estado:'pocos datos'}</td><td class="n">${p.votan} de ${p.de}</td><td>${p.origen}</td></tr>`).join('')}

@@ -33,7 +33,7 @@
    "nombre": "Reservas internacionales netas",
    "unidad": "USD millones",
    "frecuencia": "mensual",
-   "fuente": "BCB",
+   "fuente": "BCB (Excel RIN por componentes, columna RIN)",
    "min": 0,
    "max": 20000,
    "max_salto_pct": 60,
@@ -41,15 +41,27 @@
    "rezago_dias": 20
   },
   {
-   "id": "rin_divisas",
-   "nombre": "Reservas en divisas (parte líquida)",
+   "id": "rin_brutas",
+   "nombre": "Reservas internacionales brutas",
    "unidad": "USD millones",
    "frecuencia": "mensual",
-   "fuente": "BCB",
+   "fuente": "BCB (Excel RIN por componentes, columna Total)",
+   "min": 0,
+   "max": 25000,
+   "max_salto_pct": 60,
+   "frescura_dias": 70,
+   "rezago_dias": 20
+  },
+  {
+   "id": "rin_divisas",
+   "nombre": "Reservas en divisas (parte líquida de las brutas)",
+   "unidad": "USD millones",
+   "frecuencia": "mensual",
+   "fuente": "BCB (Excel RIN por componentes, columna Divisas)",
    "min": 0,
    "max": 15000,
    "max_salto_pct": 900,
-   "frescura_dias": 160,
+   "frescura_dias": 70,
    "rezago_dias": 20
   },
   {
