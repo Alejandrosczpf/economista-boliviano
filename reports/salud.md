@@ -1,10 +1,10 @@
 # Informe de salud del sistema — 2026-11-25
 
 - Índice de riesgo: **47.8** (vigilancia), régimen flotante
-- Datos nuevos o corregidos: 1035
+- Datos nuevos o corregidos: 0
 - En cuarentena esta corrida: 0
 - Fuentes con error: 0
-- Series con dato viejo o sin datos: 0 de 20
+- Series con dato viejo o sin datos: 0 de 22
 - Indicadores que no votaron por falta de dato fresco: ninguno
 - Avisos vigentes: 1
 
@@ -36,3 +36,5 @@
 | Dinero en sentido amplio (% del PIB) | 2025-12-31 | 329 | 800 | fresco |
 | Crecimiento PIB real (FMI DataMapper) | 2025-12-31 | 329 | 800 | fresco |
 | Inflación promedio (FMI DataMapper) | 2025-12-31 | 329 | 800 | fresco |
+| Inflación a fin de año (FMI WEO) | 2025-12-31 | 329 | 800 | fresco |
+| Balance fiscal del gobierno general (FMI WEO) | 2025-12-31 | 329 | 800 | fresco |

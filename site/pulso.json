@@ -4,6 +4,7 @@
  "regimen_desde": "2026-06-29",
  "indice": 47.8,
  "estado": "vigilancia",
+ "suficiente": true,
  "no_votan": [],
  "tarjetas": [
   {
@@ -5444,7 +5445,7 @@
  },
  "salud": {
   "fecha": "2026-11-25",
-  "datos_nuevos": 1035,
+  "datos_nuevos": 0,
   "en_cuarentena": [],
   "fuentes_con_error": {},
   "frescura": [
@@ -5603,6 +5604,22 @@
    {
     "serie": "fmi_weo_inflacion",
     "nombre": "Inflación promedio (FMI DataMapper)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
+   },
+   {
+    "serie": "fmi_weo_inflacion_fin",
+    "nombre": "Inflación a fin de año (FMI WEO)",
+    "ultimo": "2025-12-31",
+    "edad_dias": 329,
+    "limite_dias": 800,
+    "estado": "fresco"
+   },
+   {
+    "serie": "fmi_weo_balance",
+    "nombre": "Balance fiscal del gobierno general (FMI WEO)",
     "ultimo": "2025-12-31",
     "edad_dias": 329,
     "limite_dias": 800,
@@ -6137,7 +6154,7 @@
    {
     "fecha": "2026-08-26",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6173,7 +6190,7 @@
    {
     "fecha": "2026-08-30",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6182,7 +6199,7 @@
    {
     "fecha": "2026-08-31",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6191,7 +6208,7 @@
    {
     "fecha": "2026-09-01",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6200,7 +6217,7 @@
    {
     "fecha": "2026-09-02",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6209,7 +6226,7 @@
    {
     "fecha": "2026-09-03",
     "valor": 33.3,
-    "estado": "calma",
+    "estado": "vigilancia",
     "votan": 8,
     "de": 9,
     "origen": "reconstruido",
@@ -6981,32 +6998,9 @@
     "de": "alerta",
     "a": "vigilancia",
     "indice": 47.6
-   },
-   {
-    "fecha": "2026-08-26",
-    "de": "vigilancia",
-    "a": "calma",
-    "indice": 33.3
-   },
-   {
-    "fecha": "2026-08-27",
-    "de": "calma",
-    "a": "vigilancia",
-    "indice": 40.5
-   },
-   {
-    "fecha": "2026-08-30",
-    "de": "vigilancia",
-    "a": "calma",
-    "indice": 33.3
-   },
-   {
-    "fecha": "2026-09-04",
-    "de": "calma",
-    "a": "vigilancia",
-    "indice": 40.5
    }
   ],
   "robot_desde": "2026-11-25"
- }
+ },
+ "estado_sin_histeresis": "vigilancia"
 }
