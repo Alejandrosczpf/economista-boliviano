@@ -25,7 +25,7 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 | # | Sesión | Por qué ahora | Estado |
 |---|---|---|---|
 | 10 | Riesgo país que no se vence | Es el único indicador con fecha de vencimiento cercana y sin fuente estable | ✅ hecha (25-nov-2026) |
-| 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | pendiente |
+| 11 | Vigilar a las rutinas | Una rutina que falla en silencio se confunde con "esta semana no hubo datos" | ✅ hecha (25-nov-2026) |
 | 12 | Metodología y archivo públicos | Un índice público necesita explicar cómo se calcula y mostrar lo que dijo antes | pendiente |
 | 13 | Compartir y accesibilidad | El Pulso se lee y se comparte desde el celular (WhatsApp); los gráficos no tienen tabla | pendiente |
 | 14 | "A un paso de cambiar" | Decir qué indicadores están cerca de cambiar de color, sin predecir | pendiente |
@@ -69,6 +69,19 @@ La fase 1 dejó el sistema funcionando solo. La fase 2 cierra los huecos que que
 - Avisar también si un *pull request* de datos o de informe lleva más de 7 días sin revisarse.
 
 **Listo cuando:** si se desactiva una rutina a propósito, el martes llega un aviso.
+
+**Hecho:**
+- **Bitácora:** el issue fijo #8, "Bitácora de las rutinas", con la etiqueta `bitacora`. Las dos rutinas, al terminar y **siempre**, haya o no propuesta, comentan ahí con la marca `<!-- bitacora: carga|informe AAAA-MM-DD -->` y su resumen. Para eso usan sus herramientas de GitHub en la nube (`mcp__github__add_issue_comment`). Se actualizaron sus instrucciones; la del informe antes terminaba sin hacer nada si el informe ya existía.
+- **Vigilancia** (`pipeline/avisos.py`, `vigilancia`). El robot la corre en cada corrida, con la API de GitHub:
+  - **rutina sin noticias:** desde el martes, si falta el comentario del lunes de alguna rutina. El lunes de referencia es el más reciente cuyas rutinas ya debían terminar (15:00 UTC), y no se exigen lunes anteriores a la creación de la bitácora.
+  - **propuesta sin revisar:** un *pull request* abierto hace más de 7 días.
+
+  Los dos avisos se cierran solos al resolverse. `python -m pipeline.avisos --solo-revisar` hace la revisión sin tocar issues.
+- **Comprobado en vivo (25-nov):**
+  - las dos rutinas comentaron en la bitácora;
+  - la vigilancia contra GitHub real da "sin avisos" hoy, y avisa de las dos rutinas si se simula el martes 1-dic sin comentarios del lunes 30;
+  - el robot corrió la vigilancia sin error.
+- 7 pruebas nuevas, 102 en total con la de la sesión 10. Una es la condición de "listo": una rutina desactivada genera el aviso el martes.
 
 ## 12. Metodología y archivo públicos
 
