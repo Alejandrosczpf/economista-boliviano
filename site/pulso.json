@@ -1,5 +1,5 @@
 {
- "generado": "2026-11-25",
+ "generado": "2026-11-26",
  "regimen": "flotante",
  "regimen_desde": "2026-06-29",
  "indice": 47.8,
@@ -119,11 +119,11 @@
    "que": "Diferencia entre el dólar paralelo y el dólar oficial.",
    "lectura": "Con flotación, una brecha cercana a cero indica que la gente cree en el nuevo régimen.",
    "familia": "Si la brecha vuelve a abrirse, conseguir dólares se encarece otra vez.",
-   "valor": 1.44,
-   "fecha": "2026-11-24",
+   "valor": 1.52,
+   "fecha": "2026-11-25",
    "fuente": "paralelo.bo (CC-BY 4.0)",
    "url": "https://paralelo.bo",
-   "nota": "paralelo 12,00 vs oficial 11,83",
+   "nota": "paralelo 12,04 vs oficial 11,86",
    "semaforo": "verde",
    "peso": 1.5,
    "puntos": 0.0,
@@ -182,11 +182,11 @@
    "que": "Cuánto subió (o bajó) el dólar oficial en los últimos ~30 días.",
    "lectura": "Con flotación, moverse es normal; más de 5 % en un mes indica presión.",
    "familia": "Un dólar que sube rápido encarece lo importado en pocas semanas.",
-   "valor": -0.42,
-   "fecha": "2026-11-25",
+   "valor": -0.17,
+   "fecha": "2026-11-26",
    "fuente": "BCB",
-   "url": "https://www.bcb.gob.bo/bcb_tco_publico_ultima_cotizacion.php",
-   "nota": "de Bs 11,88 (24 oct 2026) a Bs 11,83",
+   "url": "https://www.bcb.gob.bo/librerias/indicadores/dolar/periodos.php",
+   "nota": "de Bs 11,88 (25 oct 2026) a Bs 11,86",
    "semaforo": "verde",
    "peso": 1.5,
    "puntos": 0.0,
@@ -198,7 +198,7 @@
   }
  ],
  "cifras": {
-  "tco": 11.83,
+  "tco": 11.86,
   "rin": 3964.88,
   "embi": 494.0,
   "inflacion_12m": 7.08
@@ -812,6 +812,10 @@
    {
     "fecha": "2026-11-25",
     "valor": 11.83
+   },
+   {
+    "fecha": "2026-11-26",
+    "valor": 11.86
    }
   ],
   "paralelo": [
@@ -4178,6 +4182,10 @@
    {
     "fecha": "2026-11-24",
     "valor": 12.0
+   },
+   {
+    "fecha": "2026-11-25",
+    "valor": 12.04
    }
   ],
   "rin": [
@@ -5452,15 +5460,15 @@
   ]
  },
  "salud": {
-  "fecha": "2026-11-25",
-  "datos_nuevos": 0,
+  "fecha": "2026-11-26",
+  "datos_nuevos": 2,
   "en_cuarentena": [],
   "fuentes_con_error": {},
   "frescura": [
    {
     "serie": "tco",
     "nombre": "Tipo de cambio oficial",
-    "ultimo": "2026-11-25",
+    "ultimo": "2026-11-26",
     "edad_dias": 0,
     "limite_dias": 5,
     "estado": "fresco"
@@ -5468,7 +5476,7 @@
    {
     "serie": "paralelo",
     "nombre": "Dólar paralelo/digital (promedio compra-venta)",
-    "ultimo": "2026-11-24",
+    "ultimo": "2026-11-25",
     "edad_dias": 1,
     "limite_dias": 5,
     "estado": "fresco"
@@ -5477,7 +5485,7 @@
     "serie": "rin",
     "nombre": "Reservas internacionales netas",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 70,
     "estado": "fresco"
    },
@@ -5485,7 +5493,7 @@
     "serie": "rin_brutas",
     "nombre": "Reservas internacionales brutas",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 70,
     "estado": "fresco"
    },
@@ -5493,7 +5501,7 @@
     "serie": "rin_divisas",
     "nombre": "Reservas en divisas (parte líquida de las brutas)",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 70,
     "estado": "fresco"
    },
@@ -5501,7 +5509,7 @@
     "serie": "inflacion_12m",
     "nombre": "Inflación a 12 meses",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 45,
     "estado": "fresco"
    },
@@ -5509,7 +5517,7 @@
     "serie": "inflacion_mensual",
     "nombre": "Inflación del mes",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 45,
     "estado": "fresco"
    },
@@ -5517,7 +5525,7 @@
     "serie": "embi",
     "nombre": "Riesgo país (EMBI)",
     "ultimo": "2026-11-02",
-    "edad_dias": 23,
+    "edad_dias": 24,
     "limite_dias": 90,
     "estado": "fresco"
    },
@@ -5525,7 +5533,7 @@
     "serie": "pib_proy_fmi",
     "nombre": "Proyección PIB del año (FMI)",
     "ultimo": "2026-10-13",
-    "edad_dias": 43,
+    "edad_dias": 44,
     "limite_dias": 200,
     "estado": "fresco"
    },
@@ -5533,7 +5541,7 @@
     "serie": "pib_proy_bcb",
     "nombre": "Proyección PIB del año (BCB)",
     "ultimo": "2026-10-08",
-    "edad_dias": 48,
+    "edad_dias": 49,
     "limite_dias": 120,
     "estado": "fresco"
    },
@@ -5541,7 +5549,7 @@
     "serie": "pib_proy_bm",
     "nombre": "Proyección PIB del año (Banco Mundial)",
     "ultimo": "2026-10-07",
-    "edad_dias": 49,
+    "edad_dias": 50,
     "limite_dias": 200,
     "estado": "fresco"
    },
@@ -5549,7 +5557,7 @@
     "serie": "deficit_fiscal",
     "nombre": "Déficit fiscal",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 400,
     "estado": "fresco"
    },
@@ -5557,7 +5565,7 @@
     "serie": "base_monetaria_var_acum",
     "nombre": "Variación acumulada de la base monetaria en el año",
     "ultimo": "2026-10-31",
-    "edad_dias": 25,
+    "edad_dias": 26,
     "limite_dias": 45,
     "estado": "fresco"
    },
@@ -5565,7 +5573,7 @@
     "serie": "wb_inflacion",
     "nombre": "Inflación anual (Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5573,7 +5581,7 @@
     "serie": "wb_pib_crec",
     "nombre": "Crecimiento PIB real (Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5581,7 +5589,7 @@
     "serie": "wb_reservas",
     "nombre": "Reservas totales con oro (Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5589,7 +5597,7 @@
     "serie": "wb_exportaciones",
     "nombre": "Exportaciones de bienes y servicios (Banco Mundial)",
     "ultimo": "2024-12-31",
-    "edad_dias": 694,
+    "edad_dias": 695,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5597,7 +5605,7 @@
     "serie": "wb_dinero_amplio_pib",
     "nombre": "Dinero en sentido amplio (% del PIB)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5605,7 +5613,7 @@
     "serie": "fmi_weo_pib",
     "nombre": "Crecimiento PIB real (FMI DataMapper)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5613,7 +5621,7 @@
     "serie": "fmi_weo_inflacion",
     "nombre": "Inflación promedio (FMI DataMapper)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5621,7 +5629,7 @@
     "serie": "fmi_weo_inflacion_fin",
     "nombre": "Inflación a fin de año (FMI WEO)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5629,7 +5637,7 @@
     "serie": "fmi_weo_balance",
     "nombre": "Balance fiscal del gobierno general (FMI WEO)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5637,7 +5645,7 @@
     "serie": "wb_credito_privado_pib",
     "nombre": "Crédito al sector privado (% del PIB, Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5645,7 +5653,7 @@
     "serie": "wb_m2_bs",
     "nombre": "Dinero en sentido amplio M2 (bolivianos corrientes, Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5653,7 +5661,7 @@
     "serie": "wb_tc_oficial",
     "nombre": "Tipo de cambio oficial, promedio anual (Banco Mundial)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    },
@@ -5661,7 +5669,7 @@
     "serie": "fmi_weo_cuenta_corriente",
     "nombre": "Saldo de la cuenta corriente (% del PIB, FMI WEO)",
     "ultimo": "2025-12-31",
-    "edad_dias": 329,
+    "edad_dias": 330,
     "limite_dias": 800,
     "estado": "fresco"
    }
@@ -7018,6 +7026,15 @@
     "de": 9,
     "origen": "en vivo",
     "suficiente": true
+   },
+   {
+    "fecha": "2026-11-26",
+    "valor": 47.8,
+    "estado": "vigilancia",
+    "votan": 9,
+    "de": 9,
+    "origen": "en vivo",
+    "suficiente": true
    }
   ],
   "cambios": [
@@ -7044,8 +7061,8 @@
  },
  "estado_sin_histeresis": "vigilancia",
  "semana": {
-  "desde": "2026-11-18",
-  "hasta": "2026-11-25",
+  "desde": "2026-11-19",
+  "hasta": "2026-11-26",
   "indice_antes": 47.8,
   "indice_hoy": 47.8,
   "estado_antes": "vigilancia",
@@ -7057,13 +7074,13 @@
    "id": "brecha",
    "titulo": "Brecha cambiaria",
    "unidad": "%",
-   "valor": 1.44,
+   "valor": 1.52,
    "senal": "verde",
    "direccion": "peor",
    "pasaria_a": "amarillo",
    "umbral": 3,
-   "distancia": 1.56,
-   "cercania": 0.22,
+   "distancia": 1.48,
+   "cercania": 0.21,
    "cerca": true,
    "indice_si_cambia": 54.3,
    "cambio_indice": 6.5,
@@ -7134,6 +7151,22 @@
    "estado_si_cambia": "vigilancia"
   },
   {
+   "id": "depreciacion_30d",
+   "titulo": "Dólar oficial: cambio en un mes",
+   "unidad": "%",
+   "valor": -0.17,
+   "senal": "verde",
+   "direccion": "peor",
+   "pasaria_a": "amarillo",
+   "umbral": 2,
+   "distancia": 2.17,
+   "cercania": 0.72,
+   "cerca": false,
+   "indice_si_cambia": 54.3,
+   "cambio_indice": 6.5,
+   "estado_si_cambia": "vigilancia"
+  },
+  {
    "id": "embi",
    "titulo": "Riesgo país",
    "unidad": "puntos básicos",
@@ -7163,22 +7196,6 @@
    "cerca": false,
    "indice_si_cambia": 43.5,
    "cambio_indice": -4.3,
-   "estado_si_cambia": "vigilancia"
-  },
-  {
-   "id": "depreciacion_30d",
-   "titulo": "Dólar oficial: cambio en un mes",
-   "unidad": "%",
-   "valor": -0.42,
-   "senal": "verde",
-   "direccion": "peor",
-   "pasaria_a": "amarillo",
-   "umbral": 2,
-   "distancia": 2.42,
-   "cercania": 0.81,
-   "cerca": false,
-   "indice_si_cambia": 54.3,
-   "cambio_indice": 6.5,
    "estado_si_cambia": "vigilancia"
   },
   {
@@ -7631,7 +7648,7 @@
   }
  ],
  "notas_graficos": {
-  "dolar": "El paralelo (Bs 12,00) está 1,4 % por encima del oficial (Bs 11,83). Desde el inicio de la flotación, el oficial subió 21,6 %. Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).",
+  "dolar": "El paralelo (Bs 12,04) está 1,5 % por encima del oficial (Bs 11,86). Desde el inicio de la flotación, el oficial subió 21,9 %. Paralelo: mediana diaria del USDT en plataformas P2P, según paralelo.bo (CC-BY 4.0).",
   "rin": "Última: 3.965 millones de dólares (31 oct 2026), 59,6 % más que un año antes. El mínimo desde 2002 fue 725 millones (28 feb 2003). Son reservas NETAS: la prensa suele citar las brutas, que son mayores.",
   "inflacion": "Última: 7,08 % a 12 meses (31 oct 2026). El máximo de este gráfico fue 20,96 % (30 nov 2025).",
   "embi": "Último dato: 494 puntos (2 nov 2026). Son puntos sueltos tomados de la prensa: no hay una serie diaria pública."
@@ -7639,7 +7656,7 @@
  "resumen": [
   "El índice de riesgo está en 48 de 100, en vigilancia: hay señales de tensión que conviene seguir de cerca, aunque no las de una crisis inminente.",
   "Lo que más preocupa: el déficit del Estado (11,0 % del PIB); la inflación del último mes (2,1 %); la parte de las reservas en divisas listas para usar (21,6 % del total). También en amarillo: la inflación anual (7,1 %); el riesgo país (494 puntos).",
-  "Lo que ayuda: las reservas netas del BCB, que cambiaron 59,6 % en un año; la diferencia entre el dólar paralelo y el oficial (1,4 %); el dólar oficial, que cambió -0,4 % en un mes.",
+  "Lo que ayuda: las reservas netas del BCB, que cambiaron 59,6 % en un año; la diferencia entre el dólar paralelo y el oficial (1,5 %); el dólar oficial, que cambió -0,2 % en un mes.",
   "En la última semana el índice no cambió."
  ],
  "informe": {
