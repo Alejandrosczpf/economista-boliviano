@@ -1,30 +1,30 @@
 {
  "banco_mundial": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "bcb_rin": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "bcb_tco": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "fmi": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "ine_ipc": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "manual": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  },
  "paralelo": {
   "fallos_seguidos": 0,
-  "ultima_lectura_ok": "2026-11-26"
+  "ultima_lectura_ok": "2026-11-27"
  }
 }

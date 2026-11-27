@@ -1,0 +1,394 @@
+{
+ "fecha": "2026-11-27",
+ "estado": "vigilancia",
+ "regimen": "flotante",
+ "hechos": [
+  {
+   "id": "indice",
+   "valor": 47.8,
+   "texto": "47,8 de 100",
+   "claves": [
+    "indice",
+    "riesgo"
+   ],
+   "fecha": "2026-11-27"
+  },
+  {
+   "id": "escala_indice",
+   "valor": 100.0,
+   "texto": "100 (máximo del índice)",
+   "claves": [
+    "indice",
+    "100"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "inflacion_12m",
+   "valor": 7.08,
+   "texto": "7,08 %",
+   "claves": [
+    "inflacion",
+    "precios"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "inflacion_mensual",
+   "valor": 2.07,
+   "texto": "2,07 %",
+   "claves": [
+    "inflacion",
+    "precios",
+    "mes"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "rin_var_12m",
+   "valor": 59.64,
+   "texto": "59,64 %",
+   "claves": [
+    "reserva"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "liquidez_rin",
+   "valor": 21.57,
+   "texto": "21,57 % del total",
+   "claves": [
+    "reserva",
+    "divisa",
+    "liquid"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "deficit_fiscal",
+   "valor": 11.0,
+   "texto": "11,00 % del PIB",
+   "claves": [
+    "deficit",
+    "fiscal",
+    "estado",
+    "gasto"
+   ],
+   "fecha": "2025-12-31"
+  },
+  {
+   "id": "brecha",
+   "valor": 1.86,
+   "texto": "1,86 %",
+   "claves": [
+    "brecha",
+    "paralelo",
+    "oficial",
+    "dolar"
+   ],
+   "fecha": "2026-11-26"
+  },
+  {
+   "id": "embi",
+   "valor": 494.0,
+   "texto": "494 puntos básicos",
+   "claves": [
+    "riesgo pais",
+    "embi",
+    "bonos"
+   ],
+   "fecha": "2026-11-02"
+  },
+  {
+   "id": "pib_proy",
+   "valor": -3.06,
+   "texto": "-3,06 %",
+   "claves": [
+    "crecimiento",
+    "pib",
+    "economia",
+    "proyeccion",
+    "recesion",
+    "decrec",
+    "contrac"
+   ],
+   "fecha": "2026-10-13"
+  },
+  {
+   "id": "depreciacion_30d",
+   "valor": -0.25,
+   "texto": "-0,25 %",
+   "claves": [
+    "dolar",
+    "oficial",
+    "tipo de cambio",
+    "deprecia"
+   ],
+   "fecha": "2026-11-27"
+  },
+  {
+   "id": "periodo_12_meses",
+   "valor": 12.0,
+   "texto": "12 meses",
+   "claves": [
+    "12 meses",
+    "doce meses"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "periodo_30_dias",
+   "valor": 30.0,
+   "texto": "30 días",
+   "claves": [
+    "30 dias",
+    "treinta dias"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indicadores_votan",
+   "valor": 9.0,
+   "texto": "9 indicadores votaron",
+   "claves": [
+    "indicador"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indicadores_total",
+   "valor": 9.0,
+   "texto": "9 indicadores",
+   "claves": [
+    "indicador"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "dolar_oficial",
+   "valor": 11.85,
+   "texto": "dólar oficial: 11,85 Bs (27 nov 2026)",
+   "claves": [
+    "dolar",
+    "oficial",
+    "tipo de cambio",
+    "bcb"
+   ],
+   "fecha": "2026-11-27"
+  },
+  {
+   "id": "dolar_paralelo",
+   "valor": 12.07,
+   "texto": "dólar paralelo: 12,07 Bs (26 nov 2026)",
+   "claves": [
+    "dolar",
+    "paralelo",
+    "usdt",
+    "digital"
+   ],
+   "fecha": "2026-11-26"
+  },
+  {
+   "id": "rin_neta",
+   "valor": 3964.88,
+   "texto": "reservas internacionales netas: 3.965 millones de USD (31 oct 2026)",
+   "claves": [
+    "reserva"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "rin_brutas",
+   "valor": 3964.88,
+   "texto": "reservas internacionales brutas: 3.965 millones de USD (31 oct 2026)",
+   "claves": [
+    "reserva"
+   ],
+   "fecha": "2026-10-31"
+  },
+  {
+   "id": "pib_proy_fmi",
+   "valor": -3.0,
+   "texto": "proyección del FMI: -3,00 % (13 oct 2026)",
+   "claves": [
+    "crecimiento",
+    "pib",
+    "economia",
+    "proyeccion",
+    "recesion",
+    "decrec",
+    "contrac",
+    "fmi"
+   ],
+   "fecha": "2026-10-13"
+  },
+  {
+   "id": "pib_proy_bcb",
+   "valor": -3.39,
+   "texto": "proyección del BCB: -3,39 % (8 oct 2026)",
+   "claves": [
+    "crecimiento",
+    "pib",
+    "economia",
+    "proyeccion",
+    "recesion",
+    "decrec",
+    "contrac",
+    "bcb"
+   ],
+   "fecha": "2026-10-08"
+  },
+  {
+   "id": "pib_proy_bm",
+   "valor": -2.8,
+   "texto": "proyección del Banco Mundial: -2,80 % (7 oct 2026)",
+   "claves": [
+    "crecimiento",
+    "pib",
+    "economia",
+    "proyeccion",
+    "recesion",
+    "decrec",
+    "contrac",
+    "banco mundial"
+   ],
+   "fecha": "2026-10-07"
+  },
+  {
+   "id": "distancia_brecha_peor",
+   "valor": 1.14,
+   "texto": "a 1,14 de pasar a amarillo (brecha cambiaria)",
+   "claves": [
+    "brecha",
+    "paralelo",
+    "oficial",
+    "dolar"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "umbral_brecha_peor",
+   "valor": 3.0,
+   "texto": "umbral de amarillo: 3,00 (brecha cambiaria)",
+   "claves": [
+    "brecha",
+    "paralelo",
+    "oficial",
+    "dolar",
+    "umbral"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indice_si_brecha_peor",
+   "valor": 54.3,
+   "texto": "el índice pasaría a 54,3 si brecha cambiaria pasara a amarillo",
+   "claves": [
+    "indice",
+    "riesgo"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "distancia_liquidez_rin_mejor",
+   "valor": 3.43,
+   "texto": "a 3,43 de pasar a amarillo (reservas líquidas)",
+   "claves": [
+    "reserva",
+    "divisa",
+    "liquid"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "umbral_liquidez_rin_mejor",
+   "valor": 25.0,
+   "texto": "umbral de amarillo: 25,00 (reservas líquidas)",
+   "claves": [
+    "reserva",
+    "divisa",
+    "liquid",
+    "umbral"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indice_si_liquidez_rin_mejor",
+   "valor": 43.5,
+   "texto": "el índice pasaría a 43,5 si reservas líquidas pasara a amarillo",
+   "claves": [
+    "indice",
+    "riesgo"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "distancia_embi_mejor",
+   "valor": 94.0,
+   "texto": "a 94,00 de pasar a verde (riesgo país)",
+   "claves": [
+    "riesgo pais",
+    "embi",
+    "bonos"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "umbral_embi_mejor",
+   "valor": 400.0,
+   "texto": "umbral de verde: 400,00 (riesgo país)",
+   "claves": [
+    "riesgo pais",
+    "embi",
+    "bonos",
+    "umbral"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indice_si_embi_mejor",
+   "valor": 43.5,
+   "texto": "el índice pasaría a 43,5 si riesgo país pasara a verde",
+   "claves": [
+    "indice",
+    "riesgo"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "indice_semana_antes",
+   "valor": 47.8,
+   "texto": "47,8 hace una semana (20 nov 2026)",
+   "claves": [
+    "indice",
+    "riesgo",
+    "semana"
+   ],
+   "fecha": "2026-11-20"
+  },
+  {
+   "id": "indice_cambio_semana",
+   "valor": 0.0,
+   "texto": "+0,0 puntos en la semana",
+   "claves": [
+    "indice",
+    "riesgo",
+    "semana",
+    "punto",
+    "subi",
+    "baj"
+   ],
+   "fecha": null
+  },
+  {
+   "id": "dias_semana",
+   "valor": 7.0,
+   "texto": "7 días",
+   "claves": [
+    "dia",
+    "semana"
+   ],
+   "fecha": null
+  }
+ ]
+}
